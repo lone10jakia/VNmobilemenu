@@ -8,7 +8,7 @@ local lp = Players.LocalPlayer
 
 -- ===== KEY SYSTEM =====
 local keyList = {
-    ["MEMAYBEOTEST"] = 15000, -- 1 giờ
+    ["MEMAYBE"] = 15000, -- 1 giờ
     ["MEMAYBEOKEY1T"] = 99999999999999999,    -- 10 phút
 }
 local usedKeys = {}
