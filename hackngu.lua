@@ -23,9 +23,9 @@ MainTab:CreateSection("Farm Boss")
 -- Biến
 local OrbitEnabled = false
 local SelectedBoss = nil
-local RADIUS = 20
-local HEIGHT = 10
-local SPEED = 1.5
+local RADIUS = 10
+local HEIGHT = 0
+local SPEED = 10
 
 -- Label hiển thị boss
 local BossLabel = MainTab:CreateLabel("Boss: Chưa chọn")
