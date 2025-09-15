@@ -7,9 +7,9 @@ local player = Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "THẰNG NGU DÙNG HACK",
-    LoadingTitle = "Đợi tí mày...",
-    LoadingSubtitle = "NHÌN LỒN GÌ THẰNG NGU",
+    Name = "MỆT VÃI LỒN RA CẦN BỒI THƯỜNG",
+    LoadingTitle = "ĐỤ MÁ THẰNG LỒN...",
+    LoadingSubtitle = "MỆT QUÁ",
     ConfigurationSaving = {
        Enabled = true,
        FolderName = "HackCaiIon",
@@ -23,12 +23,23 @@ MainTab:CreateSection("Farm Boss")
 -- Biến
 local OrbitEnabled = false
 local SelectedBoss = nil
-local RADIUS = 10
-local HEIGHT = 0
-local SPEED = 10
+local BossName = nil
+local RADIUS = 20
+local HEIGHT = 10
+local SPEED = 1.5
 
 -- Label hiển thị boss
 local BossLabel = MainTab:CreateLabel("Boss: Chưa chọn")
+
+-- Hàm tìm boss theo tên ở bất kỳ đâu trong workspace
+local function FindBossByName(name)
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == name and obj:FindFirstChildOfClass("Humanoid") then
+            return obj
+        end
+    end
+    return nil
+end
 
 -- Nút chọn boss bằng click
 MainTab:CreateButton({
@@ -54,10 +65,11 @@ MainTab:CreateButton({
 
             if model then
                 SelectedBoss = model
-                BossLabel:Set("Boss: " .. model.Name)
+                BossName = model.Name
+                BossLabel:Set("Boss: " .. BossName)
                 Rayfield:Notify({
                     Title = "Hack Boss",
-                    Content = "Đã chọn boss: " .. model.Name,
+                    Content = "Đã chọn boss: " .. BossName,
                     Duration = 5,
                     Image = 4483362458
                 })
@@ -119,8 +131,7 @@ RunService.Heartbeat:Connect(function()
         local char = player.Character
         if not char then return end
         local hrp = char:FindFirstChild("HumanoidRootPart")
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hrp or not hum then return end
+        if not hrp then return end
 
         if SelectedBoss:FindFirstChild("HumanoidRootPart") then
             local bhrp = SelectedBoss.HumanoidRootPart
@@ -139,6 +150,43 @@ RunService.Heartbeat:Connect(function()
                 pcall(function()
                     tool:Activate()
                 end)
+            end
+        end
+    end
+end)
+
+-- Theo dõi boss respawn + cập nhật máu
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if BossName then
+            if SelectedBoss and SelectedBoss:FindFirstChildOfClass("Humanoid") then
+                local hum = SelectedBoss:FindFirstChildOfClass("Humanoid")
+                if hum and hum.Health > 0 then
+                    BossLabel:Set("Boss: " .. BossName .. " | HP: " ..
+                        math.floor(hum.Health) .. "/" .. math.floor(hum.MaxHealth))
+                else
+                    BossLabel:Set("Boss: " .. BossName .. " | Đang chết...")
+                end
+            else
+                -- Nếu SelectedBoss mất → tìm boss mới theo BossName
+                local newBoss = FindBossByName(BossName)
+                if newBoss then
+                    SelectedBoss = newBoss
+                    local hum = newBoss:FindFirstChildOfClass("Humanoid")
+                    if hum then
+                        BossLabel:Set("Boss: " .. BossName .. " | HP: " ..
+                            math.floor(hum.Health) .. "/" .. math.floor(hum.MaxHealth))
+                    end
+                    Rayfield:Notify({
+                        Title = "Hack Boss",
+                        Content = "Boss đã hồi sinh: " .. BossName,
+                        Duration = 5,
+                        Image = 4483362458
+                    })
+                else
+                    BossLabel:Set("Boss: " .. BossName .. " | Đã chết, chờ respawn...")
+                end
             end
         end
     end
