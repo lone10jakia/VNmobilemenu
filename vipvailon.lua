@@ -9,8 +9,8 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
    Name = "memaybeo Hub - Full",
-   LoadingTitle = "Đang tải menu...",
-   LoadingSubtitle = "Auto Heal + Attack + Speed + HUD",
+   LoadingTitle = "Đang tải menu vip nè...",
+   LoadingSubtitle = " nhìn con cặc ",
    ConfigurationSaving = { Enabled = false },
    KeySystem = false
 })
@@ -23,7 +23,7 @@ local TabSet  = Window:CreateTab("Settings")
 -- Vars
 local autoAttackEnabled = false
 local AutoHeal = false
-local HealThreshold = 70
+local HealThreshold = 50
 local BandageName = "Băng gạc"
 local NormalSpeed = 16
 local hitboxSize = Vector3.new(50,50,50)
