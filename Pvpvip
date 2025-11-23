@@ -1,0 +1,283 @@
+--== MEMAYBEO HUB v3 (FULL + Auto Băng <50HP + Toggle Icon) ==--
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+
+-- GUI
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.ResetOnSpawn = false
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 40, 0, 40)
+ToggleButton.Position = UDim2.new(1, -50, 0, 10)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(25,25,25)
+ToggleButton.Text = "😏"
+ToggleButton.TextSize = 22
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.TextColor3 = Color3.fromRGB(0,255,127)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Parent = ScreenGui
+Instance.new("UICorner",ToggleButton).CornerRadius = UDim.new(1,0)
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0,130,0,270)
+MainFrame.Position = UDim2.new(1,150,0.3,0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+Instance.new("UICorner",MainFrame).CornerRadius = UDim.new(0,8)
+
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1,0,0,20)
+Title.BackgroundTransparency = 1
+Title.Text = "MEMAYBEO HUB/cuonglonlonglon"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.TextColor3 = Color3.fromRGB(0,255,127)
+
+-- Button creator
+local function makeButton(posY,text)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0,110,0,30)
+    btn.Position = UDim2.new(0,10,0,posY)
+    btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    btn.Text = text.." OFF"
+    btn.TextSize = 12
+    btn.Font = Enum.Font.Gotham
+    btn.TextColor3 = Color3.fromRGB(255,255,255)
+    btn.Parent = MainFrame
+    Instance.new("UICorner",btn).CornerRadius = UDim.new(0,5)
+    return btn
+end
+
+local SpinButton       = makeButton(25,"🔄 Xoay:")
+local SpeedButton      = makeButton(60,"👟 Tăng tốc:")
+local HealthButton     = makeButton(95,"❤️ Thanh máu:")
+local HitBoxButton     = makeButton(130,"📦 HitBox:")
+local AutoAttackButton = makeButton(165,"⚔️ Auto Đánh:")
+local FixLagButton     = makeButton(200,"⚡ FixLag:")
+local AutoBangButton   = makeButton(235,"🤕 Auto Băng:")
+
+-- Variables
+local spinActive = false
+local speedBoost = false
+local healthVisible = false
+local hitBoxActive = false
+local autoAttack = false
+local fixLag = false
+local autoBang = false
+
+local spinSpeed = 2500
+local normalSpeed, boostedSpeed = 16, 32
+local hitBoxSize = Vector3.new(7,7,7)
+
+------------------------------------------------------------------------
+-- SPIN
+------------------------------------------------------------------------
+SpinButton.MouseButton1Click:Connect(function()
+    spinActive = not spinActive
+    SpinButton.Text = "🔄 Xoay: "..(spinActive and "ON" or "OFF")
+end)
+
+RunService.RenderStepped:Connect(function(dt)
+    if spinActive and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
+    end
+end)
+
+------------------------------------------------------------------------
+-- SPEED
+------------------------------------------------------------------------
+local function applySpeed()
+    local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+    if hum then hum.WalkSpeed = speedBoost and boostedSpeed or normalSpeed end
+end
+
+SpeedButton.MouseButton1Click:Connect(function()
+    speedBoost = not speedBoost
+    SpeedButton.Text = "👟 Tăng tốc: "..(speedBoost and "ON" or "OFF")
+    applySpeed()
+end)
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if speedBoost then applySpeed() end
+    end
+end)
+
+------------------------------------------------------------------------
+-- HEALTH BAR
+------------------------------------------------------------------------
+local function addHealthBar(char)
+    if not healthVisible then return end
+    local head, hum = char:FindFirstChild("Head"), char:FindFirstChild("Humanoid")
+    if not (head and hum) or head:FindFirstChild("HealthDisplay") then return end
+
+    local Billboard = Instance.new("BillboardGui")
+    Billboard.Name, Billboard.Size, Billboard.StudsOffset, Billboard.AlwaysOnTop =
+    "HealthDisplay", UDim2.new(4,0,1,0), Vector3.new(0,3,0), true
+    Billboard.Adornee, Billboard.Parent = head, head
+
+    local barBack = Instance.new("Frame")
+    barBack.Size = UDim2.new(1,0,0.4,0)
+    barBack.Position = UDim2.new(0,0,0.3,0)
+    barBack.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    barBack.BorderSizePixel = 0
+    barBack.Parent = Billboard
+
+    local bar = Instance.new("Frame")
+    bar.Name, bar.Size, bar.BackgroundColor3, bar.BorderSizePixel =
+    "Bar", UDim2.new(1,0,1,0), Color3.fromRGB(0,255,0), 0
+    bar.Parent = barBack
+
+    local hpText = Instance.new("TextLabel")
+    hpText.Size, hpText.BackgroundTransparency, hpText.Font, hpText.TextScaled, hpText.TextColor3 =
+    UDim2.new(1,0,1,0), 1, Enum.Font.GothamBold, true, Color3.fromRGB(255,255,255)
+    hpText.Text = math.floor(hum.Health).." / "..math.floor(hum.MaxHealth)
+    hpText.Parent = barBack
+
+    hum.HealthChanged:Connect(function(h)
+        local ratio = math.max(h / hum.MaxHealth, 0)
+        bar.Size = UDim2.new(ratio,0,1,0)
+        bar.BackgroundColor3 = Color3.fromRGB(255*(1-ratio), 255*ratio, 0)
+        hpText.Text = math.floor(h).." / "..math.floor(hum.MaxHealth)
+    end)
+end
+HealthButton.MouseButton1Click:Connect(function()
+    healthVisible = not healthVisible
+    HealthButton.Text = "❤️ Thanh máu: "..(healthVisible and "ON" or "OFF")
+    for _,plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character then addHealthBar(plr.Character) end
+    end
+end)
+------------------------------------------------------------------------
+-- HITBOX
+------------------------------------------------------------------------
+local function setHitBox(char,size)
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        hrp.Size = size
+        hrp.Transparency = 0.7
+        hrp.Color = Color3.fromRGB(255,0,0)
+        hrp.Material = Enum.Material.Neon
+        hrp.CanCollide = false
+    end
+end
+
+HitBoxButton.MouseButton1Click:Connect(function()
+    hitBoxActive = not hitBoxActive
+    HitBoxButton.Text = "📦 HitBox: "..(hitBoxActive and "ON" or "OFF")
+end)
+
+task.spawn(function()
+    while task.wait(0.3) do
+        if hitBoxActive then
+            for _,pl in ipairs(Players:GetPlayers()) do
+                if pl ~= LocalPlayer and pl.Character then
+                    setHitBox(pl.Character,hitBoxSize)
+                end
+            end
+        end
+    end
+end)
+
+------------------------------------------------------------------------
+-- AUTO ATTACK
+------------------------------------------------------------------------
+AutoAttackButton.MouseButton1Click:Connect(function()
+    autoAttack = not autoAttack
+    AutoAttackButton.Text = "⚔️ Auto Đánh: "..(autoAttack and "ON" or "OFF")
+end)
+
+task.spawn(function()
+    while task.wait(0.05) do
+        if autoAttack and LocalPlayer.Character then
+            local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+            if tool then pcall(function() tool:Activate() end) end
+        end
+    end
+end)
+
+------------------------------------------------------------------------
+-- AUTO BĂNG CHUẨN <50 HP
+------------------------------------------------------------------------
+
+AutoBangButton.MouseButton1Click:Connect(function()
+    autoBang = not autoBang
+    AutoBangButton.Text = "🤕 Auto Băng: "..(autoBang and "ON" or "OFF")
+end)
+
+local function isHealTool(tool)
+    local n = tool.Name:lower()
+    return n:find("bang") or n:find("băng") or n:find("med") or n:find("heal") or n:find("kit") or n:find("band")
+end
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if autoBang and LocalPlayer.Character then
+            local char = LocalPlayer.Character
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if not hum or hum.Health >= 50 then continue end
+
+            local current = char:FindFirstChildOfClass("Tool")
+            local heal = nil
+
+            if current and isHealTool(current) then
+                heal = current
+            else
+                for _,v in ipairs(LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA("Tool") and isHealTool(v) then
+                        heal = v
+                        break
+                    end
+                end
+            end
+            if not heal then continue end
+
+            local old = nil
+            if current and not isHealTool(current) then
+                old = current
+            end
+
+            hum:EquipTool(heal)
+            task.wait(0.15)
+            pcall(function() heal:Activate() end)
+            task.wait(1)
+
+            if old then
+                hum:EquipTool(old)
+            end
+        end
+    end
+end)
+
+------------------------------------------------------------------------
+-- FIXLAG
+------------------------------------------------------------------------
+FixLagButton.MouseButton1Click:Connect(function()
+    fixLag = not fixLag
+    FixLagButton.Text = "⚡ FixLag: "..(fixLag and "ON" or "OFF")
+end)
+
+------------------------------------------------------------------------
+-- UI Toggle
+------------------------------------------------------------------------
+local menuVisible = false
+ToggleButton.MouseButton1Click:Connect(function()
+    menuVisible = not menuVisible
+    if menuVisible then
+        MainFrame.Visible = true
+        TweenService:Create(MainFrame,TweenInfo.new(0.3),{Position = UDim2.new(1,-150,0.3,0)}):Play()
+    else
+        local t = TweenService:Create(MainFrame,TweenInfo.new(0.3),{Position = UDim2.new(1,150,0.3,0)})
+        t:Play()
+        t.Completed:Connect(function() MainFrame.Visible = false end)
+    end
+end)
