@@ -1,0 +1,441 @@
+-- filename: 
+-- version: lua51
+-- line: [0, 0] id: 0
+repeat
+  task.wait()
+until game:IsLoaded()
+task.wait(1.5)
+local r0_0 = game:("Players")
+local r1_0 = game:GetService("RunService")
+local r2_0 = game:GetService("TweenService")
+local r3_0 = game:GetService("VirtualInputManager")
+local r4_0 = r0_0.LocalPlayer
+local r5_0 = r4_0:WaitForChild("PlayerGui")
+local r6_0 = "MEMAYBEO-HUB-MAI-DINH"
+for r10_0, r11_0 in pairs(r5_0:GetChildren()) do
+  if r11_0.Name:find("Memaybeo") then
+    r11_0:Destroy()
+  end
+end
+local r7_0 = false
+local r8_0 = false
+local r9_0 = false
+local r10_0 = 17
+local r11_0 = 25
+local r12_0 = 7
+local r13_0 = nil
+local r14_0 = nil
+local r15_0 = nil
+local r16_0 = 0
+local r17_0 = nil
+local r18_0 = nil
+local function r19_0()
+  -- line: [0, 0] id: 3
+  local r0_3 = r4_0.Character
+  if not r0_3 or not r0_3:FindFirstChild("HumanoidRootPart") then
+    return nil
+  end
+  local r1_3 = r0_3.HumanoidRootPart
+  local r2_3 = nil
+  local r3_3 = math.huge
+  for r7_3, r8_3 in pairs(workspace:GetDescendants()) do
+    if r8_3:IsA("Model") and r8_3 ~= r0_3 and r8_3:FindFirstChild("Humanoid") and r8_3:FindFirstChild("HumanoidRootPart") then
+      local r9_3 = string.lower(r8_3.Name)
+      if r9_3:find("boss") or r9_3:find("npc") or r9_3 == "npc2" or r8_3.Name == "NPC2" or r9_3:find("trĂ¹m") then
+        local r10_3 = (r8_3.HumanoidRootPart.Position - r1_3.Position).Magnitude
+        if r10_3 < r3_3 and r10_3 < 300 then
+          r3_3 = r10_3
+          r2_3 = r8_3
+        end
+      end
+    end
+  end
+  return r2_3
+end
+local function r20_0()
+  -- line: [0, 0] id: 15
+  r14_0 = r1_0.Heartbeat:Connect(function()
+    -- line: [0, 0] id: 16
+    if not r7_0 then
+      return 
+    end
+    if tick() % 0.25 < 0.016 then
+      r3_0:SendMouseButtonEvent(500, 400, 0, true, game, 1)
+      task.wait(0.01)
+      r3_0:SendMouseButtonEvent(500, 400, 0, false, game, 1)
+    end
+  end)
+end
+local function r21_0()
+  -- line: [0, 0] id: 18
+  local r0_18 = r4_0.Character
+  if not r0_18 then
+    return 
+  end
+  for r4_18, r5_18 in pairs(r0_18:GetChildren()) do
+    if r5_18:IsA("Tool") and r5_18:FindFirstChild("Handle") then
+      local r6_18 = r5_18.Handle
+      local r7_18 = Instance.new("Smoke")
+      r7_18.Color = Color3.new(1, 0, 0)
+      r7_18.SecondaryColor = Color3.new(0, 1, 0)
+      r7_18.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0.5),
+        NumberSequenceKeypoint.new(1, 1)
+      })
+      r7_18.Lifetime = NumberRange.new(1, 2)
+      r7_18.Rate = 50
+      r7_18.RiseVelocity = 10
+      r7_18.Parent = r6_18
+      local r8_18 = Instance.new("Fire")
+      r8_18.Color = Color3.new(1, 0.5, 0)
+      r8_18.SecondaryColor = Color3.new(1, 0, 1)
+      r8_18.Heat = 15
+      r8_18.Size = 8
+      r8_18.Parent = r6_18
+      local r9_18 = Instance.new("BillboardGui", r6_18)
+      r9_18.Size = UDim2.new(0, 100, 0, 50)
+      r9_18.StudsOffset = Vector3.new(0, 3, 0)
+      r9_18.Parent = r6_18
+      local r10_18 = Instance.new("TextLabel", r9_18)
+      r10_18.Size = UDim2.new(1, 0, 1, 0)
+      r10_18.BackgroundTransparency = 1
+      r10_18.Text = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ RAINBOW ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+      r10_18.TextColor3 = Color3.new(1, 0, 0)
+      r10_18.Font = Enum.Font.GothamBlack
+      r10_18.TextSize = 20
+      r10_18.Parent = r9_18
+      spawn(function()
+        -- line: [0, 0] id: 19
+        while r7_0 do
+          local r0_19 = r5_18.Parent
+          if r0_19 then
+            for r3_19 = 0, 360, 5 do
+              r10_18.TextColor3 = Color3.fromHSV(r3_19 / 360, 1, 1)
+              task.wait(0.05)
+            end
+          else
+            break
+          end
+        end
+      end)
+      -- close: r6_18
+    end
+    -- close: r4_18
+  end
+end
+local function r22_0()
+  -- line: [0, 0] id: 13
+  r15_0 = Instance.new("ScreenGui")
+  r15_0.Name = "MauBoss"
+  r15_0.ResetOnSpawn = false
+  r15_0.Parent = r5_0
+  local r0_13 = Instance.new("Frame", r15_0)
+  r0_13.Size = UDim2.new(0, 250, 0, 80)
+  r0_13.Position = UDim2.new(1, -270, 0, 20)
+  r0_13.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+  r0_13.Active = true
+  r0_13.Draggable = true
+  Instance.new("UICorner", r0_13).CornerRadius = UDim.new(0, 12)
+  local r1_13 = Instance.new("TextLabel", r0_13)
+  r1_13.Size = UDim2.new(1, 0, 0, 30)
+  r1_13.BackgroundTransparency = 1
+  r1_13.Text = "MÁU BOSS"
+  r1_13.TextColor3 = Color3.fromRGB(255, 100, 255)
+  r1_13.Font = Enum.Font.GothamBold
+  r1_13.TextSize = 18
+  local r2_13 = Instance.new("TextLabel", r0_13)
+  r2_13.Size = UDim2.new(1, 0, 0, 40)
+  r2_13.Position = UDim2.new(0, 0, 0, 35)
+  r2_13.BackgroundTransparency = 1
+  r2_13.Text = "HP: 100/100"
+  r2_13.TextColor3 = Color3.new(1, 1, 1)
+  r2_13.Font = Enum.Font.GothamBold
+  r2_13.TextSize = 22
+  r1_0.Heartbeat:Connect(function()
+    -- line: [0, 0] id: 14
+    if not r8_0 then
+      return 
+    end
+    local r0_14 = r19_0()
+    if r0_14 and r0_14:FindFirstChild("Humanoid") then
+      local r1_14 = r0_14.Humanoid.Health
+      local r2_14 = r0_14.Humanoid.MaxHealth
+      r2_13.Text = string.format("HP: %.0f/%.0f", r1_14, r2_14)
+      r2_13.TextColor3 = Color3.fromRGB(255 - r1_14 / r2_14 * 255, r1_14 / r2_14 * 255, 0)
+    end
+  end)
+end
+local function r23_0()
+  -- line: [0, 0] id: 20
+  spawn(function()
+    -- line: [0, 0] id: 21
+    while r9_0 do
+      local r0_21 = r4_0.Character
+      if r0_21 and r0_21:FindFirstChild("HumanoidRootPart") then
+        local r1_21 = nil
+        local r2_21 = math.huge
+        for r6_21, r7_21 in pairs(workspace:GetDescendants()) do
+          if r7_21:IsA("Part") and (r7_21.Name:find("Money") or r7_21.Name:find("Coin") or r7_21.Name:find("Cash") or r7_21.BrickColor == BrickColor.new("Bright green")) then
+            local r8_21 = (r7_21.Position - r0_21.HumanoidRootPart.Position).Magnitude
+            if r8_21 < r2_21 and r8_21 < 100 then
+              r2_21 = r8_21
+              r1_21 = r7_21
+            end
+          end
+        end
+        if r1_21 then
+          r0_21.HumanoidRootPart.CFrame = CFrame.new(r1_21.Position + Vector3.new(0, 5, 0))
+          r0_21.Humanoid:MoveTo(r1_21.Position)
+        end
+      end
+      task.wait(0.5)
+    end
+  end)
+end
+local function r24_0()
+  -- line: [0, 0] id: 23
+  r13_0 = r1_0.Heartbeat:Connect(function()
+    -- line: [0, 0] id: 24
+    if not r7_0 then
+      return 
+    end
+    local r0_24 = r4_0.Character
+    if not r0_24 or not r0_24:FindFirstChild("HumanoidRootPart") then
+      return 
+    end
+    local r1_24 = r0_24.HumanoidRootPart
+    r17_0 = r19_0()
+    if not r17_0 or not r17_0:FindFirstChild("HumanoidRootPart") then
+      return 
+    end
+    local r2_24 = r17_0.HumanoidRootPart.Position
+    local r3_24 = tick() - r16_0
+    if r3_24 < 3 then
+      local r4_24 = tick() * r11_0 % math.pi * 2
+      r1_24.CFrame = CFrame.lookAt(Vector3.new(r2_24.X + math.cos(r4_24) * r10_0, r2_24.Y, r2_24.Z + math.sin(r4_24) * r10_0), r2_24)
+    else
+      r1_24.CFrame = CFrame.lookAt(Vector3.new(r2_24.X, r2_24.Y + r12_0, r2_24.Z), r2_24)
+      r0_24.Humanoid:MoveTo(r2_24)
+      if r3_24 >= 5 then
+        r16_0 = tick()
+      end
+    end
+  end)
+end
+local function r25_0()
+  -- line: [0, 0] id: 22
+  r7_0 = true
+  r16_0 = tick()
+  r24_0()
+  r20_0()
+  r21_0()
+  game.StarterGui:SetCore("SendNotification", {
+    Title = "MEMAYBEO HUB",
+    Text = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ FRAM BOSS + RAINBOW + AUTO CLICK ON!",
+    Duration = 4,
+  })
+end
+local function r26_0()
+  -- line: [0, 0] id: 17
+  r7_0 = false
+  if r13_0 then
+    r13_0:Disconnect()
+    r13_0 = nil
+  end
+  if r14_0 then
+    r14_0:Disconnect()
+    r14_0 = nil
+  end
+end
+local function r27_0()
+  -- line: [0, 0] id: 4
+  local r0_4 = Instance.new("ScreenGui")
+  r0_4.Name = "MEMAYBEOHub_Main"
+  r0_4.ResetOnSpawn = false
+  r0_4.Parent = r5_0
+  local r1_4 = Instance.new("Frame", r0_4)
+  r1_4.Size = UDim2.new(0, 340, 0, 420)
+  r1_4.Position = UDim2.new(0.5, -170, 0.5, -210)
+  r1_4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+  r1_4.BackgroundTransparency = 0.05
+  r1_4.Active = true
+  r1_4.Draggable = true
+  Instance.new("UICorner", r1_4).CornerRadius = UDim.new(0, 16)
+  local r2_4 = Instance.new("TextLabel", r1_4)
+  r2_4.Size = UDim2.new(1, 0, 0, 45)
+  r2_4.BackgroundTransparency = 1
+  r2_4.Text = "MEMAYBEO HUB"
+  r2_4.TextColor3 = Color3.fromRGB(255, 100, 255)
+  r2_4.Font = Enum.Font.GothamBlack
+  r2_4.TextSize = 28
+  local r3_4 = Instance.new("TextButton", r1_4)
+  r3_4.Size = UDim2.new(0.92, 0, 0, 45)
+  r3_4.Position = UDim2.new(0.04, 0, 0, 60)
+  r3_4.Text = "FRAM BOSS: OFF"
+  r3_4.BackgroundColor3 = Color3.fromRGB(120, 30, 30)
+  r3_4.TextColor3 = Color3.new(1, 1, 1)
+  r3_4.Font = Enum.Font.GothamBold
+  r3_4.TextSize = 18
+  Instance.new("UICorner", r3_4).CornerRadius = UDim.new(0, 10)
+  local function r4_4(r0_5, r1_5, r2_5)
+    -- line: [0, 0] id: 5
+    local r3_5 = Instance.new("TextLabel", r1_4)
+    r3_5.Size = UDim2.new(0.92, 0, 0, 20)
+    r3_5.Position = UDim2.new(0.04, 0, 0, r0_5)
+    r3_5.Text = r1_5
+    r3_5.BackgroundTransparency = 1
+    r3_5.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    r3_5.Font = Enum.Font.Gotham
+    r3_5.TextSize = 14
+    local r4_5 = Instance.new("TextBox", r1_4)
+    r4_5.Size = UDim2.new(0.92, 0, 0, 32)
+    r4_5.Position = UDim2.new(0.04, 0, 0, r0_5 + 22)
+    r4_5.Text = r2_5
+    r4_5.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    r4_5.TextColor3 = Color3.new(1, 1, 1)
+    r4_5.Font = Enum.Font.Gotham
+    r4_5.TextSize = 15
+    Instance.new("UICorner", r4_5).CornerRadius = UDim.new(0, 8)
+    return r4_5
+  end
+  local r5_4 = r4_4(115, "Khoảng cách xoay:", "17")
+  local r6_4 = r4_4(160, "Tốc xoay:", "25")
+  local r7_4 = r4_4(205, "độ cao:", "7")
+  local r8_4 = Instance.new("TextButton", r1_4)
+  r8_4.Size = UDim2.new(0.92, 0, 0, 45)
+  r8_4.Position = UDim2.new(0.04, 0, 0, 305)
+  r8_4.Text = "Máu BOSS: OFF"
+  r8_4.BackgroundColor3 = Color3.fromRGB(30, 120, 200)
+  r8_4.TextColor3 = Color3.new(1, 1, 1)
+  r8_4.Font = Enum.Font.GothamBold
+  r8_4.TextSize = 18
+  Instance.new("UICorner", r8_4).CornerRadius = UDim.new(0, 10)
+  local r9_4 = Instance.new("TextButton", r1_4)
+  r9_4.Size = UDim2.new(0.92, 0, 0, 45)
+  r9_4.Position = UDim2.new(0.04, 0, 0, 355)
+  r9_4.Text = "TÄ NHáº¶T: OFF"
+  r9_4.BackgroundColor3 = Color3.fromRGB(30, 200, 80)
+  r9_4.TextColor3 = Color3.new(1, 1, 1)
+  r9_4.Font = Enum.Font.GothamBold
+  r9_4.TextSize = 18
+  Instance.new("UICorner", r9_4).CornerRadius = UDim.new(0, 10)
+  r3_4.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 11
+    r10_0 = tonumber(r5_4.Text) or 12
+    r11_0 = tonumber(r6_4.Text) or 1.2
+    r12_0 = tonumber(r7_4.Text) or 18
+    if r7_0 then
+      r26_0()
+      r3_4.Text = "FRAM BOSS: OFF"
+      r3_4.BackgroundColor3 = Color3.fromRGB(120, 30, 30)
+    else
+      r25_0()
+      r3_4.Text = "FRAM BOSS: ON"
+      r3_4.BackgroundColor3 = Color3.fromRGB(30, 200, 60)
+    end
+  end)
+  r8_4.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 8
+    r8_0 = not r8_0
+    if r8_0 then
+      r22_0()
+      r8_4.Text = "Máu BOSS: ON"
+      r8_4.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+    else
+      if r15_0 then
+        r15_0:Destroy()
+        r15_0 = nil
+      end
+      r8_4.Text = "Máu BOSS: OFF"
+      r8_4.BackgroundColor3 = Color3.fromRGB(30, 120, 200)
+    end
+  end)
+  r9_4.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 9
+    r9_0 = not r9_0
+    if r9_0 then
+      r23_0()
+      r9_4.Text = "TÄ NHáº¶T: ON"
+      r9_4.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    else
+      r9_4.Text = "TÄ NHáº¶T: OFF"
+      r9_4.BackgroundColor3 = Color3.fromRGB(30, 200, 80)
+    end
+  end)
+  r5_4.FocusLost:Connect(function()
+    -- line: [0, 0] id: 10
+    r10_0 = tonumber(r5_4.Text) or 12
+  end)
+  r6_4.FocusLost:Connect(function()
+    -- line: [0, 0] id: 7
+    r11_0 = tonumber(r6_4.Text) or 1.2
+  end)
+  r7_4.FocusLost:Connect(function()
+    -- line: [0, 0] id: 6
+    r12_0 = tonumber(r7_4.Text) or 18
+  end)
+end
+task.spawn(function()
+  -- line: [0, 0] id: 1
+  local r0_1 = Instance.new("ScreenGui")
+  r0_1.Name = "MemaybeoHub_Key"
+  r0_1.ResetOnSpawn = false
+  r0_1.Parent = r5_0
+  local r1_1 = Instance.new("Frame", r0_1)
+  r1_1.Size = UDim2.new(0, 360, 0, 220)
+  r1_1.Position = UDim2.new(0.5, -180, 0.5, -110)
+  r1_1.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+  r1_1.Active = true
+  r1_1.Draggable = true
+  Instance.new("UICorner", r1_1).CornerRadius = UDim.new(0, 16)
+  local r2_1 = Instance.new("TextLabel", r1_1)
+  r2_1.Size = UDim2.new(1, 0, 0, 50)
+  r2_1.Text = "MEMAYBEO HUB - Get Key"
+  r2_1.TextColor3 = Color3.fromRGB(255, 100, 255)
+  r2_1.Font = Enum.Font.GothamBlack
+  r2_1.TextSize = 26
+  r2_1.BackgroundTransparency = 1
+  local r3_1 = Instance.new("TextBox", r1_1)
+  r3_1.Size = UDim2.new(0.9, 0, 0, 45)
+  r3_1.Position = UDim2.new(0.05, 0, 0, 70)
+  r3_1.PlaceholderText = "nhập key..."
+  r3_1.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+  r3_1.TextColor3 = Color3.new(1, 1, 1)
+  r3_1.Font = Enum.Font.Gotham
+  r3_1.TextSize = 18
+  Instance.new("UICorner", r3_1).CornerRadius = UDim.new(0, 10)
+  local r4_1 = Instance.new("TextButton", r1_1)
+  r4_1.Size = UDim2.new(0.9, 0, 0, 45)
+  r4_1.Position = UDim2.new(0.05, 0, 1, -60)
+  r4_1.Text = "xác nhận"
+  r4_1.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+  r4_1.TextColor3 = Color3.new(1, 1, 1)
+  r4_1.Font = Enum.Font.GothamBold
+  Instance.new("UICorner", r4_1).CornerRadius = UDim.new(0, 10)
+  r4_1.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 2
+    if r3_1.Text == r6_0 then
+      r0_1:Destroy()
+      task.wait(0.2)
+      r27_0()
+    else
+      r3_1.Text = ""
+      game.StarterGui:SetCore("SendNotification", {
+        Title = "MEMAYBEO HUB",
+        Text = "key sai kiểm tra lại key",
+        Duration = 3,
+      })
+    end
+  end)
+end)
+r4_0.CharacterAdded:Connect(function()
+  -- line: [0, 0] id: 12
+  task.wait(3)
+  if r7_0 then
+    r25_0()
+  end
+  if r9_0 then
+    r23_0()
+  end
+end)
+-- close: r0_0
