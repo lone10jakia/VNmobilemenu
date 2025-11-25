@@ -1,0 +1,4664 @@
+-- filename: 
+-- version: lua51
+-- line: [0, 0] id: 0
+function MainScript()
+  -- line: [0, 0] id: 14
+  function emote()
+    -- line: [0, 0] id: 106
+    if _G.EmotesGUIRunning then
+      getgenv().Notify({
+        Title = "Rez Hub | Emote",
+        Content = "��️ It works It actually works",
+        Duration = 5,
+      })
+      return 
+    end
+    _G.EmotesGUIRunning = true
+    print("thank 7yd7 ")
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/7yd7/Menu-7yd7/refs/heads/Script/GUIS/Off-site/Notify.lua"))()
+    getgenv().Notify({
+      Title = "Rez Hub | Emote",
+      Content = "��️ Script loading...",
+      Duration = 5,
+    })
+    local r0_106 = game:GetService("Players")
+    local r1_106 = game:GetService("HttpService")
+    local r2_106 = game:GetService("RunService")
+    local r3_106 = r0_106.LocalPlayer
+    local r4_106 = r3_106.Character or r3_106.CharacterAdded:Wait()
+    local r5_106 = r4_106:WaitForChild("Humanoid")
+    local r6_106 = game:GetService("UserInputService")
+    local r7_106 = game:GetService("CoreGui")
+    local r8_106 = {}
+    local r9_106 = false
+    local r10_106 = nil
+    local r11_106 = "emote"
+    local r12_106 = {}
+    local r13_106 = {}
+    local r14_106 = {}
+    local r15_106 = {}
+    local r16_106 = "FavoriteAnimations.json"
+    getgenv().lastPlayedAnimation = getgenv().lastPlayedAnimation or nil
+    getgenv().autoReloadEnabled = getgenv().autoReloadEnabled or false
+    r2_106.Heartbeat:Connect(function()
+      -- line: [0, 0] id: 195
+      if r3_106.Character and r3_106.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+        local r0_195 = r7_106.RobloxGui.EmotesMenu.Children.ErrorMessage
+        if r0_195.Visible then
+          r0_195.ErrorText.Text = "Only r15 does not work r6"
+        end
+      end
+    end)
+    function ErrorMessage(r0_113, r1_113)
+      -- line: [0, 0] id: 113
+      if r10_106 then
+        task.cancel(r10_106)
+        r10_106 = nil
+      end
+      local r2_113 = r7_106.RobloxGui.EmotesMenu.Children.ErrorMessage
+      r2_113.ErrorText.Text = r0_113
+      r2_113.Visible = true
+      r10_106 = task.delay(r1_113, function()
+        -- line: [0, 0] id: 114
+        r2_113.Visible = false
+        r10_106 = nil
+      end)
+    end
+    local function r17_106()
+      -- line: [0, 0] id: 189
+      for r3_189, r4_189 in ipairs(r5_106:GetPlayingAnimationTracks()) do
+        r4_189:Stop()
+      end
+    end
+    local r18_106 = {}
+    local r19_106 = 1
+    local r20_106 = 8
+    local r21_106 = 1
+    local r22_106 = {}
+    local r23_106 = false
+    local r24_106 = {}
+    local r25_106 = 0
+    local r26_106 = {}
+    local r27_106 = {}
+    local r28_106 = false
+    local r29_106 = "FavoriteEmotes.json"
+    local r30_106 = false
+    local r31_106 = nil
+    local r32_106 = nil
+    local r33_106 = false
+    local r34_106 = false
+    local r35_106 = "SpeedEmoteConfig.json"
+    local r36_106 = nil
+    local r37_106 = nil
+    local r38_106 = nil
+    local r39_106 = nil
+    local r40_106 = nil
+    local r41_106 = nil
+    local r42_106 = nil
+    local r43_106 = nil
+    local r44_106 = nil
+    local r45_106 = nil
+    local r46_106 = nil
+    local r47_106 = nil
+    local r48_106 = nil
+    local r49_106 = nil
+    local r50_106 = nil
+    local r51_106 = nil
+    local r52_106 = nil
+    local r53_106 = nil
+    local r54_106 = nil
+    local r55_106 = nil
+    local r56_106 = nil
+    local r57_106 = nil
+    local r58_106 = nil
+    local r59_106 = "rbxassetid://71408678974152"
+    local r60_106 = "rbxassetid://106798555684020"
+    local r61_106 = "rbxassetid://97307461910825"
+    local r62_106 = "rbxassetid://124025954365505"
+    local function r63_106()
+      -- line: [0, 0] id: 157
+      local r0_157 = r3_106.Character
+      if not r0_157 then
+        return nil, nil
+      end
+      local r1_157 = r0_157:FindFirstChild("Humanoid")
+      if not r1_157 then
+        return nil, nil
+      end
+      return r0_157, r1_157
+    end
+    local function r64_106()
+      -- line: [0, 0] id: 190
+      local r1_190 = game:GetService("CoreGui"):FindFirstChild("RobloxGui")
+      if not r1_190 then
+        return false
+      end
+      local r2_190 = r1_190:FindFirstChild("EmotesMenu")
+      if not r2_190 then
+        return false
+      end
+      local r3_190 = r2_190:FindFirstChild("Children")
+      if not r3_190 then
+        return false
+      end
+      local r4_190 = r3_190:FindFirstChild("Main")
+      if not r4_190 then
+        return false
+      end
+      local r5_190 = r4_190:FindFirstChild("EmotesWheel")
+      if not r5_190 then
+        return false
+      end
+      return true, r5_190
+    end
+    local function r65_106()
+      -- line: [0, 0] id: 193
+      local r0_193, r1_193 = pcall(function()
+        -- line: [0, 0] id: 194
+        return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Back.Background.BackgroundCircleOverlay
+      end)
+      if r0_193 then
+        return r1_193
+      end
+      return nil
+    end
+    local function r66_106()
+      -- line: [0, 0] id: 198
+      local r0_198 = r65_106()
+      if not r0_198 then
+        return 
+      end
+      local r1_198 = r0_198.BackgroundColor3
+      local r2_198 = r0_198.BackgroundTransparency
+      if r38_106 then
+        r38_106.ImageColor3 = r1_198
+        r38_106.ImageTransparency = r2_198
+      end
+      if r39_106 then
+        r39_106.ImageColor3 = r1_198
+        r39_106.ImageTransparency = r2_198
+      end
+      if r40_106 then
+        r40_106.TextColor3 = r1_198
+        r40_106.TextTransparency = r2_198
+      end
+      if r41_106 then
+        r41_106.TextColor3 = r1_198
+        r41_106.TextTransparency = r2_198
+      end
+      if r42_106 then
+        r42_106.TextColor3 = r1_198
+        r42_106.TextTransparency = r2_198
+      end
+      if r43_106 then
+        r43_106.BackgroundColor3 = r1_198
+        r43_106.BackgroundTransparency = r2_198
+      end
+      if r44_106 then
+        r44_106.BackgroundColor3 = r1_198
+        r44_106.BackgroundTransparency = r2_198
+      end
+      if r52_106 then
+        r52_106.BackgroundColor3 = r1_198
+        r52_106.BackgroundTransparency = r2_198
+      end
+      if r56_106 then
+        r56_106.BackgroundColor3 = r1_198
+        r56_106.BackgroundTransparency = r2_198
+      end
+      if r54_106 then
+        r54_106.BackgroundColor3 = r1_198
+        r54_106.BackgroundTransparency = r2_198
+      end
+      if r49_106 then
+        r49_106.BackgroundColor3 = r1_198
+        r49_106.BackgroundTransparency = r2_198
+      end
+      if r57_106 then
+        r57_106.BackgroundColor3 = r1_198
+        r57_106.BackgroundTransparency = r2_198
+        r57_106.Visible = r11_106 == "animation"
+      end
+    end
+    local function r67_106(r0_145)
+      -- line: [0, 0] id: 145
+      r0_145 = string.gsub(r0_145, "http://www%.roblox%.com/asset/%?id=", "")
+      r0_145 = string.gsub(r0_145, "rbxassetid://", "")
+      return r0_145
+    end
+    local function r68_106()
+      -- line: [0, 0] id: 141
+      if writefile then
+        writefile(r29_106, r1_106:JSONEncode(r27_106))
+      end
+    end
+    local function r69_106()
+      -- line: [0, 0] id: 173
+      if readfile and isfile and isfile(r29_106) then
+        local r0_173, r1_173 = pcall(function()
+          -- line: [0, 0] id: 174
+          return r1_106:JSONDecode(readfile(r29_106))
+        end)
+        if r0_173 and r1_173 then
+          r27_106 = r1_173
+        end
+      end
+    end
+    local function r70_106()
+      -- line: [0, 0] id: 191
+      if readfile and isfile and isfile(r16_106) then
+        local r0_191, r1_191 = pcall(function()
+          -- line: [0, 0] id: 192
+          return r1_106:JSONDecode(readfile(r16_106))
+        end)
+        if r0_191 and r1_191 then
+          r15_106 = r1_191
+        end
+      end
+    end
+    local function r71_106()
+      -- line: [0, 0] id: 147
+      if readfile and isfile and isfile(r35_106) then
+        local r0_147, r1_147 = pcall(function()
+          -- line: [0, 0] id: 148
+          return r1_106:JSONDecode(readfile(r35_106))
+        end)
+        if r0_147 and r1_147 then
+          r34_106 = r1_147.Enabled or false
+          if r54_106 then
+            r54_106.Text = tostring(r1_147.SpeedValue or 1)
+            r54_106.Visible = r34_106
+          end
+        end
+      end
+    end
+    local function r72_106(r0_167)
+      -- line: [0, 0] id: 167
+      return string.match(r0_167, "Asset&id=(%d+)")
+    end
+    local function r73_106(r0_168)
+      -- line: [0, 0] id: 168
+      local r1_168, r2_168 = pcall(function()
+        -- line: [0, 0] id: 169
+        return game:GetService("MarketplaceService"):GetProductInfo(tonumber(r0_168))
+      end)
+      if r1_168 and r2_168 then
+        return r2_168.Name
+      end
+      return "Emote_" .. tostring(r0_168)
+    end
+    local function r74_106(r0_117)
+      -- line: [0, 0] id: 117
+      for r4_117, r5_117 in pairs(r27_106) do
+        if r5_117.id == tostring(r0_117) then
+          return true
+        end
+      end
+      return false
+    end
+    local function r75_106(r0_143)
+      -- line: [0, 0] id: 143
+      local r1_143, r2_143 = pcall(function()
+        -- line: [0, 0] id: 144
+        return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Front.EmotesButtons
+      end)
+      if not r1_143 or not r2_143 then
+        return 
+      end
+      local r3_143 = 1
+      for r7_143, r8_143 in pairs(r2_143:GetChildren()) do
+        if r8_143:IsA("ImageLabel") and r3_143 <= #r0_143 then
+          r8_143.Image = "rbxthumb://type=BundleThumbnail&id=" .. r0_143[r3_143].id .. "&w=420&h=420"
+          r3_143 = r3_143 + 1
+        elseif r8_143:IsA("ImageLabel") then
+          r8_143.Image = ""
+        end
+      end
+    end
+    local function r76_106()
+      -- line: [0, 0] id: 175
+      local r0_175, r1_175 = r63_106()
+      if not r0_175 or not r1_175 then
+        return 
+      end
+      local r2_175 = r1_175.HumanoidDescription
+      if not r2_175 then
+        return 
+      end
+      local r3_175 = {}
+      local r4_175 = {}
+      local r5_175 = {}
+      local r6_175 = _G.filteredFavoritesAnimationsForDisplay or r15_106
+      local r7_175 = 0 < #r6_175
+      local r8_175 = nil	-- notice: implicit variable refs by block#[13, 27]
+      if r7_175 then
+        r8_175 = math.ceil(#r6_175 / r20_106)
+        if not r8_175 then
+          ::label_34::
+          r8_175 = 0
+        end
+      else
+        goto label_34	-- block#12 is visited secondly
+      end
+      if r19_106 <= r8_175 and r7_175 then
+        local r10_175 = (r19_106 - 1) * r20_106 + 1
+        for r15_175 = r10_175, math.min(r10_175 + r20_106 - 1, #r6_175), 1 do
+          if r6_175[r15_175] then
+            table.insert(r3_175, {
+              id = tonumber(r6_175[r15_175].id),
+              name = r6_175[r15_175].name,
+            })
+          end
+        end
+      else
+        local r10_175 = {}
+        for r14_175, r15_175 in pairs(r14_106) do
+          if not r74_106(r15_175.id) then
+            table.insert(r10_175, r15_175)
+          end
+        end
+        local r12_175 = (r19_106 - r8_175 - 1) * r20_106 + 1
+        for r17_175 = r12_175, math.min(r12_175 + r20_106 - 1, #r10_175), 1 do
+          if r10_175[r17_175] then
+            table.insert(r3_175, r10_175[r17_175])
+          end
+        end
+      end
+      for r13_175, r14_175 in pairs(r3_175) do
+        local r15_175 = r14_175.name
+        r4_175[r15_175] = {
+          r14_175.id
+        }
+        table.insert(r5_175, r15_175)
+      end
+      r2_175:SetEmotes(r4_175)
+      r2_175:SetEquippedEmotes(r5_175)
+      task.wait(0.1)
+      r75_106(r3_175)
+    end
+    local function r77_106()
+      -- line: [0, 0] id: 115
+      local r0_115, r1_115 = r63_106()
+      if not r0_115 or not r1_115 then
+        return 
+      end
+      if r11_106 == "animation" then
+        r76_106()
+        return 
+      end
+      local r2_115 = r1_115.HumanoidDescription
+      if not r2_115 then
+        return 
+      end
+      local r3_115 = {}
+      local r4_115 = {}
+      local r5_115 = {}
+      local r6_115 = _G.filteredFavoritesForDisplay or r27_106
+      local r7_115 = 0 < #r6_115
+      local r8_115 = nil	-- notice: implicit variable refs by block#[15, 29]
+      if r7_115 then
+        r8_115 = math.ceil(#r6_115 / r20_106)
+        if not r8_115 then
+          ::label_40::
+          r8_115 = 0
+        end
+      else
+        goto label_40	-- block#14 is visited secondly
+      end
+      if r19_106 <= r8_115 and r7_115 then
+        local r10_115 = (r19_106 - 1) * r20_106 + 1
+        for r15_115 = r10_115, math.min(r10_115 + r20_106 - 1, #r6_115), 1 do
+          if r6_115[r15_115] then
+            table.insert(r3_115, {
+              id = tonumber(r6_115[r15_115].id),
+              name = r6_115[r15_115].name,
+            })
+          end
+        end
+      else
+        local r10_115 = {}
+        for r14_115, r15_115 in pairs(r22_106) do
+          if not r74_106(r15_115.id) then
+            table.insert(r10_115, r15_115)
+          end
+        end
+        local r12_115 = (r19_106 - r8_115 - 1) * r20_106 + 1
+        for r17_115 = r12_115, math.min(r12_115 + r20_106 - 1, #r10_115), 1 do
+          if r10_115[r17_115] then
+            table.insert(r3_115, r10_115[r17_115])
+          end
+        end
+      end
+      for r13_115, r14_115 in pairs(r3_115) do
+        local r15_115 = r14_115.name
+        r4_115[r15_115] = {
+          r14_115.id
+        }
+        table.insert(r5_115, r15_115)
+      end
+      r2_115:SetEmotes(r4_115)
+      r2_115:SetEquippedEmotes(r5_115)
+    end
+    local function r78_106()
+      -- line: [0, 0] id: 112
+      if r11_106 == "animation" then
+        local r0_112 = _G.filteredFavoritesAnimationsForDisplay or r15_106
+        local r1_112 = 0 < #r0_112
+        local r2_112 = 0
+        for r6_112, r7_112 in pairs(r14_106) do
+          if not r74_106(r7_112.id) then
+            r2_112 = r2_112 + 1
+          end
+        end
+        local r3_112 = 0
+        if r1_112 then
+          r3_112 = r3_112 + math.ceil(#r0_112 / r20_106)
+        end
+        if r2_112 > 0 then
+          r3_112 = r3_112 + math.ceil(r2_112 / r20_106)
+        end
+        return math.max(r3_112, 1)
+      end
+      local r0_112 = _G.filteredFavoritesForDisplay or r27_106
+      local r1_112 = 0 < #r0_112
+      local r2_112 = 0
+      for r6_112, r7_112 in pairs(r22_106) do
+        if not r74_106(r7_112.id) then
+          r2_112 = r2_112 + 1
+        end
+      end
+      local r3_112 = 0
+      if r1_112 then
+        r3_112 = r3_112 + math.ceil(#r0_112 / r20_106)
+      end
+      if r2_112 > 0 then
+        r3_112 = r3_112 + math.ceil(r2_112 / r20_106)
+      end
+      return math.max(r3_112, 1)
+    end
+    local function r79_106(r0_172, r1_172)
+      -- line: [0, 0] id: 172
+      for r5_172, r6_172 in r0_172:GetChildren() do
+        if r6_172:IsA("Animation") and r67_106(r6_172.AnimationId) == r1_172 then
+          return true
+        end
+      end
+      return false
+    end
+    local function r80_106(r0_116, r1_116)
+      -- line: [0, 0] id: 116
+      local r2_116 = r67_106(r1_116.Animation.AnimationId)
+      for r6_116, r7_116 in r0_116.Animate:GetChildren() do
+        if r7_116:IsA("StringValue") and r79_106(r7_116, r2_116) then
+          return false
+        end
+      end
+      return true
+    end
+    local function r81_106()
+      -- line: [0, 0] id: 124
+      local r0_124, r1_124 = r64_106()
+      if not r0_124 then
+        return false
+      end
+      if r1_124:FindFirstChild("Under") then
+        r1_124.Under:Destroy()
+      end
+      if r1_124:FindFirstChild("Top") then
+        r1_124.Top:Destroy()
+      end
+      if r1_124:FindFirstChild("EmoteWalkButton") then
+        r1_124.EmoteWalkButton:Destroy()
+      end
+      if r1_124:FindFirstChild("Favorite") then
+        r1_124.Favorite:Destroy()
+      end
+      if r1_124:FindFirstChild("SpeedEmote") then
+        r1_124.SpeedEmote:Destroy()
+      end
+      if r1_124:FindFirstChild("Changepage") then
+        r1_124.Changepage:Destroy()
+      end
+      if r1_124:FindFirstChild("SpeedBox") then
+        r1_124.SpeedBox:Destroy()
+      end
+      if r1_124:FindFirstChild("Reload") then
+        r1_124.Reload:Destroy()
+      end
+      r36_106 = Instance.new("Frame")
+      r37_106 = Instance.new("UIListLayout")
+      r38_106 = Instance.new("ImageButton")
+      r39_106 = Instance.new("ImageButton")
+      r40_106 = Instance.new("TextLabel")
+      r41_106 = Instance.new("TextLabel")
+      r42_106 = Instance.new("TextBox")
+      r44_106 = Instance.new("ImageButton")
+      r45_106 = Instance.new("UICorner")
+      r43_106 = Instance.new("Frame")
+      r46_106 = Instance.new("UIListLayout")
+      r47_106 = Instance.new("UICorner")
+      r48_106 = Instance.new("TextBox")
+      r49_106 = Instance.new("ImageButton")
+      r50_106 = Instance.new("UICorner")
+      r54_106 = Instance.new("TextBox")
+      r53_106 = Instance.new("UICorner")
+      r52_106 = Instance.new("ImageButton")
+      r51_106 = Instance.new("UICorner")
+      r56_106 = Instance.new("ImageButton")
+      r55_106 = Instance.new("UICorner")
+      r57_106 = Instance.new("ImageButton")
+      r58_106 = Instance.new("UICorner")
+      r36_106.Name = "Under"
+      r36_106.Parent = r1_124
+      r36_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r36_106.BackgroundTransparency = 1
+      r36_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r36_106.BorderSizePixel = 0
+      r36_106.Position = UDim2.new(0.129999995, 0, 1, 0)
+      r36_106.Size = UDim2.new(0.737500012, 0, 0.132499993, 0)
+      r37_106.Parent = r36_106
+      r37_106.FillDirection = Enum.FillDirection.Horizontal
+      r37_106.VerticalAlignment = Enum.VerticalAlignment.Center
+      r38_106.Name = "1left"
+      r38_106.Parent = r36_106
+      r38_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r38_106.BackgroundTransparency = 1
+      r38_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r38_106.BorderSizePixel = 0
+      r38_106.Position = UDim2.new(0.0289389063, 0, -0.0849056691, 0)
+      r38_106.Rotation = 7456
+      r38_106.Size = UDim2.new(0.169491529, 0, 0.94339627, 0)
+      r38_106.Image = "rbxassetid://93111945058621"
+      r38_106.ImageColor3 = Color3.fromRGB(0, 0, 0)
+      r38_106.ImageTransparency = 0.4
+      r39_106.Name = "9right"
+      r39_106.Parent = r36_106
+      r39_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r39_106.BackgroundTransparency = 1
+      r39_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r39_106.BorderSizePixel = 0
+      r39_106.Position = UDim2.new(0.0289389063, 0, -0.0849056691, 0)
+      r39_106.Rotation = 7456
+      r39_106.Size = UDim2.new(0.169491529, 0, 0.94339627, 0)
+      r39_106.Image = "rbxassetid://107938916240738"
+      r39_106.ImageColor3 = Color3.fromRGB(0, 0, 0)
+      r39_106.ImageTransparency = 0.4
+      r40_106.Name = "4pages"
+      r40_106.Parent = r36_106
+      r40_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r40_106.BackgroundTransparency = 1
+      r40_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r40_106.BorderSizePixel = 0
+      r40_106.Position = UDim2.new(0.630225062, 0, 0.188679263, 0)
+      r40_106.Size = UDim2.new(0.159322038, 0, 0.811320841, 0)
+      r40_106.Font = Enum.Font.SourceSansBold
+      r40_106.Text = "1"
+      r40_106.TextColor3 = Color3.fromRGB(0, 0, 0)
+      r40_106.TextScaled = true
+      r40_106.TextSize = 14
+      r40_106.TextTransparency = 0.4
+      r40_106.TextWrapped = true
+      r41_106.Name = "3TextLabel"
+      r41_106.Parent = r36_106
+      r41_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r41_106.BackgroundTransparency = 1
+      r41_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r41_106.BorderSizePixel = 0
+      r41_106.Position = UDim2.new(0.363344043, 0, 0.0283018891, 0)
+      r41_106.Size = UDim2.new(0.338983059, 0, 0.94339627, 0)
+      r41_106.Font = Enum.Font.SourceSansBold
+      r41_106.Text = " ------ "
+      r41_106.TextColor3 = Color3.fromRGB(0, 0, 0)
+      r41_106.TextScaled = true
+      r41_106.TextSize = 14
+      r41_106.TextTransparency = 0.4
+      r41_106.TextWrapped = true
+      r42_106.Name = "2Route-number"
+      r42_106.Parent = r36_106
+      r42_106.Active = true
+      r42_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r42_106.BackgroundTransparency = 1
+      r42_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r42_106.BorderSizePixel = 0
+      r42_106.Position = UDim2.new(0.138263673, 0, 0.0283018891, 0)
+      r42_106.Selectable = true
+      r42_106.Size = UDim2.new(0.159322038, 0, 0.811320841, 0)
+      r42_106.Font = Enum.Font.SourceSansBold
+      r42_106.PlaceholderColor3 = Color3.fromRGB(0, 0, 0)
+      r42_106.Text = "1"
+      r42_106.TextColor3 = Color3.fromRGB(0, 0, 0)
+      r42_106.TextScaled = true
+      r42_106.TextSize = 14
+      r42_106.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+      r42_106.TextTransparency = 0.4
+      r42_106.TextWrapped = true
+      r43_106.Name = "Top"
+      r43_106.Parent = r1_124
+      r43_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r43_106.BackgroundTransparency = 0.4
+      r43_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r43_106.BorderSizePixel = 0
+      r43_106.Position = UDim2.new(0.127499998, 0, -0.109999999, 0)
+      r43_106.Size = UDim2.new(0.737500012, 0, 0.0949999914, 0)
+      r46_106.Parent = r43_106
+      r46_106.FillDirection = Enum.FillDirection.Horizontal
+      r46_106.HorizontalAlignment = Enum.HorizontalAlignment.Center
+      r46_106.SortOrder = Enum.SortOrder.LayoutOrder
+      r46_106.VerticalAlignment = Enum.VerticalAlignment.Center
+      r47_106.CornerRadius = UDim.new(0, 20)
+      r47_106.Parent = r43_106
+      r48_106.Name = "Search"
+      r48_106.Parent = r43_106
+      r48_106.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+      r48_106.BackgroundTransparency = 1
+      r48_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r48_106.Position = UDim2.new(0.0677966103, 0, 0)
+      r48_106.Size = UDim2.new(0.864406765, 0, 0.81578958, 0)
+      r48_106.Font = Enum.Font.SourceSansBold
+      r48_106.PlaceholderText = "Search/ID"
+      r48_106.Text = ""
+      r48_106.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r48_106.TextScaled = true
+      r48_106.TextSize = 14
+      r48_106.TextWrapped = true
+      r44_106.Name = "EmoteWalkButton"
+      r44_106.Parent = r1_124
+      r44_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r44_106.BackgroundTransparency = 0.4
+      r44_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r44_106.BorderSizePixel = 0
+      r44_106.Position = UDim2.new(0.889999986, 0, -0.107500002, 0)
+      r44_106.Size = UDim2.new(0.0874999985, 0, 0.0874999985, 0)
+      r44_106.Image = r59_106
+      r45_106.CornerRadius = UDim.new(0, 10)
+      r45_106.Parent = r44_106
+      r49_106.Name = "Favorite"
+      r49_106.Parent = r1_124
+      r49_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r49_106.BackgroundTransparency = 0.4
+      r49_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r49_106.BorderSizePixel = 0
+      r49_106.Position = UDim2.new(0.0189999994, 0, -0.108000003, 0)
+      r49_106.Size = UDim2.new(0.0874999985, 0, 0.0874999985, 0)
+      r49_106.Image = "rbxassetid://124025954365505"
+      r50_106.CornerRadius = UDim.new(0, 10)
+      r50_106.Parent = r49_106
+      r54_106.Name = "SpeedBox"
+      r54_106.Parent = r1_124
+      r54_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r54_106.BackgroundTransparency = 0.4
+      r54_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r54_106.BorderSizePixel = 0
+      r54_106.Position = UDim2.new(0.0189999398, 0, -0.000499992399, 0)
+      r54_106.Size = UDim2.new(0.0874999985, 0, 0.0874999985, 0)
+      r54_106.Visible = false
+      r54_106.Font = Enum.Font.SourceSansBold
+      r54_106.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+      r54_106.Text = "1"
+      r54_106.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r54_106.TextScaled = true
+      r54_106.TextWrapped = true
+      r54_106:GetPropertyChangedSignal("Text"):Connect(function()
+        -- line: [0, 0] id: 125
+        r54_106.Text = r54_106.Text:gsub("[^%d.]", "")
+      end)
+      r54_106.ZIndex = 2
+      r53_106.CornerRadius = UDim.new(0, 10)
+      r53_106.Parent = r54_106
+      r52_106.Name = "SpeedEmote"
+      r52_106.Parent = r1_124
+      r52_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r52_106.BackgroundTransparency = 0.4
+      r52_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r52_106.BorderSizePixel = 0
+      r52_106.Position = UDim2.new(0.888999999, 0, 0, 0)
+      r52_106.Size = UDim2.new(0.0874999985, 0, 0.0874999985, 0)
+      r52_106.Image = "rbxassetid://116056570415896"
+      r52_106.ZIndex = 2
+      r51_106.CornerRadius = UDim.new(0, 10)
+      r51_106.Parent = r52_106
+      r56_106.Name = "Changepage"
+      r56_106.Parent = r1_124
+      r56_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r56_106.BackgroundTransparency = 0.4
+      r56_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r56_106.BorderSizePixel = 0
+      r56_106.Position = UDim2.new(0.019, 0, 1.021, 0)
+      r56_106.Size = UDim2.new(0.087, 0, 0.087, 0)
+      r56_106.ZIndex = 3
+      r56_106.Image = "rbxassetid://13285615740"
+      r55_106.CornerRadius = UDim.new(0, 10)
+      r55_106.Parent = r56_106
+      r57_106.Name = "Reload"
+      r57_106.Parent = r1_124
+      r57_106.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+      r57_106.BackgroundTransparency = 0.4
+      r57_106.BorderColor3 = Color3.fromRGB(0, 0, 0)
+      r57_106.BorderSizePixel = 0
+      r57_106.Position = UDim2.new(0.888999999, 0, 1.02100003, 0)
+      r57_106.Size = UDim2.new(0.0869999975, 0, 0.0869999975, 0)
+      r57_106.ZIndex = 3
+      r57_106.Image = "rbxassetid://127493377027615"
+      r58_106.CornerRadius = UDim.new(0, 10)
+      r58_106.Parent = r57_106
+      r71_106()
+      connectEvents()
+      r33_106 = true
+      r66_106()
+      return true
+    end
+    local function r82_106()
+      -- line: [0, 0] id: 118
+      if r40_106 and r42_106 then
+        r40_106.Text = tostring(r21_106)
+        r42_106.Text = tostring(r19_106)
+      end
+    end
+    local function r83_106(r0_171, r1_171, r2_171)
+      -- line: [0, 0] id: 171
+      local r3_171 = r0_171:FindFirstChild("FavoriteIcon")
+      if not r3_171 then
+        r3_171 = Instance.new("ImageLabel")
+        r3_171.Name = "FavoriteIcon"
+        r3_171.Size = UDim2.new(0.3, 0, 0.3, 0)
+        r3_171.Position = UDim2.new(0.7, 0, 0, 0)
+        r3_171.AnchorPoint = Vector2.new(0, 0)
+        r3_171.BackgroundTransparency = 1
+        r3_171.ZIndex = r0_171.ZIndex + 5
+        r3_171.ScaleType = Enum.ScaleType.Fit
+        r3_171.Parent = r0_171
+      end
+      if r2_171 then
+        r3_171.Image = r61_106
+      else
+        r3_171.Image = r62_106
+      end
+    end
+    local function r84_106()
+      -- line: [0, 0] id: 135
+      local r0_135, r1_135 = pcall(function()
+        -- line: [0, 0] id: 136
+        return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Front.EmotesButtons
+      end)
+      if r0_135 and r1_135 then
+        for r5_135, r6_135 in pairs(r1_135:GetChildren()) do
+          if r6_135:IsA("ImageLabel") and r6_135.Image ~= "" then
+            local r8_135 = r72_106(r6_135.Image)
+            if r8_135 then
+              r83_106(r6_135, r8_135, r74_106(r8_135))
+            end
+          end
+        end
+      end
+    end
+    local function r85_106(r0_170, r1_170)
+      -- line: [0, 0] id: 170
+      local r2_170 = false
+      local r3_170 = 0
+      for r7_170, r8_170 in pairs(r27_106) do
+        if r8_170.id == r0_170 then
+          r2_170 = true
+          r3_170 = r7_170
+          break
+        end
+      end
+      if r2_170 then
+        table.remove(r27_106, r3_170)
+        getgenv().Notify({
+          Title = "Rez Hub | Favorite System",
+          Content = " Removed \"" .. r1_170 .. "\" from favorites",
+          Duration = 3,
+        })
+      else
+        table.insert(r27_106, {
+          id = r0_170,
+          name = r1_170 .. " - ⭐",
+        })
+        getgenv().Notify({
+          Title = "Rez Hub | Favorite System",
+          Content = " Added \"" .. r1_170 .. "\" to favorites",
+          Duration = 3,
+        })
+      end
+      r68_106()
+      r21_106 = r78_106()
+      r82_106()
+      r77_106()
+      r84_106()
+    end
+    local function r86_106()
+      -- line: [0, 0] id: 126
+      if r9_106 then
+        return 
+      end
+      local function r0_126()
+        -- line: [0, 0] id: 127
+        while r28_106 do
+          local r0_127, r1_127 = pcall(function()
+            -- line: [0, 0] id: 129
+            return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Front.EmotesButtons
+          end)
+          if r0_127 and r1_127 then
+            for r5_127, r6_127 in pairs(r8_106) do
+              if r6_127 then
+                r6_127:Disconnect()
+              end
+            end
+            r8_106 = {}
+            for r5_127, r6_127 in pairs(r1_127:GetChildren()) do
+              if r6_127:IsA("ImageLabel") and r6_127.Image ~= "" then
+                local r7_127 = r6_127:FindFirstChild("ClickDetector") or Instance.new("TextButton")
+                r7_127.Name = "ClickDetector"
+                r7_127.Size = UDim2.new(1, 0, 1, 0)
+                r7_127.Position = UDim2.new(0, 0, 0, 0)
+                r7_127.BackgroundTransparency = 1
+                r7_127.Text = ""
+                r7_127.ZIndex = r6_127.ZIndex + 1
+                r7_127.Parent = r6_127
+                local r9_127 = r72_106(r6_127.Image)
+                if r9_127 then
+                  r83_106(r6_127, r9_127, r74_106(r9_127))
+                end
+                table.insert(r8_106, r7_127.MouseButton1Click:Connect(function()
+                  -- line: [0, 0] id: 128
+                  if r28_106 and r9_127 then
+                    r85_106(r9_127, r73_106(r9_127))
+                  end
+                end))
+                -- close: r7_127
+              end
+            end
+          end
+          task.wait(0.1)
+        end
+        for r3_127, r4_127 in pairs(r8_106) do
+          if r4_127 then
+            r4_127:Disconnect()
+          end
+        end
+        r8_106 = {}
+        r9_106 = false
+      end
+      if r28_106 then
+        r9_106 = true
+        task.spawn(r0_126)
+      end
+    end
+    local function r87_106(r0_159)
+      -- line: [0, 0] id: 159
+      local r1_159 = game.Players.LocalPlayer
+      local r2_159 = r1_159.Character or r1_159.CharacterAdded:Wait()
+      local r3_159 = r2_159:FindFirstChild("Humanoid")
+      local r4_159 = r2_159:FindFirstChild("Animate")
+      if not r4_159 or not r3_159 then
+        getgenv().Notify({
+          Title = "Rez Hub | Animation Error",
+          Content = "Không tìm thấy",
+          Duration = 3,
+        })
+        return 
+      end
+      local r5_159 = r0_159.id
+      local r6_159 = r0_159.bundledItems
+      getgenv().lastPlayedAnimation = r0_159
+      if not r6_159 then
+        getgenv().Notify({
+          Title = "Rez Hub | Animation Error",
+          Content = "Không tìm thấy",
+          Duration = 3,
+        })
+        return 
+      end
+      for r10_159, r11_159 in pairs(r3_159:GetPlayingAnimationTracks()) do
+        r11_159:Stop()
+      end
+      for r10_159, r11_159 in pairs(r6_159) do
+        for r15_159, r16_159 in pairs(r11_159) do
+          spawn(function()
+            -- line: [0, 0] id: 161
+            local r0_161, r1_161 = pcall(function()
+              -- line: [0, 0] id: 162
+              return game:GetObjects("rbxassetid://" .. r16_159)
+            end)
+            if r0_161 then
+              local r2_161 = nil	-- notice: implicit variable refs by block#[2]
+              if r1_161 then
+                function r2_161(r0_163, r1_163)
+                  -- line: [0, 0] id: 163
+                  for r5_163, r6_163 in pairs(r0_163:GetChildren()) do
+                    if r6_163:IsA("Animation") then
+                      local r8_163 = (r1_163 .. "." .. r6_163.Name):split(".")
+                      if #r8_163 >= 2 then
+                        local r9_163 = r8_163[#r8_163 - 1]
+                        local r10_163 = r8_163[#r8_163]
+                        if r4_159:FindFirstChild(r9_163) then
+                          local r11_163 = r4_159[r9_163]
+                          if r11_163:FindFirstChild(r10_163) then
+                            r11_163[r10_163].AnimationId = r6_163.AnimationId
+                            task.wait(0.1)
+                            local r12_163 = Instance.new("Animation")
+                            r12_163.AnimationId = r6_163.AnimationId
+                            local r13_163 = r3_159.Animator:LoadAnimation(r12_163)
+                            r13_163.Priority = Enum.AnimationPriority.Action
+                            r13_163:Play()
+                            task.wait(0.1)
+                            r13_163:Stop()
+                          end
+                        end
+                      end
+                    elseif #r6_163:GetChildren() > 0 then
+                      r2_161(r6_163, r1_163 .. "." .. r6_163.Name)
+                    end
+                  end
+                end
+                for r6_161, r7_161 in pairs(r1_161) do
+                  r2_161(r7_161, r7_161.Name)
+                  r7_161.Parent = workspace
+                  task.delay(1, function()
+                    -- line: [0, 0] id: 164
+                    if r7_161 then
+                      r7_161:Destroy()
+                    end
+                  end)
+                  -- close: r6_161
+                end
+                -- close: r2_161
+              end
+            end
+          end)
+          -- close: r15_159
+        end
+      end
+      task.wait(0.2)
+      spawn(function()
+        -- line: [0, 0] id: 160
+        local r0_160 = r3_159:FindFirstChild("HumanoidDescription")
+        if r0_160 then
+          r3_159:ApplyDescription(r0_160)
+        end
+      end)
+    end
+    local function r88_106()
+      -- line: [0, 0] id: 132
+      while r11_106 == "animation" do
+        local r0_132, r1_132 = pcall(function()
+          -- line: [0, 0] id: 134
+          return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Front.EmotesButtons
+        end)
+        if r0_132 and r1_132 then
+          for r5_132, r6_132 in pairs(r8_106) do
+            if r6_132 then
+              r6_132:Disconnect()
+            end
+          end
+          r8_106 = {}
+          local r2_132 = _G.filteredFavoritesAnimationsForDisplay or r15_106
+          local r3_132 = 0 < #r2_132
+          local r4_132 = nil	-- notice: implicit variable refs by block#[15, 29]
+          if r3_132 then
+            r4_132 = math.ceil(#r2_132 / r20_106)
+            if not r4_132 then
+              ::label_42::
+              r4_132 = 0
+            end
+          else
+            goto label_42	-- block#14 is visited secondly
+          end
+          local r5_132 = r19_106 <= r4_132
+          local r6_132 = {}
+          if r5_132 and r3_132 then
+            local r7_132 = (r19_106 - 1) * r20_106 + 1
+            for r12_132 = r7_132, math.min(r7_132 + r20_106 - 1, #r2_132), 1 do
+              if r2_132[r12_132] then
+                table.insert(r6_132, r2_132[r12_132])
+              end
+            end
+          else
+            local r7_132 = {}
+            for r11_132, r12_132 in pairs(r14_106) do
+              if not r74_106(r12_132.id) then
+                table.insert(r7_132, r12_132)
+              end
+            end
+            local r9_132 = (r19_106 - r4_132 - 1) * r20_106 + 1
+            for r14_132 = r9_132, math.min(r9_132 + r20_106 - 1, #r7_132), 1 do
+              if r7_132[r14_132] then
+                table.insert(r6_132, r7_132[r14_132])
+              end
+            end
+          end
+          local r7_132 = 1
+          for r11_132, r12_132 in pairs(r1_132:GetChildren()) do
+            if r12_132:IsA("ImageLabel") and r7_132 <= #r6_132 then
+              local r13_132 = r12_132:FindFirstChild("ClickDetector") or Instance.new("TextButton")
+              r13_132.Name = "ClickDetector"
+              r13_132.Size = UDim2.new(1, 0, 1, 0)
+              r13_132.Position = UDim2.new(0, 0, 0, 0)
+              r13_132.BackgroundTransparency = 1
+              r13_132.Text = ""
+              r13_132.ZIndex = r12_132.ZIndex + 1
+              r13_132.Parent = r12_132
+              local r14_132 = r6_132[r7_132]
+              table.insert(r8_106, r13_132.MouseButton1Click:Connect(function()
+                -- line: [0, 0] id: 133
+                r87_106(r14_132)
+              end))
+              r7_132 = r7_132 + 1
+              -- close: r13_132
+            end
+          end
+        end
+        task.wait(0.1)
+      end
+    end
+    local function r89_106()
+      -- line: [0, 0] id: 108
+      r9_106 = false
+      for r3_108, r4_108 in pairs(r8_106) do
+        if r4_108 then
+          r4_108:Disconnect()
+        end
+      end
+      r8_106 = {}
+      local r0_108, r1_108 = pcall(function()
+        -- line: [0, 0] id: 109
+        return game:GetService("CoreGui").RobloxGui.EmotesMenu.Children.Main.EmotesWheel.Front.EmotesButtons
+      end)
+      if r0_108 and r1_108 then
+        for r5_108, r6_108 in pairs(r1_108:GetChildren()) do
+          if r6_108:IsA("ImageLabel") then
+            local r7_108 = r6_108:FindFirstChild("ClickDetector")
+            if r7_108 then
+              r7_108:Destroy()
+            end
+            local r8_108 = r6_108:FindFirstChild("FavoriteIcon")
+            if r8_108 then
+              r8_108:Destroy()
+            end
+          end
+        end
+      end
+    end
+    local function r90_106()
+      -- line: [0, 0] id: 110
+      if r23_106 then
+        return 
+      end
+      r23_106 = true
+      r18_106 = {}
+      r25_106 = 0
+      local r0_110, r1_110 = pcall(function()
+        -- line: [0, 0] id: 111
+        local r0_111 = game:HttpGet("https://raw.githubusercontent.com/7yd7/sniper-Emote/refs/heads/test/EmoteSniper.json")
+        if r0_111 and r0_111 ~= "" then
+          return r1_106:JSONDecode(r0_111).data or {}
+        end
+        return nil
+      end)
+      if r0_110 and r1_110 then
+        for r5_110, r6_110 in pairs(r1_110) do
+          local r7_110 = {
+            id = tonumber(r6_110.id),
+          }
+          local r8_110 = r6_110.name
+          if not r8_110 then
+            r8_110 = "Emote_"
+            r8_110 = r8_110 .. (r6_110.id or "Unknown")
+          end
+          r7_110.name = r8_110
+          if r7_110.id and 0 < r7_110.id then
+            table.insert(r18_106, r7_110)
+            r25_106 = r25_106 + 1
+          end
+        end
+      else
+        r18_106 = {
+          {
+            id = 3360686498,
+            name = "Stadium",
+          },
+          {
+            id = 3360692915,
+            name = "Tilt",
+          },
+          {
+            id = 3576968026,
+            name = "Shrug",
+          },
+          {
+            id = 3360689775,
+            name = "Salute",
+          }
+        }
+        r25_106 = #r18_106
+      end
+      r24_106 = r18_106
+      r22_106 = r18_106
+      r21_106 = r78_106()
+      r19_106 = 1
+      r82_106()
+      r77_106()
+      getgenv().Notify({
+        Title = "Rez Hub | Emote",
+        Content = " Load Thành Công! Total Emotes: " .. r25_106,
+        Duration = 5,
+      })
+      r23_106 = false
+    end
+    local function r91_106()
+      -- line: [0, 0] id: 154
+      if r23_106 then
+        return 
+      end
+      r23_106 = true
+      r12_106 = {}
+      local r0_154, r1_154 = pcall(function()
+        -- line: [0, 0] id: 155
+        local r0_155 = game:HttpGet("https://raw.githubusercontent.com/7yd7/sniper-Emote/refs/heads/test/AnimationSniper.json")
+        if r0_155 and r0_155 ~= "" then
+          return r1_106:JSONDecode(r0_155).data or {}
+        end
+        return nil
+      end)
+      if r0_154 and r1_154 then
+        for r5_154, r6_154 in pairs(r1_154) do
+          local r7_154 = {
+            id = tonumber(r6_154.id),
+          }
+          local r8_154 = r6_154.name
+          if not r8_154 then
+            r8_154 = "Animation_"
+            r8_154 = r8_154 .. (r6_154.id or "Unknown")
+          end
+          r7_154.name = r8_154
+          r7_154.bundledItems = r6_154.bundledItems
+          if r7_154.id and 0 < r7_154.id then
+            table.insert(r12_106, r7_154)
+          end
+        end
+      end
+      r13_106 = r12_106
+      r14_106 = r12_106
+      r23_106 = false
+    end
+    local function r92_106(r0_196)
+      -- line: [0, 0] id: 196
+      if r23_106 then
+        getgenv().Notify({
+          Title = "Rez Hub | Emote",
+          Content = "�ang load , vui lòng chờ",
+          Duration = 5,
+        })
+        return 
+      end
+      r0_196 = r0_196:lower()
+      if r0_196 == "" then
+        r22_106 = r24_106
+        if _G.originalFavoritesBackup then
+          _G.originalFavoritesBackup = nil
+        end
+        _G.filteredFavoritesForDisplay = nil
+      else
+        local r1_196 = r0_196:match("^%d%d%d%d%d+$")
+        local r2_196 = {}
+        if r1_196 then
+          for r6_196, r7_196 in pairs(r24_106) do
+            if tostring(r7_196.id) == r0_196 then
+              table.insert(r2_196, r7_196)
+            end
+          end
+          if #r2_196 == 0 then
+            local r3_196 = tonumber(r0_196)
+            if r3_196 then
+              local r5_196 = {
+                id = r3_196,
+                name = r73_106(r3_196),
+              }
+              table.insert(r24_106, r5_196)
+              table.insert(r2_196, r5_196)
+            end
+          end
+        else
+          for r6_196, r7_196 in pairs(r24_106) do
+            if r7_196.name:lower():find(r0_196) then
+              table.insert(r2_196, r7_196)
+            end
+          end
+        end
+        r22_106 = r2_196
+        if not r1_196 then
+          if not _G.originalFavoritesBackup then
+            _G.originalFavoritesBackup = {}
+            for r6_196, r7_196 in pairs(r27_106) do
+              _G.originalFavoritesBackup[r6_196] = {
+                id = r7_196.id,
+                name = r7_196.name,
+              }
+            end
+          end
+          _G.filteredFavoritesForDisplay = {}
+          for r6_196, r7_196 in pairs(r27_106) do
+            if r7_196.name:lower():find(r0_196) then
+              table.insert(_G.filteredFavoritesForDisplay, r7_196)
+            end
+          end
+        end
+      end
+      r21_106 = r78_106()
+      r19_106 = 1
+      r82_106()
+      r77_106()
+    end
+    local function r93_106(r0_150)
+      -- line: [0, 0] id: 150
+      if r0_150 < 1 then
+        r19_106 = 1
+      elseif r21_106 < r0_150 then
+        r19_106 = r21_106
+      else
+        r19_106 = r0_150
+      end
+      r82_106()
+      r77_106()
+    end
+    local function r94_106()
+      -- line: [0, 0] id: 153
+      if r19_106 <= 1 then
+        r19_106 = r21_106
+      else
+        r19_106 = r19_106 - 1
+      end
+      r82_106()
+      r77_106()
+    end
+    local function r95_106()
+      -- line: [0, 0] id: 158
+      if r21_106 <= r19_106 then
+        r19_106 = 1
+      else
+        r19_106 = r19_106 + 1
+      end
+      r82_106()
+      r77_106()
+    end
+    local function r96_106()
+      -- line: [0, 0] id: 149
+      if r31_106 then
+        r31_106:Stop()
+        r31_106 = nil
+      end
+    end
+    local function r97_106(r0_138, r1_138)
+      -- line: [0, 0] id: 138
+      r96_106()
+      r17_106()
+      local r2_138 = Instance.new("Animation")
+      r2_138.AnimationId = "rbxassetid://" .. r1_138
+      local r3_138, r4_138 = pcall(function()
+        -- line: [0, 0] id: 139
+        return r0_138.Animator:LoadAnimation(r2_138)
+      end)
+      if r3_138 and r4_138 then
+        r31_106 = r4_138
+        r31_106.Priority = Enum.AnimationPriority.Action
+        r31_106.Looped = true
+        task.wait(0.1)
+        if r34_106 or r30_106 then
+          r31_106:Play()
+          if r34_106 then
+            r31_106:AdjustSpeed(tonumber(r54_106.Text) or 1)
+          end
+        end
+      end
+    end
+    local function r98_106(r0_119)
+      -- line: [0, 0] id: 119
+      r32_106 = r0_119
+      r96_106()
+      local r1_119 = r0_119:WaitForChild("Humanoid")
+      local r2_119 = r1_119:WaitForChild("Animator")
+      if getgenv().autoReloadEnabled and getgenv().lastPlayedAnimation then
+        task.wait(0.3)
+        r87_106(getgenv().lastPlayedAnimation)
+        getgenv().Notify({
+          Title = "Rez Hub | Auto Reload Animation",
+          Content = "����� The last animation was automatically \n reapplied",
+          Duration = 3,
+        })
+      end
+      r2_119.AnimationPlayed:Connect(function(r0_120)
+        -- line: [0, 0] id: 120
+        if r80_106(r0_119, r0_120) then
+          local r1_120 = r67_106(r0_120.Animation.AnimationId)
+          if r30_106 then
+            if r31_106 then
+              if r67_106(r31_106.Animation.AnimationId) == r1_120 then
+                return 
+              end
+              r96_106()
+            end
+            r97_106(r1_119, r1_120)
+            if r31_106 then
+              r31_106.Ended:Connect(function()
+                -- line: [0, 0] id: 121
+                if r31_106 == r0_120 then
+                  r31_106 = nil
+                end
+              end)
+            end
+          end
+          if r34_106 and not r30_106 then
+            if r31_106 then
+              if r67_106(r31_106.Animation.AnimationId) == r1_120 then
+                return 
+              end
+              r96_106()
+            end
+            r97_106(r1_119, r1_120)
+            if r31_106 then
+              r31_106.Ended:Connect(function()
+                -- line: [0, 0] id: 122
+                if r31_106 == r0_120 then
+                  r31_106 = nil
+                end
+              end)
+            end
+          end
+        end
+      end)
+      r1_119.Died:Connect(function()
+        -- line: [0, 0] id: 123
+        r30_106 = false
+        r34_106 = false
+        r28_106 = false
+        r31_106 = nil
+        r17_106()
+        r96_106()
+      end)
+    end
+    local function r99_106()
+      -- line: [0, 0] id: 142
+      r30_106 = not r30_106
+      if r30_106 then
+        getgenv().Notify({
+          Title = "Rez Hub | Emote Freeze",
+          Content = " Emote freeze ON",
+          Duration = 5,
+        })
+        r44_106.Image = r60_106
+        task.wait(0.1)
+        r96_106()
+        if r31_106 and r31_106.IsPlaying then
+          r31_106:AdjustSpeed(1)
+        end
+      else
+        getgenv().Notify({
+          Title = "Rez Hub | Emote Freeze",
+          Content = " Emote freeze OFF",
+          Duration = 5,
+        })
+        r44_106.Image = r59_106
+        task.wait(0.1)
+        r96_106()
+        if r31_106 and r31_106.IsPlaying and r34_106 then
+          r31_106:AdjustSpeed(tonumber(r54_106.Text) or 1)
+        elseif r31_106 and r31_106.IsPlaying then
+          r31_106:AdjustSpeed(1)
+        end
+      end
+    end
+    print(r0_106.LocalPlayer.Name)
+    local function r100_106()
+      -- line: [0, 0] id: 152
+      r34_106 = not r34_106
+      r54_106.Visible = r34_106
+      if r34_106 then
+        getgenv().Notify({
+          Title = "Rez Hub | Speed Emote",
+          Content = " Speed Emote ON",
+          Duration = 5,
+        })
+        task.wait(0.1)
+        r96_106()
+      else
+        getgenv().Notify({
+          Title = "Rez Hub | Speed Emote",
+          Content = " Speed Emote OFF",
+          Duration = 5,
+        })
+        task.wait(0.1)
+        r96_106()
+      end
+      if writefile then
+        local r0_152 = writefile
+        local r1_152 = r35_106
+        local r2_152 = r1_106
+        local r4_152 = {
+          Enabled = r34_106,
+          SpeedValue = tonumber(r54_106.Text) or 1,
+        }
+        r0_152(r1_152, r2_152:JSONEncode(r4_152))
+      end
+    end
+    local function r101_106()
+      -- line: [0, 0] id: 186
+      r28_106 = not r28_106
+      if r28_106 then
+        r49_106.Image = "rbxassetid://97307461910825"
+        getgenv().Notify({
+          Title = "Rez Hub | Favorite System",
+          Content = " Emote Yêu Thích On",
+          Duration = 5,
+        })
+        getgenv().Notify({
+          Title = "Rez Hub | Favorite System",
+          Content = "��️ Click on any emote to add/remove from \n favorites ( Click to image )",
+          Duration = 5,
+        })
+        r86_106()
+      else
+        r49_106.Image = "rbxassetid://124025954365505"
+        getgenv().Notify({
+          Title = "Rez Hub | Favorite System",
+          Content = " Emote Yêu Thích OFF",
+          Duration = 3,
+        })
+        r89_106()
+      end
+    end
+    local r102_106 = {}
+    local r103_106 = 0.1
+    local function r104_106(r0_188, r1_188)
+      -- line: [0, 0] id: 188
+      local r2_188 = tick()
+      if not r102_106[r0_188] or r103_106 < r2_188 - r102_106[r0_188] then
+        r102_106[r0_188] = r2_188
+        r1_188()
+      end
+    end
+    local function r105_106()
+      -- line: [0, 0] id: 151
+      if r9_106 then
+        return 
+      end
+      if r11_106 == "animation" then
+        r9_106 = true
+        task.spawn(r88_106)
+      end
+    end
+    local function r106_106()
+      -- line: [0, 0] id: 140
+      getgenv().autoReloadEnabled = not getgenv().autoReloadEnabled
+      if getgenv().autoReloadEnabled then
+        getgenv().Notify({
+          Title = "Rez Hub | Auto Reload Animation",
+          Content = " Auto Reload ON",
+          Duration = 5,
+        })
+      else
+        getgenv().Notify({
+          Title = "Rez Hub | Auto Reload Animation",
+          Content = " Auto Reload OFF",
+          Duration = 3,
+        })
+      end
+    end
+    function connectEvents()
+      -- line: [0, 0] id: 176
+      if r38_106 then
+        r38_106.MouseButton1Click:Connect(r94_106)
+      end
+      if r39_106 then
+        r39_106.MouseButton1Click:Connect(r95_106)
+      end
+      if r42_106 then
+        r42_106.FocusLost:Connect(function(r0_177)
+          -- line: [0, 0] id: 177
+          local r1_177 = tonumber(r42_106.Text)
+          if r1_177 then
+            r93_106(r1_177)
+          else
+            r42_106.Text = tostring(r19_106)
+          end
+        end)
+      end
+      if r48_106 then
+        r48_106.Changed:Connect(function(r0_182)
+          -- line: [0, 0] id: 182
+          if r0_182 == "Text" then
+            r92_106(r48_106.Text)
+          end
+        end)
+      end
+      if r44_106 then
+        r44_106.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 180
+          r104_106("EmoteWalk", r99_106)
+        end)
+      end
+      if r49_106 then
+        r49_106.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 181
+          r104_106("Favorite", r101_106)
+        end)
+      end
+      if r52_106 then
+        r52_106.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 179
+          r104_106("SpeedEmote", r100_106)
+        end)
+      end
+      if r57_106 then
+        r57_106.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 178
+          r104_106("AutoReload", r106_106)
+        end)
+      end
+      if r56_106 then
+        r56_106.MouseButton1Click:Connect(function()
+          -- line: [0, 0] id: 184
+          r89_106()
+          if r11_106 == "emote" then
+            r11_106 = "animation"
+            spawn(function()
+              -- line: [0, 0] id: 185
+              r91_106()
+              r19_106 = 1
+              r21_106 = r78_106()
+              r82_106()
+              r77_106()
+              r9_106 = true
+              task.spawn(r88_106)
+            end)
+            getgenv().Notify({
+              Title = "Rez hub | Animation",
+              Content = " Changed to Emote > Animation Mode",
+              Duration = 3,
+            })
+            getgenv().Notify({
+              Title = "Rez Hub | Animation",
+              Content = " Click on any Animation ( Click to image )",
+              Duration = 5,
+            })
+          else
+            r11_106 = "emote"
+            r19_106 = 1
+            r21_106 = r78_106()
+            r82_106()
+            r77_106()
+            getgenv().Notify({
+              Title = "Rez Hub | Emote",
+              Content = " Changed to Animation > Emote Mode",
+              Duration = 3,
+            })
+          end
+        end)
+      end
+      if r54_106 then
+        r54_106.FocusLost:Connect(function()
+          -- line: [0, 0] id: 183
+          if writefile then
+            local r0_183 = writefile
+            local r1_183 = r35_106
+            local r2_183 = r1_106
+            local r4_183 = {
+              Enabled = r34_106,
+              SpeedValue = tonumber(r54_106.Text) or 1,
+            }
+            r0_183(r1_183, r2_183:JSONEncode(r4_183))
+          end
+        end)
+      end
+    end
+    local function r107_106()
+      -- line: [0, 0] id: 156
+      local r0_156, r1_156 = r64_106()
+      if not r0_156 then
+        r33_106 = false
+        return 
+      end
+      if not r1_156:FindFirstChild("Under") or not r1_156:FindFirstChild("Top") or not r1_156:FindFirstChild("EmoteWalkButton") or not r1_156:FindFirstChild("Favorite") or not r1_156:FindFirstChild("SpeedEmote") or not r1_156:FindFirstChild("SpeedBox") or not r1_156:FindFirstChild("Changepage") or not r1_156:FindFirstChild("Reload") then
+        r33_106 = false
+        if r81_106() then
+          r82_106()
+          r77_106()
+          r71_106()
+        end
+      end
+    end
+    if r3_106.Character then
+      r98_106(r3_106.Character)
+    end
+    r3_106.CharacterAdded:Connect(function(r0_165)
+      -- line: [0, 0] id: 165
+      r98_106(r0_165)
+      task.wait(0.3)
+      spawn(function()
+        -- line: [0, 0] id: 166
+        while not r64_106() do
+          task.wait(0.1)
+        end
+        task.wait(0.3)
+        r17_106()
+        if r81_106() and 0 < #r18_106 then
+          r82_106()
+          r77_106()
+          r71_106()
+        end
+      end)
+    end)
+    r3_106.CharacterAdded:Connect(function(r0_187)
+      -- line: [0, 0] id: 187
+      r4_106 = r0_187
+      r5_106 = r0_187:WaitForChild("Humanoid")
+      r30_106 = false
+      r34_106 = false
+      r28_106 = false
+      r31_106 = nil
+      r17_106()
+    end)
+    local r108_106 = r2_106.Heartbeat:Connect(function()
+      -- line: [0, 0] id: 137
+      if not r33_106 then
+        r107_106()
+      else
+        r66_106()
+      end
+    end)
+    local function r109_106(r0_130, r1_130)
+      -- line: [0, 0] id: 130
+      if not r0_130 then
+        return nil
+      end
+      local r2_130, r3_130 = pcall(function()
+        -- line: [0, 0] id: 131
+        return r0_130:FindFirstChild(r1_130)
+      end)
+      if r2_130 then
+        return r3_130
+      end
+      return nil
+    end
+    r2_106.Stepped:Connect(function()
+      -- line: [0, 0] id: 197
+      if r5_106 and r31_106 and r31_106.IsPlaying and 0 < r5_106.MoveDirection.Magnitude and r34_106 and not r30_106 then
+        r31_106:Stop()
+        r31_106 = nil
+      end
+    end)
+    spawn(function()
+      -- line: [0, 0] id: 107
+      while not r64_106() do
+        wait(0.1)
+      end
+      if r81_106() then
+        r69_106()
+        r90_106()
+        r71_106()
+      end
+    end)
+    task.spawn(function()
+      -- line: [0, 0] id: 146
+      -- notice: unreachable block#16
+      local r0_146 = game:GetService("StarterGui")
+      local r1_146 = game:GetService("CoreGui")
+      while true do
+        local r2_146 = r1_146:FindFirstChild("RobloxGui")
+        local r3_146 = r2_146 and r2_146:FindFirstChild("EmotesMenu")
+        if not r3_146 then
+          r0_146:SetCoreGuiEnabled(Enum.CoreGuiType.EmotesMenu, true)
+        elseif r3_146:FindFirstChild("Children") and r3_146.Children:FindFirstChild("Main") and r3_146.Children.Main:FindFirstChild("EmotesWheel") then
+          local r5_146 = r3_146.Children.Main.EmotesWheel
+          if not r5_146:FindFirstChild("Under") or not r5_146:FindFirstChild("Top") then
+            if r81_106 then
+              r81_106()
+              r71_106()
+            end
+            if r66_106 then
+              r66_106()
+              r82_106()
+              r69_106()
+            end
+          end
+        end
+        task.wait(0.3)
+      end
+    end)
+    if r6_106.TouchEnabled and not r6_106.KeyboardEnabled then
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/7yd7/Hub/refs/heads/Branch/GUIS/OpenEmote.lua"))()
+      getgenv().Notify({
+        Title = "Rez Hub | Emote Mobile",
+        Content = "mở khi cần sử dụng",
+        Duration = 5,
+      })
+    end
+    if r6_106.KeyboardEnabled then
+      getgenv().Notify({
+        Title = "Rez Hub | Emote PC",
+        Content = " Mở menu thì nhấn nút \".\"",
+        Duration = 5,
+      })
+    end
+  end
+  local r1_14 = game:GetService("Players").LocalPlayer
+  local r2_14 = game:GetService("Workspace")
+  local r3_14 = game:GetService("TweenService")
+  local r4_14 = game:GetService("RunService")
+  local r5_14 = game:GetService("ReplicatedStorage")
+  local r6_14 = workspace.CurrentCamera
+  local r7_14 = game:GetService("UserInputService")
+  local r8_14 = r7_14.TouchEnabled and not r7_14.KeyboardEnabled
+  local r9_14 = nil
+  if r8_14 then
+    r9_14 = UDim2.fromScale(0.6, 0.8)
+  else
+    r9_14 = UDim2.fromOffset(500, 350)
+  end
+  local r10_14 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+  local r11_14 = r10_14:CreateWindow({
+    Title = "Rez Hub | Premium",
+    SubTitle = "by rez",
+    TabWidth = 140,
+    Theme = "Darker",
+    Acrylic = false,
+    Size = r9_14,
+    MinimizeKey = Enum.KeyCode.J,
+  })
+  local r12_14 = Instance.new("ScreenGui")
+  local r13_14 = Instance.new("ImageButton")
+  local r14_14 = Instance.new("UICorner")
+  local r15_14 = Instance.new("Frame")
+  local r16_14 = Instance.new("UIStroke")
+  r12_14.Name = "Xeter"
+  r12_14.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+  r12_14.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+  r13_14.Name = "ToggleUIButton"
+  r13_14.Parent = r12_14
+  r13_14.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+  r13_14.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
+  r13_14.Size = UDim2.new(0, 51, 0, 51)
+  r13_14.Image = "rbxassetid://126512304687614"
+  r13_14.Visible = true
+  r13_14.Draggable = true
+  r14_14.Parent = r13_14
+  r16_14.Parent = r13_14
+  r16_14.Thickness = 3
+  r16_14.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+  r16_14.LineJoinMode = Enum.LineJoinMode.Round
+  task.spawn(function()
+    -- line: [0, 0] id: 225
+    local r0_225 = game:GetService("RunService")
+    local r1_225 = 0
+    r0_225.Heartbeat:Connect(function(r0_226)
+      -- line: [0, 0] id: 226
+      r1_225 = (r1_225 + r0_226 * 0.25) % 1
+      r16_14.Color = Color3.fromHSV(r1_225, 1, 1)
+    end)
+  end)
+  r13_14.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 222
+    local r0_222 = game:GetService("VirtualInputManager")
+    r0_222:SendKeyEvent(true, Enum.KeyCode.J, false, game)
+    task.wait(0.05)
+    r0_222:SendKeyEvent(false, Enum.KeyCode.J, false, game)
+  end)
+  local r17_14 = {
+    Info = r11_14:AddTab({
+      Title = "Thông Tin",
+      Icon = "info",
+    }),
+    Heal = r11_14:AddTab({
+      Title = "Heal",
+      Icon = "heart",
+    }),
+    PVP = r11_14:AddTab({
+      Title = "PvP",
+      Icon = "sword",
+    }),
+    Boss = r11_14:AddTab({
+      Title = "Boss",
+      Icon = "axe",
+    }),
+    Player = r11_14:AddTab({
+      Title = "Người Chơi",
+      Icon = "user",
+    }),
+    Player2 = r11_14:AddTab({
+      Title = "Người Khác",
+      Icon = "user",
+    }),
+    TP = r11_14:AddTab({
+      Title = "Trang Phục",
+      Icon = "leaf",
+    }),
+    Roles = r11_14:AddTab({
+      Title = "Roles",
+      Icon = "star",
+    }),
+    Emotes = r11_14:AddTab({
+      Title = "Emotes",
+      Icon = "activity",
+    }),
+    Money = r11_14:AddTab({
+      Title = "Tiền",
+      Icon = "banknote",
+    }),
+    Teleport = r11_14:AddTab({
+      Title = "Dịch Chuyển",
+      Icon = "map",
+    }),
+    Fixlag = r11_14:AddTab({
+      Title = "FixLag",
+      Icon = "cpu",
+    }),
+    Settings = r11_14:AddTab({
+      Title = "Settings",
+      Icon = "settings",
+    }),
+  }
+  local function r18_14(r0_79, r1_79, r2_79)
+    -- line: [0, 0] id: 79
+    r0_79:AddButton({
+      Title = r1_79,
+      Description = "Nhấn để sao chép link",
+      Callback = function()
+        -- line: [0, 0] id: 80
+        setclipboard(r2_79)
+        r10_14:Notify({
+          Title = " Đã sao chép!",
+          Content = r1_79 .. " đã được sao chép vào clipboard.",
+          Duration = 3,
+        })
+      end,
+    })
+  end
+  r17_14.Info:AddParagraph({
+    Title = " LƯU Ý",
+    Content = "Nhấn phím J To ON / OFF GUI",
+  })
+  r18_14(r17_14.Info, "����� Discord", "https://discord.gg/NAyGX2Q7d6")
+  r18_14(r17_14.Info, "����� Youtube", "https://www.youtube.com/@changbeomientay0")
+  r18_14(r17_14.Info, "����� Tiktok", "https://www.tiktok.com/@nguyndiz")
+  r18_14(r17_14.Info, "����� Donate", "https://create.roblox.com/dashboard/creations/experiences/6821163566/passes/1268730242/overview")
+  local r19_14 = nil
+  getgenv().AutoEquip = false
+  getgenv().AutoLayBangGac = false
+  getgenv().AutoMuaBangGac = false
+  r17_14.Heal:AddButton({
+    Title = "Chọn Vũ Khí",
+    Description = "Mở danh sách vũ khí trong balo",
+    Callback = function()
+      -- line: [0, 0] id: 67
+      local r0_67 = {}
+      for r4_67, r5_67 in ipairs(r1_14.Backpack:GetChildren()) do
+        if r5_67:IsA("Tool") then
+          table.insert(r0_67, {
+            Title = r5_67.Name,
+            Callback = function()
+              -- line: [0, 0] id: 68
+              r19_14 = r5_67.Name
+              print("[RezHub] Vũ khí đã chọn:", r5_67.Name)
+            end,
+          })
+        end
+        -- close: r4_67
+      end
+      table.insert(r0_67, {
+        Title = "Thoát",
+        Callback = function()
+          -- line: [0, 0] id: 69
+          print("�ã thoát chọn vũ khí.")
+        end,
+      })
+      r11_14:Dialog({
+        Title = "Chọn Vũ Khí",
+        Content = "Chọn một vũ khí từ balo:",
+        Buttons = r0_67,
+      })
+    end,
+  })
+  r17_14.Heal:AddToggle("AutoEquipToggle", {
+    Title = "Auto Equip mỗi 5s",
+    Description = "Tự trang bị lại vũ khí đã chọn",
+    Default = false,
+    Callback = function(r0_104)
+      -- line: [0, 0] id: 104
+      getgenv().AutoEquip = r0_104
+    end,
+  })
+  task.spawn(function()
+    -- line: [0, 0] id: 105
+    local r0_105 = false
+    while task.wait(5) do
+      local r1_105 = getgenv().AutoEquip
+      if r1_105 then
+        r1_105 = r19_14
+        if r1_105 then
+          r1_105 = r1_14.Character
+          local r2_105 = r1_14:FindFirstChild("Backpack")
+          if r2_105 then
+            local r3_105 = r2_105:FindFirstChild(r19_14)
+            if r3_105 then
+              r3_105.Parent = r1_105
+              print("[RezHub] Trang bị lại:", r19_14)
+              r0_105 = false
+            elseif not r1_105:FindFirstChild(r19_14) and not r0_105 then
+              warn("[RezHub] Không tìm thấy vũ khí \'" .. r19_14 .. "\' để trang bị lại.")
+              r0_105 = true
+            end
+          end
+        end
+      end
+    end
+  end)
+  local function r20_14(r0_27)
+    -- line: [0, 0] id: 27
+    if not r5_14:FindFirstChild("KnitPackages") then
+      return 
+    end
+    local r2_27 = r5_14.KnitPackages:WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("InventoryService"):WaitForChild("RE")
+    r2_27:WaitForChild("updateInventory"):FireServer("refresh")
+    r2_27:WaitForChild("updateInventory"):FireServer("eue", r0_27)
+  end
+  local function r21_14()
+    -- line: [0, 0] id: 233
+    local r0_233 = r1_14.Backpack:FindFirstChild("băng gạc") or r1_14.Character:FindFirstChild("băng gạc")
+    if not r0_233 then
+      return 
+    end
+    if not r1_14.Character:FindFirstChild("băng gạc") then
+      r0_233.Parent = r1_14.Character
+      task.wait(0.2)
+    end
+    if r0_233:FindFirstChild("RemoteEvent") then
+      r0_233.RemoteEvent:FireServer()
+    else
+      r0_233:Activate()
+    end
+    task.delay(1, function()
+      -- line: [0, 0] id: 234
+      if r1_14.Character and r19_14 then
+        local r0_234 = r1_14.Backpack:FindFirstChild(r19_14)
+        if r0_234 then
+          r0_234.Parent = r1_14.Character
+        end
+      end
+    end)
+  end
+  r17_14.Heal:AddToggle("AutoHealToggle", {
+    Title = "Auto Heal < 80 HP",
+    Default = false,
+    Callback = function(r0_15)
+      -- line: [0, 0] id: 15
+      getgenv().AutoLayBangGac = r0_15
+    end,
+  })
+  task.spawn(function()
+    -- line: [0, 0] id: 262
+    while task.wait(0.5) do
+      local r0_262 = getgenv().AutoLayBangGac
+      if r0_262 then
+        r0_262 = r1_14.Character
+        if r0_262 and r0_262:FindFirstChild("Humanoid") and r0_262.Humanoid.Health < 80 then
+          local r1_262 = r0_262:FindFirstChild("băng gạc") or r1_14.Backpack:FindFirstChild("băng gạc")
+          local r2_262 = nil	-- notice: implicit variable refs by block#[12]
+          if not r1_262 then
+            r2_262 = r1_14:FindFirstChild("PlayerGui")
+            if r2_262 and r2_262:FindFirstChild("Inventory") then
+              r2_262.Inventory.Enabled = true
+              task.delay(0.5, function()
+                -- line: [0, 0] id: 263
+                r2_262.Inventory.Enabled = false
+              end)
+            end
+            r20_14("băng gạc")
+            task.wait(0.5)
+            -- close: r2_262
+          end
+          r2_262 = r21_14
+          r2_262()
+        end
+      end
+    end
+  end)
+  local function r22_14()
+    -- line: [0, 0] id: 82
+    if not r5_14:FindFirstChild("KnitPackages") then
+      return 
+    end
+    r5_14.KnitPackages._Index["sleitnick_knit@1.7.0"].knit.Services.ShopService.RE:WaitForChild("buyItem"):FireServer("băng gạc", 5)
+    print("[RezHub] Đã mua 5 băng gạc.")
+  end
+  task.spawn(function()
+    -- line: [0, 0] id: 22
+    while task.wait(30) do
+      local r0_22 = getgenv().AutoMuaBangGac
+      if r0_22 then
+        r22_14()
+      end
+    end
+  end)
+  r17_14.Heal:AddToggle("AutoMuaBangGac", {
+    Title = "Auto Mua Băng Gạc (30s)",
+    Description = "Tự động mua 5 băng gạc mỗi 30s",
+    Default = false,
+    Callback = function(r0_92)
+      -- line: [0, 0] id: 92
+      getgenv().AutoMuaBangGac = r0_92
+    end,
+  })
+  local r23_14 = game:GetService("Players")
+  local r24_14 = game:GetService("RunService")
+  local r25_14 = r23_14.LocalPlayer
+  local r26_14 = 30
+  local r27_14 = nil
+  local r28_14 = nil
+  local function r29_14()
+    -- line: [0, 0] id: 232
+    local r0_232 = r25_14.Character or r25_14.CharacterAdded:Wait()
+    r27_14 = r0_232:WaitForChild("Humanoid")
+    r28_14 = r0_232:WaitForChild("HumanoidRootPart")
+  end
+  r29_14()
+  r25_14.CharacterAdded:Connect(r29_14)
+  r17_14.Player:AddSlider("SafeSpeedValue", {
+    Title = "Tốc chạy",
+    Default = 16,
+    Min = 16,
+    Max = 120,
+    Rounding = 0,
+    Callback = function(r0_73)
+      -- line: [0, 0] id: 73
+      r26_14 = r0_73
+    end,
+  })
+  r24_14.RenderStepped:Connect(function(r0_270)
+    -- line: [0, 0] id: 270
+    if not r27_14 or not r28_14 then
+      return 
+    end
+    local r1_270 = r27_14.MoveDirection
+    if r1_270.Magnitude > 0 then
+      r28_14.CFrame = r28_14.CFrame + r1_270 * (r26_14 - 16) * r0_270
+    end
+  end)
+  local r30_14 = game:GetService("Players")
+  local r31_14 = game:GetService("RunService")
+  local r32_14 = game:GetService("UserInputService")
+  local r33_14 = workspace.CurrentCamera
+  local r34_14 = r30_14.LocalPlayer
+  local r35_14 = r34_14.Character or r34_14.CharacterAdded:Wait()
+  local r36_14 = nil
+  local r37_14 = {}
+  local r38_14 = 16
+  local r39_14 = 60
+  local function r40_14(r0_219)
+    -- line: [0, 0] id: 219
+    r36_14 = r0_219:WaitForChild("Humanoid")
+    r35_14 = r0_219
+    r36_14.WalkSpeed = r38_14
+  end
+  r40_14(r35_14)
+  r34_14.CharacterAdded:Connect(r40_14)
+  local function r41_14(r0_201)
+    -- line: [0, 0] id: 201
+    if r37_14[r0_201] then
+      r37_14[r0_201]:Disconnect()
+      r37_14[r0_201] = nil
+    end
+  end
+  r17_14.Player:AddToggle("InfJump", {
+    Title = "Nhảy Liên Tục",
+    Default = false,
+    Callback = function(r0_83)
+      -- line: [0, 0] id: 83
+      r41_14("InfJump")
+      if r0_83 then
+        r37_14.InfJump = r32_14.JumpRequest:Connect(function()
+          -- line: [0, 0] id: 84
+          if r36_14 then
+            r36_14:ChangeState("Jumping")
+          end
+        end)
+      end
+    end,
+  })
+  r17_14.Player:AddSlider("JumpPower", {
+    Title = "Nhảy Cao",
+    Default = 50,
+    Min = 50,
+    Max = 200,
+    Rounding = 1,
+    Callback = function(r0_17)
+      -- line: [0, 0] id: 17
+      if r36_14 then
+        r36_14.UseJumpPower = true
+        r36_14.JumpPower = r0_17
+      end
+    end,
+  })
+  local function r42_14()
+    -- line: [0, 0] id: 220
+    local r0_220 = r35_14 and r35_14:FindFirstChild("HumanoidRootPart")
+    if not r0_220 then
+      return 
+    end
+    local r1_220 = Instance.new("BodyGyro", r0_220)
+    local r2_220 = Instance.new("BodyVelocity", r0_220)
+    local r4_220 = Vector3.new(9000000000, 9000000000, 9000000000)
+    r1_220.CFrame = r0_220.CFrame
+    r1_220.MaxTorque = r4_220
+    r1_220.P = 90000
+    r2_220.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
+    r37_14.Fly = r31_14.RenderStepped:Connect(function()
+      -- line: [0, 0] id: 221
+      local r0_221 = Vector3.zero
+      local r1_221 = r33_14.CFrame
+      if r32_14:IsKeyDown(Enum.KeyCode.W) then
+        r0_221 = r0_221 + r1_221.LookVector
+      end
+      if r32_14:IsKeyDown(Enum.KeyCode.S) then
+        r0_221 = r0_221 - r1_221.LookVector
+      end
+      if r32_14:IsKeyDown(Enum.KeyCode.A) then
+        r0_221 = r0_221 - r1_221.RightVector
+      end
+      if r32_14:IsKeyDown(Enum.KeyCode.D) then
+        r0_221 = r0_221 + r1_221.RightVector
+      end
+      if r32_14:IsKeyDown(Enum.KeyCode.Space) then
+        r0_221 = r0_221 + r1_221.UpVector
+      end
+      if r32_14:IsKeyDown(Enum.KeyCode.LeftShift) then
+        r0_221 = r0_221 - r1_221.UpVector
+      end
+      local r2_221 = r2_220
+      local r3_221 = r0_221.Magnitude
+      if r3_221 > 0 then
+        r3_221 = r0_221.Unit * r39_14 or Vector3.zero
+      else
+        goto label_73	-- block#14 is visited secondly
+      end
+      r2_221.Velocity = r3_221
+      r1_220.CFrame = r1_221
+    end)
+  end
+  local function r43_14()
+    -- line: [0, 0] id: 255
+    r41_14("Fly")
+    local r0_255 = r35_14 and r35_14:FindFirstChild("HumanoidRootPart")
+    if not r0_255 then
+      return 
+    end
+    for r4_255, r5_255 in pairs(r0_255:GetChildren()) do
+      if r5_255:IsA("BodyGyro") or r5_255:IsA("BodyVelocity") then
+        r5_255:Destroy()
+      end
+    end
+  end
+  r17_14.Player:AddToggle("Fly", {
+    Title = "Bật Fly",
+    Default = false,
+    Callback = function(r0_25)
+      -- line: [0, 0] id: 25
+      if r0_25 then
+        r42_14()
+      else
+        r43_14()
+      end
+    end,
+  })
+  r17_14.Player:AddSlider("FlySpeed", {
+    Title = "Tốc Độ Bay",
+    Default = 60,
+    Min = 10,
+    Max = 200,
+    Rounding = 1,
+    Callback = function(r0_243)
+      -- line: [0, 0] id: 243
+      r39_14 = r0_243
+    end,
+  })
+  r17_14.Player:AddToggle("Noclip", {
+    Title = "Xuyên Tường",
+    Default = false,
+    Callback = function(r0_85)
+      -- line: [0, 0] id: 85
+      r41_14("Noclip")
+      if r0_85 then
+        r37_14.Noclip = r31_14.Stepped:Connect(function()
+          -- line: [0, 0] id: 86
+          if r35_14 then
+            for r3_86, r4_86 in pairs(r35_14:GetDescendants()) do
+              if r4_86:IsA("BasePart") then
+                r4_86.CanCollide = false
+              end
+            end
+          end
+        end)
+      end
+    end,
+  })
+  r34_14.CharacterAdded:Connect(function(r0_252)
+    -- line: [0, 0] id: 252
+    r35_14 = r0_252
+  end)
+  local r44_14 = false
+  local r45_14 = 0
+  local r46_14 = 50
+  r17_14.Player:AddToggle("AutoSpin", {
+    Title = "Auto Xoay",
+    Default = false,
+    Callback = function(r0_74)
+      -- line: [0, 0] id: 74
+      r44_14 = r0_74
+    end,
+  })
+  r17_14.Player:AddSlider("SpinSpeed", {
+    Title = "Tốc độ xoay",
+    Description = "Tốc độ xoay",
+    Default = r46_14,
+    Min = 10,
+    Max = 1000,
+    Rounding = 0,
+    Callback = function(r0_238)
+      -- line: [0, 0] id: 238
+      r46_14 = r0_238
+    end,
+  })
+  r31_14.Heartbeat:Connect(function(r0_250)
+    -- line: [0, 0] id: 250
+    local r1_250 = r25_14.Character
+    if r44_14 and r1_250 and r1_250:FindFirstChild("HumanoidRootPart") then
+      r45_14 = r45_14 + r0_250 * r46_14
+      local r2_250 = r1_250.HumanoidRootPart
+      r2_250.CFrame = CFrame.new(r2_250.Position) * CFrame.Angles(0, r45_14, 0)
+    end
+  end)
+  local r47_14 = workspace.CurrentCamera
+  r17_14.Player:AddSlider("CamFOV", {
+    Title = "�ộ rộng camera",
+    Default = 70,
+    Min = 70,
+    Max = 120,
+    Rounding = 0,
+    Callback = function(r0_102)
+      -- line: [0, 0] id: 102
+      r47_14.FieldOfView = r0_102
+    end,
+  })
+  local r48_14 = workspace.CurrentCamera
+  local r49_14 = game:GetService("RunService")
+  local r50_14 = game:GetService("Stats")
+  local r51_14 = game:GetService("Lighting")
+  local r52_14 = true
+  local r53_14 = true
+  local r54_14 = Drawing.new("Text")
+  local r55_14 = Drawing.new("Text")
+  local function r56_14(r0_246, r1_246)
+    -- line: [0, 0] id: 246
+    r0_246.Size = 16
+    r0_246.Position = Vector2.new(r48_14.ViewportSize.X - 100, r1_246)
+    local r2_246 = Color3.fromRGB(0, 255, 0)
+    r0_246.Outline = true
+    r0_246.Center = false
+    r0_246.Color = r2_246
+    return r0_246
+  end
+  r56_14(r54_14, 10).Visible = r52_14
+  r56_14(r55_14, 30).Visible = r53_14
+  local function r57_14(r0_207)
+    -- line: [0, 0] id: 207
+    local r1_207 = tick() * r0_207
+    return Color3.fromRGB(math.sin(r1_207) * 127 + 128, math.sin((r1_207 + 2)) * 127 + 128, math.sin((r1_207 + 4)) * 127 + 128)
+  end
+  local r58_14 = 0
+  local r59_14 = tick()
+  r49_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 76
+    r58_14 = r58_14 + 1
+    r54_14.Color = r57_14(2)
+    if tick() - r59_14 >= 1 then
+      if r52_14 then
+        r54_14.Visible = true
+        r54_14.Text = "FPS: " .. r58_14
+      else
+        r54_14.Visible = false
+      end
+      if r53_14 then
+        local r0_76 = math.floor
+        local r1_76 = r50_14.Network.ServerStatsItem["Data Ping"]
+        if not r1_76 then
+          r1_76 = {}
+          function r1_76.GetValue()
+            -- line: [0, 0] id: 77
+            return 0
+          end
+        end
+        r0_76 = r0_76(r1_76:GetValue())
+        local r2_76 = "Ping: " .. r0_76 .. " ms"
+        r55_14.Text = r2_76
+        r1_76 = r55_14
+        if r0_76 <= 120 then
+          r2_76 = Color3.fromRGB(100, 245, 158) or Color3.fromRGB(255, 0, 0)
+        else
+          goto label_61	-- block#9 is visited secondly
+        end
+        r1_76.Color = r2_76
+        r55_14.Visible = true
+      else
+        r55_14.Visible = false
+      end
+      r59_14 = tick()
+      r58_14 = 0
+    end
+  end)
+  r17_14.Fixlag:AddToggle("ShowFPS", {
+    Title = "Hiện FPS",
+    Default = true,
+    Callback = function(r0_206)
+      -- line: [0, 0] id: 206
+      r54_14.Visible = r0_206
+      r52_14 = r0_206
+    end,
+  })
+  r17_14.Fixlag:AddToggle("ShowPing", {
+    Title = "Hiện Ping (ms)",
+    Default = true,
+    Callback = function(r0_97)
+      -- line: [0, 0] id: 97
+      r55_14.Visible = r0_97
+      r53_14 = r0_97
+    end,
+  })
+  r17_14.Fixlag:AddButton({
+    Title = "Tăng FPS",
+    Callback = function()
+      -- line: [0, 0] id: 59
+      pcall(function()
+        -- line: [0, 0] id: 61
+        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+        r51_14.GlobalShadows = false
+        r51_14.FogEnd = 100
+        r51_14.Brightness = 0
+        r51_14.ClockTime = 14
+        r51_14.EnvironmentSpecularScale = 0
+        r51_14.EnvironmentDiffuseScale = 0
+        r51_14.OutdoorAmbient = Color3.new(0, 0, 0)
+        local r0_61 = workspace:FindFirstChildOfClass("Terrain")
+        if r0_61 then
+          r0_61.WaterTransparency = 1
+          r0_61.WaterReflectance = 0
+          r0_61.WaterWaveSpeed = 0
+          r0_61.WaterWaveSize = 0
+        end
+        for r4_61, r5_61 in ipairs(r51_14:GetDescendants()) do
+          if r5_61:IsA("PostEffect") then
+            r5_61.Enabled = false
+          end
+        end
+        for r4_61, r5_61 in ipairs(game:GetDescendants()) do
+          if r5_61:IsA("ParticleEmitter") or r5_61:IsA("Trail") then
+            r5_61.Enabled = false
+          elseif r5_61:IsA("Texture") or r5_61:IsA("Decal") then
+            r5_61.Transparency = 1
+          elseif r5_61:IsA("BasePart") then
+            r5_61.CastShadow = false
+          end
+        end
+      end)
+      lib:Dialog({
+        Title = "Success",
+        Content = "FPS Boost applied successfully!",
+        Buttons = {
+          {
+            Title = "OK",
+            Variant = "Primary",
+            Callback = function()
+              -- line: [0, 0] id: 60
+            end,
+          }
+        },
+      })
+    end,
+  })
+  local function r60_14(r0_265)
+    -- line: [0, 0] id: 265
+    local r1_265 = game:GetService("Lighting")
+    local r2_265 = workspace:FindFirstChildOfClass("Terrain")
+    if r0_265 >= 10 then
+      r1_265.GlobalShadows = false
+      r1_265.FogEnd = 9000000000
+    end
+    if r0_265 >= 20 then
+      for r6_265, r7_265 in ipairs(r1_265:GetChildren()) do
+        if r7_265:IsA("BloomEffect") or r7_265:IsA("SunRaysEffect") then
+          r7_265.Enabled = false
+        end
+      end
+    end
+    if r0_265 >= 30 then
+      for r6_265, r7_265 in ipairs(r1_265:GetChildren()) do
+        if r7_265:IsA("ColorCorrectionEffect") or r7_265:IsA("BlurEffect") then
+          r7_265.Enabled = false
+        end
+      end
+    end
+    if 40 <= r0_265 and r2_265 then
+      r2_265.WaterWaveSize = 0
+      r2_265.WaterWaveSpeed = 0
+      r2_265.WaterReflectance = 0
+      r2_265.WaterTransparency = 0
+    end
+    if r0_265 >= 50 then
+      for r6_265, r7_265 in ipairs(workspace:GetDescendants()) do
+        if r7_265:IsA("BasePart") then
+          r7_265.Material = Enum.Material.SmoothPlastic
+        end
+      end
+    end
+    if r0_265 >= 60 then
+      for r6_265, r7_265 in ipairs(workspace:GetDescendants()) do
+        if r7_265:IsA("ParticleEmitter") or r7_265:IsA("Trail") then
+          r7_265.Enabled = false
+        end
+      end
+    end
+    if r0_265 >= 70 then
+      for r6_265, r7_265 in ipairs(workspace:GetDescendants()) do
+        if r7_265:IsA("Decal") or r7_265:IsA("Texture") then
+          r7_265:Destroy()
+        elseif r7_265:IsA("MeshPart") then
+          r7_265.TextureID = ""
+        end
+      end
+    end
+    if r0_265 >= 80 then
+      for r6_265, r7_265 in ipairs(workspace:GetDescendants()) do
+        if r7_265:IsA("BasePart") then
+          r7_265.Color = Color3.new(1, 1, 1)
+        end
+      end
+    end
+    r10_14:Notify({
+      Title = "Fix Lag",
+      Content = "�ã xoá đồ họa ở mức " .. r0_265 .. "%",
+      Duration = 3,
+    })
+  end
+  for r64_14, r65_14 in ipairs({
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80
+  }) do
+    local r68_14 = {}
+    local r70_14 = r65_14
+    r68_14.Title = "Fix Lag " .. r70_14 .. "%"
+    local function r69_14()
+      -- line: [0, 0] id: 96
+      r60_14(r65_14)
+    end
+    r68_14.Callback = r69_14
+    r17_14.Fixlag:AddButton(r68_14)
+    -- close: r64_14
+  end
+  local r61_14 = game.Lighting.FogStart
+  local r62_14 = game.Lighting.FogEnd
+  local r63_14 = false
+  r17_14.Fixlag:AddToggle("NoFog", {
+    Title = "Xóa Sương Mù",
+    Default = false,
+  }):OnChanged(function(r0_224)
+    -- line: [0, 0] id: 224
+    r63_14 = r0_224
+    if r63_14 then
+      game.Lighting.FogStart = 999999
+      game.Lighting.FogEnd = 1000000
+    else
+      game.Lighting.FogStart = r61_14
+      game.Lighting.FogEnd = r62_14
+    end
+  end)
+  local r64_14 = nil
+  local r65_14 = false
+  local r66_14 = nil
+  local r67_14 = nil
+  local r68_14 = nil
+  local function r69_14()
+    -- line: [0, 0] id: 214
+    local r0_214 = {}
+    for r4_214, r5_214 in ipairs(r30_14:GetPlayers()) do
+      if r5_214 ~= r25_14 then
+        table.insert(r0_214, r5_214.Name)
+      end
+    end
+    return r0_214
+  end
+  local r70_14 = r17_14.Player2:AddDropdown("PlayerList", {
+    Title = "Chọn người chơi",
+    Values = r69_14(),
+    Multi = false,
+    Callback = function(r0_251)
+      -- line: [0, 0] id: 251
+      r64_14 = r0_251
+    end,
+  })
+  r30_14.PlayerAdded:Connect(function()
+    -- line: [0, 0] id: 30
+    r70_14:SetValues(r69_14())
+  end)
+  r30_14.PlayerRemoving:Connect(function()
+    -- line: [0, 0] id: 199
+    r70_14:SetValues(r69_14())
+  end)
+  r17_14.Player2:AddButton({
+    Title = " Teleport đến",
+    Callback = function()
+      -- line: [0, 0] id: 18
+      if not r64_14 then
+        r10_14:Notify({
+          Title = "",
+          Content = "Chưa chọn người chơi!",
+          Duration = 3,
+        })
+        return 
+      end
+      local r0_18 = r30_14:FindFirstChild(r64_14)
+      if r0_18 and r0_18.Character and r0_18.Character:FindFirstChild("HumanoidRootPart") then
+        r25_14.Character:MoveTo(r0_18.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
+        r10_14:Notify({
+          Title = "",
+          Content = "�ã teleport đến " .. r64_14,
+          Duration = 2,
+        })
+      end
+    end,
+  })
+  r17_14.Player2:AddToggle("ESPSelected", {
+    Title = " ESP người chơi đã chọn",
+    Default = false,
+    Callback = function(r0_241)
+      -- line: [0, 0] id: 241
+      r65_14 = r0_241
+      if not r0_241 then
+        if r66_14 then
+          r66_14:Remove()
+          r66_14 = nil
+        end
+        if r67_14 then
+          r67_14:Remove()
+          r67_14 = nil
+        end
+        if r68_14 then
+          r68_14:Destroy()
+          r68_14 = nil
+        end
+      end
+    end,
+  })
+  local function r71_14()
+    -- line: [0, 0] id: 200
+    if not r66_14 then
+      r66_14 = Drawing.new("Square")
+      r66_14.Color = Color3.fromRGB(255, 0, 0)
+      r66_14.Thickness = 2
+      r66_14.Filled = false
+    end
+    if not r67_14 then
+      r67_14 = Drawing.new("Text")
+      r67_14.Size = 16
+      r67_14.Color = Color3.fromRGB(255, 255, 255)
+      r67_14.Center = true
+      r67_14.Outline = true
+    end
+  end
+  local function r72_14(r0_93)
+    -- line: [0, 0] id: 93
+    if r68_14 then
+      r68_14:Destroy()
+    end
+    local r1_93 = Instance.new("Highlight")
+    r1_93.Name = "ESP_Highlight"
+    r1_93.FillTransparency = 1
+    r1_93.OutlineColor = Color3.fromRGB(0, 255, 255)
+    r1_93.OutlineTransparency = 0
+    r1_93.Adornee = r0_93
+    r1_93.Parent = game:GetService("CoreGui")
+    r68_14 = r1_93
+  end
+  r49_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 216
+    if not r65_14 or not r64_14 then
+      return 
+    end
+    local r0_216 = r30_14:FindFirstChild(r64_14)
+    if r0_216 and r0_216.Character and r0_216.Character:FindFirstChild("HumanoidRootPart") then
+      local r1_216 = r0_216.Character.HumanoidRootPart
+      local r2_216 = r0_216.Character:FindFirstChild("Head")
+      r71_14()
+      r72_14(r0_216.Character)
+      local r3_216, r4_216 = r48_14:WorldToViewportPoint(r1_216.Position)
+      if r4_216 then
+        local r5_216 = 1 / r3_216.Z * 100
+        local r6_216 = 25 * r5_216
+        local r7_216 = 35 * r5_216
+        r66_14.Visible = true
+        r66_14.Size = Vector2.new(r6_216, r7_216)
+        r66_14.Position = Vector2.new(r3_216.X - r6_216 / 2, r3_216.Y - r7_216 / 2)
+        local r8_216 = math.floor(r25_14:DistanceFromCharacter(r1_216.Position))
+        r67_14.Visible = true
+        r67_14.Text = r0_216.Name .. " [" .. tostring(r8_216) .. "m]"
+        r67_14.Position = Vector2.new(r3_216.X, r3_216.Y - r7_216 / 2 - 15)
+      else
+        r66_14.Visible = false
+        r67_14.Visible = false
+      end
+    else
+      if r66_14 then
+        r66_14.Visible = false
+      end
+      if r67_14 then
+        r67_14.Visible = false
+      end
+      if r68_14 then
+        r68_14:Destroy()
+        r68_14 = nil
+      end
+    end
+  end)
+  local function r73_14(r0_273, r1_273, r2_273)
+    -- line: [0, 0] id: 273
+    r0_273:AddButton({
+      Title = r1_273,
+      Description = "Nhấn để sao chép ID",
+      Callback = function()
+        -- line: [0, 0] id: 274
+        setclipboard(r2_273)
+        r10_14:Notify({
+          Title = " Đã sao chép!",
+          Content = r1_273 .. " đã được sao chép vào clipboard.",
+          Duration = 3,
+        })
+      end,
+    })
+  end
+  r17_14.TP:AddParagraph({
+    Title = "Nhấn Vào Nút Để Copy ID",
+    Content = "Mình chỉ gom 1 số cái ID thôi nhé",
+  })
+  r17_14.TP:AddSection("Dân Cụt Chân")
+  r73_14(r17_14.TP, "Chân Cụt Trái", "139607718")
+  r73_14(r17_14.TP, "Chân Cụt Phải", "139607673")
+  r73_14(r17_14.TP, "Sừng Korblox", "17592708698")
+  r73_14(r17_14.TP, "Vương Miệng Korblox", "73810783541103")
+  r73_14(r17_14.TP, "�ầu Lâu Korblox", "136803300")
+  r17_14.TP:AddSection("Skin Mini 1")
+  r73_14(r17_14.TP, "Thân", "86276167122427")
+  r73_14(r17_14.TP, "Chân Trái", "120785401936070")
+  r73_14(r17_14.TP, "Chân Phải", "103061743974631")
+  r73_14(r17_14.TP, "Tay Phải", "91595991056038")
+  r73_14(r17_14.TP, "Tay Trái", "83057025799838")
+  r17_14.TP:AddSection("Skin Mini 2")
+  r73_14(r17_14.TP, "Thân", "112722466960512")
+  r73_14(r17_14.TP, "Tay Trái", "82598238110471")
+  r73_14(r17_14.TP, "Tay Phải", "76079756909323")
+  r73_14(r17_14.TP, "Chân Trái", "103380121023771")
+  r73_14(r17_14.TP, "Chân Phải", "107431241133468")
+  r17_14.TP:AddSection("Skin Mini 3")
+  r73_14(r17_14.TP, "Thân", "86122752579187")
+  r73_14(r17_14.TP, "Tay Trái", "91583420445531")
+  r73_14(r17_14.TP, "Tay Phải", "85720657972091")
+  r73_14(r17_14.TP, "Chân Trái", "118745550941304")
+  r73_14(r17_14.TP, "Chân Phải", "124168624661431")
+  r17_14.TP:AddSection("Người Thon + Cao")
+  r73_14(r17_14.TP, "Thân", "92757812011061")
+  r73_14(r17_14.TP, "Tay Trái", "115905570886697")
+  r73_14(r17_14.TP, "Tay Phải", "99519402284266")
+  r73_14(r17_14.TP, "Chân Trái", "124343282827669")
+  r73_14(r17_14.TP, "Chân Phải", "84418052877367")
+  local r74_14 = game:GetService("Players")
+  local r75_14 = game:GetService("RunService")
+  local r76_14 = r74_14.LocalPlayer
+  local r77_14 = r76_14.Character or r76_14.CharacterAdded:Wait()
+  if not r77_14 or not r77_14:FindFirstChild("NameTag") then
+    warn("Không tìm thấy nhân vật")
+    return 
+  end
+  local r78_14 = r77_14.NameTag.Main
+  local r79_14 = r78_14:FindFirstChild("Rank")
+  local r80_14 = r78_14:FindFirstChild("UserDisplayName")
+  local r81_14 = r78_14:FindFirstChild("Username")
+  local r82_14 = nil	-- notice: implicit variable refs by block#[21]
+  if r79_14 then
+    r82_14 = r79_14.Text
+    if not r82_14 then
+      ::label_942::
+      r82_14 = "Rank"
+    end
+  else
+    goto label_942	-- block#17 is visited secondly
+  end
+  local r83_14 = nil	-- notice: implicit variable refs by block#[21]
+  if r79_14 then
+    r83_14 = r79_14.TextColor3
+    if not r83_14 then
+      ::label_949::
+      r83_14 = Color3.new(1, 1, 1)
+    end
+  else
+    goto label_949	-- block#20 is visited secondly
+  end
+  local r84_14 = {
+    [" Cậu Cả ������"] = Color3.fromRGB(255, 255, 0),
+    ["Dân Xã Hội"] = Color3.fromRGB(255, 0, 0),
+  }
+  r17_14.Roles:AddDropdown("SelectRole", {
+    Title = "Chọn Role",
+    Values = {
+      "Mặc định",
+      " Cậu Cả ������",
+      "Dân Xã Hội"
+    },
+    Multi = false,
+    Default = "Mặc định",
+    Callback = function(r0_249)
+      -- line: [0, 0] id: 249
+      if not r79_14 then
+        return 
+      end
+      if r0_249 == "Mặc định" then
+        r79_14.Text = r82_14
+        r79_14.TextColor3 = r83_14
+      else
+        r79_14.Text = r0_249
+        r79_14.TextColor3 = r84_14[r0_249] or Color3.new(1, 1, 1)
+      end
+    end,
+  })
+  local r87_14 = "AddInput"
+  r87_14 = "CustomRoleInput"
+  r17_14.Roles:[r87_14](r87_14, {
+    Title = "Role tùy chỉnh",
+    Default = "",
+    Placeholder = "Nhập Role bạn muốn...",
+    Callback = function(r0_245)
+      -- line: [0, 0] id: 245
+      if r79_14 and r0_245 ~= "" then
+        r79_14.Text = r0_245
+        r79_14.TextColor3 = Color3.new(1, 1, 1)
+      elseif r79_14 then
+        r79_14.Text = r82_14
+        r79_14.TextColor3 = r83_14
+      end
+    end,
+  })
+  local r85_14 = "Trắng"
+  local r86_14 = Color3.fromRGB(255, 0, 0)
+  r87_14 = Color3.fromRGB(0, 0, 255)
+  local r88_14 = Color3.fromRGB(255, 255, 255)
+  local r89_14 = false
+  local r90_14 = nil
+  local r91_14 = {
+    Color3.fromRGB(255, 0, 0),
+    Color3.fromRGB(255, 127, 0),
+    Color3.fromRGB(255, 255, 0),
+    Color3.fromRGB(0, 255, 0),
+    Color3.fromRGB(0, 0, 255),
+    Color3.fromRGB(75, 0, 130),
+    Color3.fromRGB(143, 0, 255)
+  }
+  local function r92_14()
+    -- line: [0, 0] id: 64
+    if r90_14 then
+      r90_14:Disconnect()
+      r90_14 = nil
+    end
+    r89_14 = false
+    if r85_14 == "Trắng" then
+      r80_14.TextColor3 = Color3.new(1, 1, 1)
+      r81_14.TextColor3 = Color3.new(1, 1, 1)
+    elseif r85_14 == "Chọn" then
+      r80_14.TextColor3 = r88_14
+      r81_14.TextColor3 = r88_14
+    else
+      local r0_64 = r85_14
+      if r0_64 == "Gradient" then
+        r0_64 = 0
+        r90_14 = r75_14.Heartbeat:Connect(function(r0_66)
+          -- line: [0, 0] id: 66
+          r0_64 = r0_64 + r0_66
+          local r1_66 = math.abs(math.sin(r0_64))
+          local r2_66 = Color3.new(r86_14.R + (r87_14.R - r86_14.R) * r1_66, r86_14.G + (r87_14.G - r86_14.G) * r1_66, r86_14.B + (r87_14.B - r86_14.B) * r1_66)
+          r80_14.TextColor3 = r2_66
+          r81_14.TextColor3 = r2_66
+        end)
+        -- close: r0_64
+      else
+        r0_64 = r85_14
+        if r0_64 == "Rainbow" then
+          r0_64 = true
+          r89_14 = r0_64
+          r0_64 = coroutine
+          r0_64 = r0_64.wrap
+          r0_64 = r0_64(function()
+            -- line: [0, 0] id: 65
+            local r0_65 = 1
+            while r89_14 do
+              local r1_65 = r0_65 % #r91_14 + 1
+              local r2_65 = r91_14[r0_65]
+              local r3_65 = r91_14[r1_65]
+              for r7_65 = 0, 1, 0.02 do
+                local r8_65 = Color3.new(r2_65.R + (r3_65.R - r2_65.R) * r7_65, r2_65.G + (r3_65.G - r2_65.G) * r7_65, r2_65.B + (r3_65.B - r2_65.B) * r7_65)
+                r80_14.TextColor3 = r8_65
+                r81_14.TextColor3 = r8_65
+                task.wait(0.03)
+              end
+              r0_65 = r1_65
+            end
+          end)
+          r0_64()
+        end
+      end
+    end
+  end
+  r17_14.Roles:AddDropdown("ColorEffect", {
+    Title = "Chế độ màu",
+    Values = {
+      "Trắng",
+      "Chọn",
+      "Gradient",
+      "Rainbow"
+    },
+    Default = "Trắng",
+    Callback = function(r0_91)
+      -- line: [0, 0] id: 91
+      r85_14 = r0_91
+      r92_14()
+    end,
+  })
+  local r95_14 = "AddColorpicker"
+  r95_14 = "CustomColor"
+  r17_14.Roles:[r95_14](r95_14, {
+    Title = "Màu đã chọn",
+    Default = Color3.fromRGB(255, 255, 255),
+    Callback = function(r0_78)
+      -- line: [0, 0] id: 78
+      r88_14 = r0_78
+      if r85_14 == "Chọn" then
+        r92_14()
+      end
+    end,
+  })
+  r95_14 = "AddColorpicker"
+  r95_14 = "Color1"
+  r17_14.Roles:[r95_14](r95_14, {
+    Title = "Màu 1 (Gradient)",
+    Default = Color3.fromRGB(255, 0, 0),
+    Callback = function(r0_235)
+      -- line: [0, 0] id: 235
+      r86_14 = r0_235
+    end,
+  })
+  r95_14 = "AddColorpicker"
+  r95_14 = "Color2"
+  r17_14.Roles:[r95_14](r95_14, {
+    Title = "Màu 2 (Gradient)",
+    Default = Color3.fromRGB(0, 0, 255),
+    Callback = function(r0_254)
+      -- line: [0, 0] id: 254
+      r87_14 = r0_254
+    end,
+  })
+  local r94_14 = game:GetService("Players").LocalPlayer
+  r95_14 = game:GetService("Workspace")
+  local r97_14 = (r94_14.Character or r94_14.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart")
+  local function r98_14(r0_227)
+    -- line: [0, 0] id: 227
+    if r97_14 then
+      r97_14.CFrame = CFrame.new(r0_227 + Vector3.new(0, 3, 0))
+    end
+  end
+  local function r99_14(r0_272)
+    -- line: [0, 0] id: 272
+    local r1_272 = r0_272:FindFirstChildOfClass("Humanoid")
+    if r1_272 and 0 < r1_272.Health then
+      r1_272.Health = 0
+    end
+  end
+  local function r100_14()
+    -- line: [0, 0] id: 103
+    local r0_103 = workspace.CityNPCs.NPCs:GetChildren()
+    for r4_103, r5_103 in pairs(r0_103) do
+      local r6_103 = r5_103:FindFirstChildOfClass("Humanoid")
+      if r6_103 then
+        if not r6_103:GetAttribute("OldHealth") then
+          r6_103:SetAttribute("OldHealth", r6_103.MaxHealth)
+        end
+        r6_103.Health = r6_103:GetAttribute("OldHealth")
+      end
+    end
+    task.wait(0.5)
+    for r4_103, r5_103 in pairs(r0_103) do
+      local r6_103 = r5_103:FindFirstChildOfClass("Humanoid")
+      if r6_103 then
+        r6_103.Health = 0
+      end
+    end
+    for r4_103, r5_103 in pairs(workspace.CityNPCs.Drop:GetDescendants()) do
+      if r5_103:IsA("ProximityPrompt") then
+        r5_103.HoldDuration = 0
+        r5_103.MaxActivationDistance = 20
+      end
+    end
+  end
+  local function r101_14()
+    -- line: [0, 0] id: 202
+    local r0_202 = workspace.CityNPCs.Drop:GetChildren()
+    for r4_202, r5_202 in pairs(r0_202) do
+      local r6_202 = r5_202.Name:lower()
+      if r6_202:find("cash") or r6_202:find("money") or r6_202:find("chest") then
+        local r7_202 = r5_202:FindFirstChildOfClass("ProximityPrompt") or r5_202:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if r7_202 then
+          r97_14.CFrame = CFrame.new(r5_202.Position)
+          task.wait(0.05)
+          fireproximityprompt(r7_202, 1)
+        end
+      end
+    end
+    for r4_202, r5_202 in pairs(r0_202) do
+      local r6_202 = r5_202.Name:lower()
+      if not r6_202:find("cash") and not r6_202:find("money") and not r6_202:find("chest") then
+        local r7_202 = r5_202:FindFirstChildOfClass("ProximityPrompt") or r5_202:FindFirstChildWhichIsA("ProximityPrompt", true)
+        if r7_202 then
+          r97_14.CFrame = CFrame.new(r5_202.Position)
+          task.wait(0.05)
+          fireproximityprompt(r7_202, 1)
+        end
+      end
+    end
+  end
+  local function r102_14()
+    -- line: [0, 0] id: 23
+    local r1_23 = math.huge
+    local r0_23 = nil	-- notice: implicit variable refs by block#[8]
+    for r5_23, r6_23 in pairs(workspace.CityNPCs.NPCs:GetChildren()) do
+      if r6_23:IsA("Model") and r6_23:FindFirstChild("HumanoidRootPart") then
+        local r7_23 = r6_23:FindFirstChildOfClass("Humanoid")
+        if r7_23 and 0 < r7_23.Health then
+          local r8_23 = (r97_14.Position - r6_23.HumanoidRootPart.Position).Magnitude
+          if r8_23 < r1_23 then
+            r0_23 = r6_23
+            r1_23 = r8_23
+          end
+        end
+      end
+    end
+    return r0_23
+  end
+  local r103_14 = false
+  r17_14.Money:AddToggle("AutoFarmNPC", {
+    Title = "Auto Farm NPC + Ưu tiên tiền",
+    Default = false,
+    Callback = function(r0_70)
+      -- line: [0, 0] id: 70
+      r103_14 = r0_70
+      if r103_14 then
+        task.spawn(function()
+          -- line: [0, 0] id: 71
+          while r103_14 do
+            local r0_71 = pairs
+            for r3_71, r4_71 in r0_71(workspace.CityNPCs.Drop:GetChildren()) do
+              local r5_71 = r4_71.Name:lower()
+              if r5_71:find("cash") or r5_71:find("money") or r5_71:find("chest") then
+                local r6_71 = r4_71:FindFirstChildOfClass("ProximityPrompt") or r4_71:FindFirstChildWhichIsA("ProximityPrompt", true)
+                if r6_71 then
+                  r97_14.CFrame = CFrame.new(r4_71.Position)
+                  task.wait(0.05)
+                  fireproximityprompt(r6_71, 1)
+                end
+              end
+            end
+            r0_71 = r102_14()
+            if r0_71 then
+              r98_14(r0_71.HumanoidRootPart.Position)
+              task.wait(0.3)
+              r99_14(r0_71)
+              task.wait(0.2)
+              r101_14()
+            else
+              warn("��️ Không tìm thấy NPC nào — reset lại toàn bộ...")
+              r100_14()
+            end
+            task.wait(0.3)
+          end
+        end)
+      end
+    end,
+  })
+  local r106_14 = "AddInput"
+  r106_14 = "MoneyInput"
+  r17_14.Money:[r106_14](r106_14, {
+    Title = " Nhập số tiền",
+    Default = "",
+    Placeholder = "VD: 999999",
+    Callback = function(r0_75)
+      -- line: [0, 0] id: 75
+      local r2_75 = game:GetService("Players").LocalPlayer:FindFirstChild("leaderstats")
+      if r2_75 and r2_75:FindFirstChild("VND") then
+        local r3_75 = tonumber(r0_75)
+        if r3_75 then
+          r2_75.VND.Value = r3_75
+        else
+          r10_14:Notify({
+            Title = " Lỗi",
+            Content = "Vui lòng nhập số hợp lệ!",
+            Duration = 3,
+          })
+        end
+      else
+        r10_14:Notify({
+          Title = " Không tìm thấy",
+          Duration = 3,
+        })
+      end
+    end,
+  })
+  local r104_14 = game:GetService("Players").LocalPlayer
+  local r105_14 = game:GetService("RunService")
+  r106_14 = r104_14:WaitForChild("leaderstats"):WaitForChild("VND").Value
+  r17_14.Money:AddButton({
+    Title = "Reset về ban đầu",
+    Description = "Trả lại số tiền lúc đầu",
+    Callback = function()
+      -- line: [0, 0] id: 210
+      local r0_210 = r104_14:FindFirstChild("leaderstats")
+      if r0_210 and r0_210:FindFirstChild("VND") then
+        r0_210.VND.Value = r106_14
+        r10_14:Notify({
+          Title = "�� Reset thành công",
+          Content = "VND đã trở về " .. tostring(r106_14),
+          Duration = 3,
+        })
+      else
+        r10_14:Notify({
+          Title = "��️ Không tìm thấy leaderstats hoặc VND",
+          Duration = 3,
+        })
+      end
+    end,
+  })
+  local r107_14 = r17_14.Money:AddParagraph({
+    Title = "0",
+    Content = "Số tiền kiếm được",
+  })
+  local r108_14 = r17_14.Money:AddParagraph({
+    Title = "0",
+    Content = "Số dư hiện tại",
+  })
+  local r109_14 = r17_14.Money:AddParagraph({
+    Title = "00:00:00",
+    Content = "Thời gian treo",
+  })
+  local function r110_14(r0_215)
+    -- line: [0, 0] id: 215
+    local r1_215 = tostring(r0_215):reverse():gsub("(%d%d%d)", "%1,"):reverse()
+    if r1_215:sub(1, 1) == "," then
+      r1_215 = r1_215:sub(2)
+    end
+    return r1_215
+  end
+  local r111_14 = r104_14:WaitForChild("leaderstats"):WaitForChild("VND")
+  local r112_14 = r111_14.Value
+  local r113_14 = tick()
+  r105_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 87
+    local r0_87 = r111_14.Value
+    r107_14:SetTitle(" " .. r110_14(r0_87 - r112_14))
+    r108_14:SetTitle(" " .. r110_14(r0_87))
+    local r2_87 = tick() - r113_14
+    r109_14:SetTitle(string.format(" %02d:%02d:%02d", math.floor(r2_87 / 3600), math.floor(r2_87 % 3600 / 60), math.floor(r2_87 % 60)))
+  end)
+  r17_14.Money:AddToggle("FPSBoost", {
+    Title = " FPS Boost",
+    Default = false,
+    Callback = function(r0_240)
+      -- line: [0, 0] id: 240
+      if r0_240 then
+        setfpscap(30)
+        r51_14.GlobalShadows = false
+        r51_14.FogEnd = 9000000000
+        for r4_240, r5_240 in pairs(workspace:GetDescendants()) do
+          if r5_240:IsA("BasePart") then
+            r5_240.Material = Enum.Material.SmoothPlastic
+            r5_240.Reflectance = 0
+          elseif r5_240:IsA("Decal") or r5_240:IsA("Texture") then
+            r5_240.Transparency = 1
+          end
+        end
+      else
+        setfpscap(999)
+        r51_14.GlobalShadows = true
+      end
+    end,
+  })
+  local r115_14 = game:GetService("Players").LocalPlayer
+  local r116_14 = r115_14:FindFirstChild("stats") and r115_14.stats:FindFirstChild("Level")
+  if r116_14 then
+    r116_14.Value = 1000000000
+  end
+  local r117_14 = {
+    {
+      Name = "Sảnh Chính",
+      Position = Vector3.new(674.5293, 20.3271, -381.9542),
+    },
+    {
+      Name = "Bán Phóng Lợn",
+      Position = Vector3.new(792.9041, 20.3271, -290.885),
+    },
+    {
+      Name = "Gara Ô Tô",
+      Position = Vector3.new(814.2191, 20.3271, 133.1891),
+    },
+    {
+      Name = "Chùa",
+      Position = Vector3.new(1464.2713, 86.7332, -290.7584),
+    },
+    {
+      Name = "Farm Gỗ",
+      Position = Vector3.new(1650.7684, 18.7658, -324.5135),
+    },
+    {
+      Name = "Gara Xe Máy",
+      Position = Vector3.new(1095.4713, 20.209, -671.6462),
+    },
+    {
+      Name = "Chỗ Mua Xe",
+      Position = Vector3.new(771.1827, 18.7002, -480.8843),
+    },
+    {
+      Name = "�ồn Công An",
+      Position = Vector3.new(583.4995, 18.7001, -695.2412),
+    },
+    {
+      Name = "Trụ Sở Công An",
+      Position = Vector3.new(759.4039, 18.7001, -840.0175),
+    },
+    {
+      Name = "Công Viên",
+      Position = Vector3.new(-59.2103, 29.6434, -815.5474),
+    },
+    {
+      Name = "Tháp Trầm Hương",
+      Position = Vector3.new(69.9936, 19.4572, -127.9629),
+    },
+    {
+      Name = "Khu Boss",
+      Position = Vector3.new(-2578, 278, -1519),
+    },
+    {
+      Name = "�à Lạt",
+      Position = Vector3.new(-17052, 457, -1404),
+    }
+  }
+  local function r118_14(r0_21)
+    -- line: [0, 0] id: 21
+    (r76_14.Character or r76_14.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart").CFrame = CFrame.new(r0_21)
+  end
+  for r122_14, r123_14 in ipairs(r117_14) do
+    local r126_14 = {
+      Title = r123_14.Name,
+      Description = string.format("X: %.1f, Y: %.1f, Z: %.1f", r123_14.Position.X, r123_14.Position.Y, r123_14.Position.Z),
+      Callback = function()
+        -- line: [0, 0] id: 239
+        r118_14(r123_14.Position)
+      end,
+    }
+    r17_14.Teleport:AddButton(r126_14)
+    -- close: r122_14
+  end
+  function PVP()
+    -- line: [0, 0] id: 31
+    repeat
+      task.wait()
+    until game:IsLoaded()
+    local r0_31 = game:GetService("UserInputService")
+    local r1_31 = game:GetService("Players")
+    local r2_31 = game:GetService("RunService")
+    local r3_31 = game:GetService("TweenService")
+    local r4_31 = r0_31.TouchEnabled and not r0_31.KeyboardEnabled
+    local r5_31 = nil	-- notice: implicit variable refs by block#[12]
+    if r4_31 then
+      r5_31 = UDim2.fromOffset(230, 270)
+      if not r5_31 then
+        ::label_38::
+        r5_31 = UDim2.fromOffset(300, 370)
+      end
+    else
+      goto label_38	-- block#5 is visited secondly
+    end
+    local r6_31 = nil	-- notice: implicit variable refs by block#[18]
+    if r4_31 then
+      r6_31 = 190
+      if not r6_31 then
+        ::label_48::
+        r6_31 = 240
+      end
+    else
+      goto label_48	-- block#8 is visited secondly
+    end
+    local r7_31 = nil	-- notice: implicit variable refs by block#[18]
+    if r4_31 then
+      r7_31 = 32
+      if not r7_31 then
+        ::label_54::
+        r7_31 = 40
+      end
+    else
+      goto label_54	-- block#11 is visited secondly
+    end
+    local r8_31 = Instance.new("ScreenGui")
+    r8_31.Parent = game.CoreGui
+    local r9_31 = Instance.new("Frame")
+    r9_31.Size = r5_31
+    r9_31.Position = UDim2.new(0.5, -r5_31.X.Offset / 2, 0.35, 0)
+    r9_31.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    r9_31.BorderSizePixel = 0
+    r9_31.Active = true
+    r9_31.Draggable = true
+    r9_31.Parent = r8_31
+    Instance.new("UICorner", r9_31).CornerRadius = UDim.new(0, 10)
+    local r10_31 = Instance.new("UIStroke", r9_31)
+    r10_31.Thickness = 2
+    r10_31.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    task.spawn(function()
+      -- line: [0, 0] id: 56
+      local r0_56 = 0
+      while task.wait(0.03) do
+        r0_56 = (r0_56 + 0.005) % 1
+        local r1_56 = r10_31
+        r1_56.Color = Color3.fromHSV(r0_56, 1, 1)
+      end
+    end)
+    local r11_31 = Instance.new("TextLabel", r9_31)
+    local r12_31 = UDim2.new(1, 0, 0, 32)
+    r11_31.Size = r12_31
+    r11_31.BackgroundTransparency = 1
+    r11_31.Text = "�� Rez PvP ┃"
+    if r4_31 then
+      r12_31 = 18 or 22
+    else
+      goto label_135	-- block#14 is visited secondly
+    end
+    r11_31.TextSize = r12_31
+    r11_31.Font = Enum.Font.GothamBold
+    r11_31.TextColor3 = Color3.fromRGB(255, 255, 255)
+    r12_31 = Instance.new("TextLabel", r9_31)
+    r12_31.Size = UDim2.new(1, 0, 0, 20)
+    local r13_31 = UDim2.new(0, 0, 0, 25)
+    r12_31.Position = r13_31
+    r12_31.BackgroundTransparency = 1
+    r12_31.Text = "Bá Sàn Cộng Đồng VN"
+    if r4_31 then
+      r13_31 = 12 or 14
+    else
+      goto label_176	-- block#17 is visited secondly
+    end
+    r12_31.TextSize = r13_31
+    r12_31.Font = Enum.Font.Gotham
+    r12_31.TextColor3 = Color3.fromRGB(255, 60, 60)
+    r13_31 = Instance.new("Frame", r9_31)
+    r13_31.Size = UDim2.new(1, 0, 1, -55)
+    r13_31.Position = UDim2.new(0, 0, 0, 55)
+    r13_31.BackgroundTransparency = 1
+    local r14_31 = Instance.new("UIListLayout", r13_31)
+    r14_31.FillDirection = Enum.FillDirection.Vertical
+    r14_31.Padding = UDim.new(0, 8)
+    r14_31.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    local function r15_31(r0_37)
+      -- line: [0, 0] id: 37
+      local r1_37 = Instance.new("TextButton")
+      r1_37.Size = UDim2.new(0, r6_31, 0, r7_31)
+      r1_37.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+      r1_37.Text = r0_37
+      r1_37.Font = Enum.Font.GothamBold
+      local r2_37 = r4_31
+      if r2_37 then
+        r2_37 = 14 or 16
+      else
+        goto label_30	-- block#2 is visited secondly
+      end
+      r1_37.TextSize = r2_37
+      r1_37.TextColor3 = Color3.fromRGB(255, 255, 255)
+      Instance.new("UICorner", r1_37).CornerRadius = UDim.new(0, 6)
+      r1_37.MouseEnter:Connect(function()
+        -- line: [0, 0] id: 39
+        if not r4_31 then
+          r1_37.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        end
+      end)
+      r1_37.MouseLeave:Connect(function()
+        -- line: [0, 0] id: 38
+        if not r4_31 then
+          r1_37.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        end
+      end)
+      return r1_37
+    end
+    local r16_31 = r1_31.LocalPlayer
+    local r17_31 = nil
+    local r18_31 = nil
+    local r19_31 = 16
+    r16_31.CharacterAdded:Connect(function(r0_40)
+      -- line: [0, 0] id: 40
+      r17_31 = r0_40
+      r18_31 = r0_40:WaitForChild("Humanoid")
+      r19_31 = r18_31.WalkSpeed
+    end)
+    if r16_31.Character then
+      r17_31 = r16_31.Character
+      r18_31 = r17_31:FindFirstChildOfClass("Humanoid")
+      if r18_31 then
+        r19_31 = r18_31.WalkSpeed
+      end
+    end
+    local function r20_31(r0_43)
+      -- line: [0, 0] id: 43
+      if r0_43.UserInputType == Enum.UserInputType.MouseButton1 or r0_43.UserInputType == Enum.UserInputType.Touch then
+        isDragging = true
+        updateSlider(r0_31:GetMouseLocation().X)
+      end
+    end
+    local function r22_31()
+      -- line: [0, 0] id: 44
+      isDragging = false
+    end
+    r0_31.InputChanged:Connect(function(r0_52)
+      -- line: [0, 0] id: 52
+      if isDragging and (r0_52.UserInputType == Enum.UserInputType.MouseMovement or r0_52.UserInputType == Enum.UserInputType.Touch) then
+        updateSlider(r0_52.Position.X)
+      end
+    end)
+    r0_31.InputEnded:Connect(r22_31)
+    local r23_31 = game:GetService("Players")
+    local r24_31 = game:GetService("RunService")
+    local r25_31 = game:GetService("TweenService")
+    local r26_31 = r23_31.LocalPlayer
+    local r27_31 = r26_31.Character or r26_31.CharacterAdded:Wait()
+    local r28_31 = r27_31:WaitForChild("HumanoidRootPart")
+    r26_31.CharacterAdded:Connect(function(r0_51)
+      -- line: [0, 0] id: 51
+      r27_31 = r0_51
+      r28_31 = r0_51:WaitForChild("HumanoidRootPart")
+    end)
+    local r29_31 = false
+    local r30_31 = 30
+    local r31_31 = r15_31("Tăng tốc chạy")
+    r31_31.Parent = r13_31
+    r31_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 34
+      r29_31 = not r29_31
+      local r0_34 = r31_31
+      local r1_34 = r29_31
+      if r1_34 then
+        r1_34 = "Tăng tốc: ON" or "Tăng tốc chạy"
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_34.Text = r1_34
+    end)
+    local r32_31 = Instance.new("TextLabel", r13_31)
+    r32_31.Size = UDim2.new(1, 0, 0, 35)
+    r32_31.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    r32_31.BackgroundTransparency = 0.15
+    r32_31.TextColor3 = Color3.fromRGB(255, 255, 255)
+    r32_31.Font = Enum.Font.GothamBold
+    r32_31.TextSize = 14
+    r32_31.Text = "Tốc độ: " .. r30_31
+    Instance.new("UICorner", r32_31).CornerRadius = UDim.new(0, 8)
+    local r33_31 = Instance.new("TextButton", r32_31)
+    r33_31.Size = UDim2.new(1, 0, 1, 0)
+    r33_31.BackgroundTransparency = 1
+    r33_31.Text = ""
+    r33_31.MouseButton1Down:Connect(function()
+      -- line: [0, 0] id: 47
+      local r0_47 = r24_31.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 48
+        r30_31 = math.floor(20 + math.clamp((r23_31.LocalPlayer:GetMouse().X - r32_31.AbsolutePosition.X) / r32_31.AbsoluteSize.X, 0, 1) * 40)
+        r32_31.Text = "Tốc độ: " .. r30_31
+      end)
+      r33_31.MouseButton1Up:Once(function()
+        -- line: [0, 0] id: 49
+        if r0_47 then
+          r0_47:Disconnect()
+        end
+      end)
+    end)
+    local r34_31 = nil
+    local r35_31 = nil
+    local function r36_31()
+      -- line: [0, 0] id: 41
+      local r0_41 = r26_31.Character or r26_31.CharacterAdded:Wait()
+      r34_31 = r0_41:WaitForChild("Humanoid")
+      r35_31 = r0_41:WaitForChild("HumanoidRootPart")
+    end
+    r36_31()
+    r26_31.CharacterAdded:Connect(r36_31)
+    r24_31.RenderStepped:Connect(function(r0_54)
+      -- line: [0, 0] id: 54
+      if not r29_31 then
+        return 
+      end
+      if not r34_31 or not r35_31 then
+        return 
+      end
+      local r1_54 = r34_31.MoveDirection
+      if r1_54.Magnitude > 0 then
+        r35_31.CFrame = r35_31.CFrame + r1_54 * (r30_31 - 16) * r0_54
+      end
+    end)
+    local r37_31 = false
+    local r38_31 = r15_31(" Hiển thị máu người chơi ")
+    r38_31.Parent = r13_31
+    local r39_31 = {}
+    r38_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 53
+      r37_31 = not r37_31
+      local r0_53 = r38_31
+      local r1_53 = r37_31
+      if r1_53 then
+        r1_53 = "�ang hiển thị " or "Hiển thị máu người chơi"
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_53.Text = r1_53
+      if not r37_31 then
+        for r3_53, r4_53 in pairs(r39_31) do
+          r4_53:Destroy()
+        end
+        r39_31 = {}
+      end
+    end)
+    r24_31.RenderStepped:Connect(function()
+      -- line: [0, 0] id: 36
+      if not r37_31 then
+        return 
+      end
+      for r3_36, r4_36 in pairs(r23_31:GetPlayers()) do
+        if r4_36 ~= r26_31 and r4_36.Character and r4_36.Character:FindFirstChild("HumanoidRootPart") and r4_36.Character:FindFirstChild("Humanoid") then
+          local r5_36 = r4_36.Character.HumanoidRootPart
+          local r6_36 = r4_36.Character.Humanoid
+          if (r5_36.Position - r28_31.Position).Magnitude <= 100 and 0 < r6_36.Health then
+            if not r39_31[r4_36] then
+              local r8_36 = Instance.new("BillboardGui")
+              r8_36.Size = UDim2.new(0, 90, 0, 35)
+              r8_36.AlwaysOnTop = true
+              r8_36.LightInfluence = 0
+              r8_36.MaxDistance = 150
+              local r9_36 = Instance.new("TextLabel", r8_36)
+              r9_36.Size = UDim2.new(1, 0, 1, 0)
+              r9_36.BackgroundTransparency = 0.2
+              r9_36.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+              r9_36.TextColor3 = Color3.fromRGB(255, 0, 0)
+              r9_36.Font = Enum.Font.GothamBold
+              r9_36.TextSize = 16
+              r9_36.TextStrokeTransparency = 0.2
+              r9_36.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+              r9_36.Name = "HPText"
+              Instance.new("UICorner", r9_36).CornerRadius = UDim.new(0, 6)
+              r39_31[r4_36] = r8_36
+              r8_36.Parent = r4_36.Character
+            end
+            local r8_36 = r39_31[r4_36]
+            r8_36.Adornee = r5_36
+            r8_36.HPText.Text = math.floor(r6_36.Health)
+          elseif r39_31[r4_36] then
+            r39_31[r4_36]:Destroy()
+            r39_31[r4_36] = nil
+          end
+        end
+      end
+    end)
+    local r40_31 = false
+    local r41_31 = r15_31(" Auto đánh")
+    r41_31.Parent = r13_31
+    r41_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 35
+      r40_31 = not r40_31
+      local r0_35 = r41_31
+      local r1_35 = r40_31
+      if r1_35 then
+        r1_35 = "�ang Đánh" or "Auto đánh"
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_35.Text = r1_35
+    end)
+    task.spawn(function()
+      -- line: [0, 0] id: 32
+      -- notice: unreachable block#5
+      while true do
+        local r0_32 = r40_31
+        if r0_32 then
+          r0_32 = r27_31:FindFirstChildOfClass("Tool")
+          if r0_32 then
+            pcall(function()
+              -- line: [0, 0] id: 33
+              r0_32:Activate()
+            end)
+          end
+          -- close: r0_32
+        end
+        r0_32 = task
+        r0_32 = r0_32.wait
+        r0_32(0.2)
+      end
+    end)
+    local r42_31 = false
+    local r43_31 = r15_31(" Aimlock người gần nhất")
+    r43_31.Parent = r13_31
+    r43_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 45
+      r42_31 = not r42_31
+      local r0_45 = r43_31
+      local r1_45 = r42_31
+      if r1_45 then
+        r1_45 = "�ang Bật" or " Aimlock người gần nhất"
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_45.Text = r1_45
+    end)
+    local function r44_31()
+      -- line: [0, 0] id: 55
+      local r1_55 = 9999
+      local r0_55 = nil	-- notice: implicit variable refs by block#[8]
+      for r5_55, r6_55 in pairs(r23_31:GetPlayers()) do
+        if r6_55 ~= r26_31 and r6_55.Character and r6_55.Character:FindFirstChild("HumanoidRootPart") then
+          local r7_55 = (r6_55.Character.HumanoidRootPart.Position - r28_31.Position).Magnitude
+          if r7_55 < r1_55 and r7_55 <= 50 then
+            r0_55 = r6_55
+            r1_55 = r7_55
+          end
+        end
+      end
+      return r0_55
+    end
+    r24_31.RenderStepped:Connect(function()
+      -- line: [0, 0] id: 42
+      if not r42_31 then
+        return 
+      end
+      local r0_42 = r44_31()
+      if r0_42 and r0_42.Character and r0_42.Character:FindFirstChild("HumanoidRootPart") then
+        r28_31.CFrame = CFrame.new(r28_31.Position, r0_42.Character.HumanoidRootPart.Position)
+      end
+    end)
+    local r45_31 = false
+    local r46_31 = r15_31("Hitbox Player")
+    r46_31.Parent = r13_31
+    r46_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 46
+      r45_31 = not r45_31
+      local r0_46 = r46_31
+      local r1_46 = r45_31
+      if r1_46 then
+        r1_46 = " Hitbox" or " Hitbox Player"
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_46.Text = r1_46
+      for r3_46, r4_46 in ipairs(r23_31:GetPlayers()) do
+        if r4_46 ~= r26_31 and r4_46.Character and r4_46.Character:FindFirstChild("HumanoidRootPart") then
+          local r5_46 = r4_46.Character.HumanoidRootPart
+          if r45_31 then
+            local r6_46 = Instance.new("Highlight")
+            r6_46.Name = "ESP"
+            r6_46.Adornee = r4_46.Character
+            r6_46.FillColor = Color3.fromRGB(255, 0, 0)
+            r6_46.FillTransparency = 0.5
+            r6_46.OutlineTransparency = 0
+            r6_46.Parent = game.CoreGui
+            r5_46.Size = Vector3.new(10, 10, 10)
+            r5_46.Material = Enum.Material.ForceField
+            r5_46.Transparency = 0.5
+          else
+            if game.CoreGui:FindFirstChild("ESP") then
+              game.CoreGui.ESP:Destroy()
+            end
+            r5_46.Size = Vector3.new(2, 2, 1)
+            r5_46.Material = Enum.Material.Plastic
+            r5_46.Transparency = 1
+          end
+        end
+      end
+    end)
+    local r47_31 = Instance.new("TextButton", r9_31)
+    r47_31.Text = "��"
+    r47_31.Position = UDim2.new(1, -35, 0, 5)
+    r47_31.Size = UDim2.new(0, 30, 0, 25)
+    r47_31.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    r47_31.TextColor3 = Color3.fromRGB(255, 255, 255)
+    r47_31.Font = Enum.Font.GothamBold
+    r47_31.TextSize = 14
+    Instance.new("UICorner", r47_31).CornerRadius = UDim.new(0, 6)
+    r47_31.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 50
+      if r8_31 then
+        r8_31:Destroy()
+      end
+    end)
+  end
+  r17_14.PVP:AddButton({
+    Title = "Script PvP Mobile",
+    Description = "Nhấn Vào Đây Để Mở Script PVP Cực BÁ",
+    Callback = function()
+      -- line: [0, 0] id: 63
+      PVP()
+    end,
+  })
+  local r119_14 = game:GetService("Players")
+  local r120_14 = r119_14.LocalPlayer
+  local r121_14 = r120_14.Character or r120_14.CharacterAdded:Wait()
+  local r122_14 = r120_14:WaitForChild("Backpack")
+  local r123_14 = false
+  local r124_14 = Color3.fromRGB(255, 150, 50)
+  local r125_14 = {}
+  local r126_14 = {
+    PhongLon = function(r0_94)
+      -- line: [0, 0] id: 94
+      local r1_94 = r0_94:FindFirstChild("can")
+      if r1_94 and r1_94:FindFirstChild("Mesh") then
+        return r1_94.Mesh
+      end
+    end,
+    MaTau = function(r0_24)
+      -- line: [0, 0] id: 24
+      return r0_24:FindFirstChild("Hitbox")
+    end,
+    ["Trường thương"] = function(r0_277)
+      -- line: [0, 0] id: 277
+      return r0_277:FindFirstChild("Object_3")
+    end,
+    ["Phong Lon (Hoàng Kim)"] = function(r0_253)
+      -- line: [0, 0] id: 253
+      return r0_253:FindFirstChild("pl")
+    end,
+    ["Bát Xà Mâu"] = function(r0_209)
+      -- line: [0, 0] id: 209
+      return r0_209:FindFirstChild("Cylinder.002")
+    end,
+    ["Hồng Ngọc Katana"] = function(r0_260)
+      -- line: [0, 0] id: 260
+      return r0_260:FindFirstChild("Hitbox")
+    end,
+  }
+  r126_14["Hồng Ngọc Katana"] = function(r0_229)
+    -- line: [0, 0] id: 229
+    return r0_229:FindFirstChild("Handle")
+  end
+  local function r127_14(r0_242)
+    -- line: [0, 0] id: 242
+    if not r0_242 or not r0_242:IsA("Tool") then
+      return 
+    end
+    local r1_242 = nil
+    if r126_14[r0_242.Name] then
+      r1_242 = r126_14[r0_242.Name](r0_242)
+    end
+    if not r1_242 then
+      r1_242 = r0_242:FindFirstChildWhichIsA("BasePart") or r0_242:FindFirstChild("Handle")
+    end
+    if not r1_242 or not r1_242:IsA("BasePart") then
+      return 
+    end
+    for r5_242, r6_242 in ipairs(r1_242:GetChildren()) do
+      if r6_242:IsA("Fire") or r6_242:IsA("ParticleEmitter") or r6_242:IsA("Trail") then
+        r6_242:Destroy()
+      end
+    end
+    local r2_242 = Instance.new("Fire")
+    r2_242.Name = "ClassicFire"
+    r2_242.Size = 10
+    r2_242.Heat = 17
+    r2_242.Color = r124_14
+    r2_242.SecondaryColor = r124_14:Lerp(Color3.new(1, 1, 1), 0.5)
+    r2_242.Parent = r1_242
+    local r3_242 = Instance.new("Attachment", r1_242)
+    local r4_242 = Instance.new("ParticleEmitter")
+    r4_242.Name = "LightningEffect"
+    r4_242.Texture = "rbxassetid://243098098"
+    r4_242.Rate = 40
+    r4_242.Lifetime = NumberRange.new(0.1, 0.3)
+    r4_242.Speed = NumberRange.new(2, 6)
+    r4_242.Rotation = NumberRange.new(0, 360)
+    r4_242.LightEmission = 0.8
+    r4_242.Color = ColorSequence.new(r124_14)
+    r4_242.Size = NumberSequence.new({
+      NumberSequenceKeypoint.new(0, 0.8),
+      NumberSequenceKeypoint.new(1, 0.2)
+    })
+    r4_242.Transparency = NumberSequence.new({
+      NumberSequenceKeypoint.new(0, 0),
+      NumberSequenceKeypoint.new(1, 1)
+    })
+    r4_242.LockedToPart = true
+    r4_242.Parent = r3_242
+    local r5_242 = Instance.new("Attachment", r1_242)
+    local r6_242 = Instance.new("Attachment", r1_242)
+    r5_242.Position = Vector3.new(0, 0.3, 0.7)
+    r6_242.Position = Vector3.new(0, -0.3, -0.7)
+    local r7_242 = Instance.new("Trail")
+    r7_242.Name = "WeaponTrail"
+    r7_242.Attachment0 = r5_242
+    r7_242.Attachment1 = r6_242
+    r7_242.Color = ColorSequence.new(r124_14)
+    r7_242.Transparency = NumberSequence.new(0, 1)
+    r7_242.Lifetime = 0.25
+    r7_242.LightEmission = 0.5
+    r7_242.WidthScale = NumberSequence.new(1, 0)
+    r7_242.Parent = r1_242
+    r125_14[r0_242] = {
+      r2_242,
+      r4_242,
+      r7_242
+    }
+  end
+  local function r128_14()
+    -- line: [0, 0] id: 237
+    for r3_237, r4_237 in pairs(r125_14) do
+      for r8_237, r9_237 in ipairs(r4_237) do
+        if r9_237 and r9_237.Parent then
+          r9_237:Destroy()
+        end
+      end
+    end
+    r125_14 = {}
+  end
+  local function r129_14(r0_89)
+    -- line: [0, 0] id: 89
+    r124_14 = r0_89
+    for r4_89, r5_89 in pairs(r125_14) do
+      for r9_89, r10_89 in ipairs(r5_89) do
+        if r10_89:IsA("Fire") then
+          r10_89.Color = r0_89
+          r10_89.SecondaryColor = r0_89:Lerp(Color3.new(1, 1, 1), 0.5)
+        elseif r10_89:IsA("ParticleEmitter") or r10_89:IsA("Trail") then
+          r10_89.Color = ColorSequence.new(r0_89)
+        end
+      end
+    end
+  end
+  local function r130_14(r0_256)
+    -- line: [0, 0] id: 256
+    r0_256.ChildAdded:Connect(function(r0_257)
+      -- line: [0, 0] id: 257
+      if r123_14 and r0_257:IsA("Tool") then
+        task.wait(0.3)
+        r127_14(r0_257)
+      end
+    end)
+  end
+  r130_14(r121_14)
+  r120_14.CharacterAdded:Connect(r130_14)
+  local r133_14 = "FindFirstChildOfClass"
+  r133_14 = "Tool"
+  local r131_14 = r121_14:[r133_14](r133_14)
+  if r131_14 then
+    r127_14(r131_14)
+  end
+  r17_14.PVP:AddToggle("FX_Toggle", {
+    Title = "Hiệu Ứng Vũ Khí",
+    Description = "Bật tắt hiệu ứng lửa, tia chớp và vệt sáng cho Tool đang cầm",
+    Default = false,
+    Callback = function(r0_218)
+      -- line: [0, 0] id: 218
+      r123_14 = r0_218
+      if r0_218 then
+        local r1_218 = r120_14.Character and r120_14.Character:FindFirstChildOfClass("Tool")
+        if r1_218 then
+          r127_14(r1_218)
+        end
+      else
+        r128_14()
+      end
+    end,
+  })
+  local r134_14 = "AddColorpicker"
+  r134_14 = "FX_Color"
+  r17_14.PVP:[r134_14](r134_14, {
+    Title = "Màu Hiệu Ứng",
+    Default = Color3.fromRGB(255, 150, 50),
+    Callback = function(r0_26)
+      -- line: [0, 0] id: 26
+      r129_14(r0_26)
+    end,
+  })
+  r17_14.PVP:AddButton({
+    Title = "Nhặt ghế ",
+    Callback = function()
+      -- line: [0, 0] id: 231
+      local r0_231 = workspace:FindFirstChild("Ghe")
+      if not r0_231 then
+        return 
+      end
+      local r1_231 = 0
+      for r5_231, r6_231 in pairs(r0_231:GetChildren()) do
+        if r6_231.Name:lower():find("chair") or r6_231:IsA("Model") then
+          local r7_231 = r6_231:FindFirstChild("hitbox")
+          if r7_231 and r7_231:FindFirstChildOfClass("ClickDetector") then
+            fireclickdetector(r7_231:FindFirstChildOfClass("ClickDetector"))
+            r1_231 = r1_231 + 1
+          end
+        end
+      end
+    end,
+  })
+  local r132_14 = false
+  r17_14.PVP:AddToggle("AutoNhatGhe", {
+    Title = "Tự động nhặt ghế (0.5s)",
+    Default = false,
+    Callback = function(r0_258)
+      -- line: [0, 0] id: 258
+      r132_14 = r0_258
+      task.spawn(function()
+        -- line: [0, 0] id: 259
+        while r132_14 do
+          local r0_259 = workspace:FindFirstChild("Ghe")
+          if r0_259 then
+            for r4_259, r5_259 in pairs(r0_259:GetChildren()) do
+              if r5_259.Name:lower():find("chair") or r5_259:IsA("Model") then
+                local r6_259 = r5_259:FindFirstChild("hitbox")
+                if r6_259 and r6_259:FindFirstChildOfClass("ClickDetector") then
+                  fireclickdetector(r6_259:FindFirstChildOfClass("ClickDetector"))
+                end
+              end
+            end
+          end
+          task.wait(0.5)
+        end
+      end)
+    end,
+  })
+  r133_14 = nil
+  r134_14 = false
+  local r135_14 = false
+  local r136_14 = false
+  local r137_14 = false
+  local r138_14 = false
+  local r139_14 = {}
+  Instance.new("Folder").Name = "ESP"
+  r17_14.PVP:AddToggle("ToolHitboxESP", {
+    Title = "Hitbox Vũ Khí",
+    Default = false,
+  }):OnChanged(function(r0_205)
+    -- line: [0, 0] id: 205
+    r137_14 = r0_205
+    if not r0_205 then
+      for r4_205, r5_205 in pairs(r139_14) do
+        if r5_205 and r5_205.Parent then
+          r5_205:Destroy()
+        end
+      end
+      r139_14 = {}
+    end
+  end)
+  local function r141_14(r0_248)
+    -- line: [0, 0] id: 248
+    if r0_248 and r0_248:FindFirstChild("Handle") and not r139_14[r0_248] then
+      local r1_248 = r0_248.Handle
+      local r2_248 = Instance.new("SelectionBox")
+      r2_248.Name = "ToolHitboxESP"
+      r2_248.Adornee = r1_248
+      r2_248.LineThickness = 0.05
+      r2_248.Color3 = Color3.fromRGB(255, 255, 255)
+      r2_248.SurfaceTransparency = 1
+      r2_248.Parent = r1_248
+      r139_14[r0_248] = r2_248
+    end
+  end
+  r105_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 90
+    if r137_14 then
+      for r3_90, r4_90 in ipairs(r119_14:GetPlayers()) do
+        if r4_90.Character then
+          for r8_90, r9_90 in ipairs(r4_90.Character:GetChildren()) do
+            if r9_90:IsA("Tool") then
+              r141_14(r9_90)
+            end
+          end
+        end
+      end
+    end
+  end)
+  r119_14.PlayerRemoving:Connect(function(r0_275)
+    -- line: [0, 0] id: 275
+    if r0_275.Character then
+      for r4_275, r5_275 in ipairs(r0_275.Character:GetChildren()) do
+        if r139_14[r5_275] then
+          r139_14[r5_275]:Destroy()
+          r139_14[r5_275] = nil
+        end
+      end
+    end
+  end)
+  local r142_14 = false
+  local r143_14 = 0.1
+  local function r144_14()
+    -- line: [0, 0] id: 266
+    task.spawn(function()
+      -- line: [0, 0] id: 267
+      while r142_14 do
+        local r0_267 = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if r0_267 then
+          pcall(function()
+            -- line: [0, 0] id: 268
+            r0_267:Activate()
+          end)
+        end
+        task.wait(r143_14)
+        -- close: r0_267
+      end
+    end)
+  end
+  r17_14.PVP:AddToggle("AutoHit", {
+    Title = "Auto Đánh Nhanh",
+    Default = false,
+    Callback = function(r0_228)
+      -- line: [0, 0] id: 228
+      r142_14 = r0_228
+      if r142_14 then
+        r144_14()
+      end
+    end,
+  })
+  local r145_14 = false
+  local r146_14 = math.rad(60)
+  local r147_14 = 100
+  r17_14.PVP:AddToggle("AimLock", {
+    Title = "Aim Lock Player Gần",
+    Default = false,
+    Callback = function(r0_98)
+      -- line: [0, 0] id: 98
+      r145_14 = r0_98
+    end,
+  })
+  r105_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 81
+    if not r145_14 then
+      return 
+    end
+    local r1_81 = r120_14.Character and r0_81:FindFirstChild("HumanoidRootPart")
+    if not r0_81 or not r1_81 then
+      return 
+    end
+    local r2_81 = workspace.CurrentCamera
+    local r3_81 = nil
+    local r4_81 = r146_14
+    for r8_81, r9_81 in pairs(r119_14:GetPlayers()) do
+      if r9_81 ~= r120_14 and r9_81.Character and r9_81.Character:FindFirstChild("HumanoidRootPart") then
+        local r10_81 = r9_81.Character.HumanoidRootPart
+        local r11_81 = r9_81.Character:FindFirstChildOfClass("Humanoid")
+        if r11_81 and 0 < r11_81.Health then
+          local r13_81 = math.acos((r10_81.Position - r2_81.CFrame.Position).Unit:Dot(r2_81.CFrame.LookVector))
+          local r14_81 = (r1_81.Position - r10_81.Position).Magnitude
+          if r13_81 < r4_81 and r14_81 <= r147_14 then
+            r3_81 = r10_81
+            r4_81 = r13_81
+          end
+        end
+      end
+    end
+    if r3_81 then
+      local r5_81 = r1_81.Position
+      local r6_81 = r3_81.Position
+      r1_81.CFrame = CFrame.new(r5_81, r5_81 + (Vector3.new(r6_81.X, r5_81.Y, r6_81.Z) - r5_81).Unit)
+    end
+  end)
+  local r148_14 = game:GetService("Players")
+  local r149_14 = game:GetService("RunService")
+  local r150_14 = r148_14.LocalPlayer
+  local r151_14 = 200
+  local r152_14 = Color3.fromRGB(255, 80, 80)
+  local r153_14 = 0.3
+  local r154_14 = 0.15
+  local r155_14 = {}
+  local r156_14 = {}
+  local r157_14 = 0
+  local r158_14 = false
+  local function r159_14()
+    -- line: [0, 0] id: 269
+    local r0_269 = Instance.new("BoxHandleAdornment")
+    r0_269.AlwaysOnTop = true
+    r0_269.Color3 = r152_14
+    r0_269.Transparency = r153_14
+    r0_269.ZIndex = 1
+    r0_269.Adornee = nil
+    r0_269.Size = Vector3.new(3, 4, 3)
+    r0_269.Parent = workspace
+    return r0_269
+  end
+  local function r160_14()
+    -- line: [0, 0] id: 62
+    return table.remove(r155_14) or r159_14()
+  end
+  local function r161_14(r0_217)
+    -- line: [0, 0] id: 217
+    r0_217.Adornee = nil
+    r0_217.Parent = workspace
+    table.insert(r155_14, r0_217)
+  end
+  local function r162_14(r0_19)
+    -- line: [0, 0] id: 19
+    return r0_19 and (r0_19:FindFirstChild("HumanoidRootPart") or r0_19:FindFirstChild("Torso"))
+  end
+  local function r163_14(r0_58)
+    -- line: [0, 0] id: 58
+    local r1_58 = r0_58.Character
+    if not r1_58 then
+      return 
+    end
+    local r2_58 = r162_14(r1_58)
+    if not r2_58 then
+      return 
+    end
+    local r3_58 = r160_14()
+    r3_58.Adornee = r2_58
+    r3_58.Size = r2_58.Size + Vector3.new(3, 4, 3)
+    r156_14[r0_58] = r3_58
+  end
+  local function r164_14(r0_16)
+    -- line: [0, 0] id: 16
+    local r1_16 = r156_14[r0_16]
+    if r1_16 then
+      r161_14(r1_16)
+      r156_14[r0_16] = nil
+    end
+  end
+  local function r166_14()
+    -- line: [0, 0] id: 247
+    for r3_247, r4_247 in pairs(r156_14) do
+      r164_14(r3_247)
+    end
+  end
+  r149_14.Heartbeat:Connect(function(r0_212)
+    -- line: [0, 0] id: 212
+    if not r158_14 then
+      return 
+    end
+    r157_14 = r157_14 + r0_212
+    if r157_14 < r154_14 then
+      return 
+    end
+    r157_14 = 0
+    local r2_212 = r162_14(r150_14.Character)
+    if not r2_212 then
+      return 
+    end
+    for r6_212, r7_212 in ipairs(r148_14:GetPlayers()) do
+      if r7_212 ~= r150_14 and r7_212.Character then
+        local r8_212 = r162_14(r7_212.Character)
+        if r8_212 and r156_14[r7_212] then
+          r164_14(r7_212)
+        end
+      end
+    end
+    -- warn: not visited block [12]
+    -- block#12:
+    -- _u8(r7_212)
+    -- goto label_61
+  end)
+  function _G.EnableHitbox(r0_208)
+    -- line: [0, 0] id: 208
+    r158_14 = r0_208
+    if not r0_208 then
+      r166_14()
+    end
+  end
+  r17_14.PVP:AddToggle("ShowHitbox", {
+    Title = "Bật Hitbox",
+    Default = false,
+    Callback = function(r0_230)
+      -- line: [0, 0] id: 230
+      if r0_230 then
+        _G.EnableHitbox(true)
+      else
+        _G.EnableHitbox(false)
+      end
+    end,
+  })
+  local r167_14 = r148_14.LocalPlayer
+  local r168_14 = r167_14.Character or r167_14.CharacterAdded:Wait()
+  local r169_14 = r168_14:WaitForChild("HumanoidRootPart")
+  r167_14.CharacterAdded:Connect(function(r0_211)
+    -- line: [0, 0] id: 211
+    r168_14 = r0_211
+    r169_14 = r0_211:WaitForChild("HumanoidRootPart")
+  end)
+  local r170_14 = false
+  local r171_14 = false
+  local r172_14 = false
+  local r173_14 = false
+  local r174_14 = false
+  local r175_14 = nil
+  local r176_14 = nil
+  local r177_14 = 0
+  local r178_14 = 14
+  local r179_14 = 0.35
+  local r180_14 = 3.5
+  r167_14.Idled:Connect(function()
+    -- line: [0, 0] id: 72
+    VirtualUser:Button2Down(Vector2.new(0, 0), r95_14.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0, 0), r95_14.CurrentCamera.CFrame)
+  end)
+  local r181_14 = Instance.new("ScreenGui")
+  r181_14.Name = "BossHealthGui"
+  r181_14.ResetOnSpawn = false
+  r181_14.Parent = game:GetService("CoreGui")
+  local r182_14 = Instance.new("TextLabel")
+  r182_14.Size = UDim2.new(0, 400, 0, 30)
+  r182_14.Position = UDim2.new(0.5, -200, 0.05, 0)
+  r182_14.BackgroundTransparency = 0.3
+  r182_14.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+  r182_14.TextColor3 = Color3.fromRGB(255, 255, 255)
+  r182_14.Font = Enum.Font.GothamBold
+  r182_14.TextSize = 18
+  r182_14.TextXAlignment = Enum.TextXAlignment.Center
+  r182_14.Visible = false
+  Instance.new("UICorner", r182_14).CornerRadius = UDim.new(0, 6)
+  r182_14.Parent = r181_14
+  local function r183_14()
+    -- line: [0, 0] id: 88
+    local r0_88 = r95_14:FindFirstChild("GiangHo2") and r95_14.GiangHo2:FindFirstChild("NPCs")
+    if not r0_88 then
+      return nil
+    end
+    local r1_88 = nil
+    local r2_88 = math.huge
+    for r6_88, r7_88 in pairs(r0_88:GetChildren()) do
+      if r7_88:IsA("Model") and r7_88:FindFirstChild("Humanoid") and r7_88:FindFirstChild("HumanoidRootPart") then
+        local r8_88 = (r169_14.Position - r7_88.HumanoidRootPart.Position).Magnitude
+        if r8_88 < r2_88 and 0 < r7_88.Humanoid.Health then
+          r2_88 = r8_88
+          r1_88 = r7_88
+        end
+      end
+    end
+    return r1_88
+  end
+  local function r184_14(r0_28)
+    -- line: [0, 0] id: 28
+    if not r169_14 then
+      return 
+    end
+    local r1_28 = r169_14.Position - r0_28
+    r1_28 = Vector3.new(r1_28.X, 0, r1_28.Z).Unit
+    if r1_28.Magnitude == 0 then
+      r1_28 = Vector3.new(1, 0, 0)
+    end
+    local r3_28 = r3_14:Create(r169_14, TweenInfo.new(1.2, Enum.EasingStyle.Sine), {
+      CFrame = CFrame.new(r0_28 + r1_28 * r178_14 + Vector3.new(0, r180_14, 0), r0_28),
+    })
+    r3_28:Play()
+    r3_28.Completed:Connect(function()
+      -- line: [0, 0] id: 29
+      r177_14 = math.atan2(r1_28.Z, r1_28.X)
+      r171_14 = true
+    end)
+  end
+  r149_14.RenderStepped:Connect(function(r0_95)
+    -- line: [0, 0] id: 95
+    if r171_14 and r169_14 and r175_14 and r175_14:FindFirstChild("HumanoidRootPart") then
+      local r1_95 = r175_14.HumanoidRootPart.Position
+      r177_14 = r177_14 + math.rad(360) / r179_14 * r0_95
+      local r4_95 = r1_95 + Vector3.new(math.cos(r177_14) * r178_14, r180_14, math.sin(r177_14) * r178_14)
+      if r176_14 then
+        r176_14:Cancel()
+      end
+      r176_14 = r3_14:Create(r169_14, TweenInfo.new(0.05), {
+        CFrame = CFrame.new(r4_95, r1_95),
+      })
+      r176_14:Play()
+    end
+  end)
+  task.spawn(function()
+    -- line: [0, 0] id: 100
+    while task.wait(0.1) do
+      local r0_100 = r170_14
+      if r0_100 then
+        r0_100 = r168_14 and r168_14:FindFirstChildOfClass("Tool")
+        if r0_100 then
+          pcall(function()
+            -- line: [0, 0] id: 101
+            r0_100:Activate()
+          end)
+        end
+        -- close: r0_100
+      end
+    end
+  end)
+  r149_14.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 271
+    if not r172_14 then
+      return 
+    end
+    local r0_271 = r183_14()
+    if r0_271 and r0_271:FindFirstChild("Humanoid") and 0 < r0_271.Humanoid.Health then
+      r175_14 = r0_271
+    end
+  end)
+  task.spawn(function()
+    -- line: [0, 0] id: 57
+    while task.wait(0.3) do
+      local r0_57 = r174_14
+      if r0_57 then
+        r0_57 = r95_14:FindFirstChild("GiangHo2") and r95_14.GiangHo2:FindFirstChild("Drop")
+        if r0_57 then
+          for r4_57, r5_57 in ipairs(r0_57:GetChildren()) do
+            if r5_57:IsA("BasePart") and r5_57:FindFirstChildOfClass("ProximityPrompt") then
+              local r6_57 = r5_57:FindFirstChildOfClass("ProximityPrompt")
+              if (r169_14.Position - r5_57.Position).Magnitude < 60 then
+                fireproximityprompt(r6_57)
+                task.wait(0.1)
+              end
+            end
+          end
+        end
+      end
+    end
+  end)
+  task.spawn(function()
+    -- line: [0, 0] id: 264
+    while task.wait(0.5) do
+      local r0_264 = r173_14
+      if r0_264 then
+        r0_264 = r175_14
+        if r0_264 then
+          r0_264 = r175_14:FindFirstChild("Humanoid")
+          if r0_264 then
+            r0_264 = math.floor(r175_14.Humanoid.Health)
+            r182_14.Text = " " .. r175_14.Name .. ": " .. r0_264 .. " / " .. math.floor(r175_14.Humanoid.MaxHealth)
+            r182_14.Visible = true
+          end
+        end
+      end
+      r0_264 = r182_14
+      r0_264.Visible = false
+    end
+  end)
+  r17_14.Boss:AddToggle("AutoFarmBoss", {
+    Title = "Auto Farm Boss",
+    Default = false,
+    Callback = function(r0_276)
+      -- line: [0, 0] id: 276
+      r172_14 = r0_276
+      r170_14 = r0_276
+      r171_14 = r0_276
+      if r0_276 then
+        r175_14 = r183_14()
+        if r175_14 and r175_14:FindFirstChild("HumanoidRootPart") then
+          r184_14(r175_14.HumanoidRootPart.Position)
+        end
+      else
+        r175_14 = nil
+        if r176_14 then
+          r176_14:Cancel()
+          r176_14 = nil
+        end
+      end
+    end,
+  })
+  r17_14.Boss:AddToggle("ShowBossHP", {
+    Title = "Hiển thị máu Boss",
+    Default = false,
+    Callback = function(r0_20)
+      -- line: [0, 0] id: 20
+      r173_14 = r0_20
+    end,
+  })
+  r17_14.Boss:AddToggle("AutoPickup", {
+    Title = "Tự nhặt vật phẩm (Drop)",
+    Default = false,
+    Callback = function(r0_261)
+      -- line: [0, 0] id: 261
+      r174_14 = r0_261
+    end,
+  })
+  local r187_14 = "AddInput"
+  r187_14 = "Radius"
+  r17_14.Boss:[r187_14](r187_14, {
+    Title = "Bán kính xoay",
+    Default = 13.2,
+    Min = 8,
+    Max = 35,
+    Rounding = 1,
+    Callback = function(r0_223)
+      -- line: [0, 0] id: 223
+      r178_14 = r0_223
+    end,
+  })
+  r187_14 = "AddInput"
+  r187_14 = "Speed"
+  r17_14.Boss:[r187_14](r187_14, {
+    Title = "Tốc độ xoay",
+    Default = 0.3,
+    Min = 0.01,
+    Max = 100,
+    Rounding = 1,
+    Callback = function(r0_244)
+      -- line: [0, 0] id: 244
+      r179_14 = r0_244
+    end,
+  })
+  local r185_14 = r95_14.CurrentCamera
+  local r186_14 = r185_14.CameraType
+  r187_14 = r185_14.CFrame
+  local r188_14 = false
+  local r189_14 = nil
+  local function r190_14(r0_203)
+    -- line: [0, 0] id: 203
+    local r1_203 = r95_14:FindFirstChild("GiangHo2") and r95_14.GiangHo2:FindFirstChild("NPCs") and r95_14.GiangHo2.NPCs:FindFirstChild("NPC2")
+    if not r1_203 or not r1_203:FindFirstChild("HumanoidRootPart") then
+      warn("��️ Không tìm thấy NPC2 trong workspace.GiangHo2.NPCs")
+      return 
+    end
+    if r0_203 then
+      r186_14 = r185_14.CameraType
+      r187_14 = r185_14.CFrame
+      r185_14.CameraType = Enum.CameraType.Scriptable
+      r188_14 = true
+      r189_14 = r149_14.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 204
+        if not r188_14 or not r1_203 or not r1_203:FindFirstChild("HumanoidRootPart") then
+          return 
+        end
+        local r0_204 = r1_203.HumanoidRootPart.Position
+        r185_14.CFrame = CFrame.new(r0_204 + Vector3.new(0, 70, 0), r0_204)
+      end)
+    else
+      r188_14 = false
+      if r189_14 then
+        r189_14:Disconnect()
+        r189_14 = nil
+      end
+      r185_14.CameraType = r186_14 or Enum.CameraType.Custom
+      r185_14.CFrame = r187_14
+    end
+  end
+  r17_14.Boss:AddToggle("Camera", {
+    Title = "Camera Trên Cao",
+    Default = false,
+    Callback = function(r0_236)
+      -- line: [0, 0] id: 236
+      r190_14(r0_236)
+    end,
+  })
+  r17_14.Emotes:AddParagraph({
+    Title = "Cách Sử Dụng Lọ Vương",
+    Content = "Khi bấm button sẽ xuất hiện 1 dụng cụ ở trong người , cầm dụng cụ đó lên sẽ kích hoạt khả năng lọ vương chí tôn",
+  })
+  r17_14.Emotes:AddButton({
+    Title = "Kích hoạt Emote",
+    Description = "Sở hữu full emote",
+    Callback = function()
+      -- line: [0, 0] id: 99
+      emote()
+    end,
+  })
+  r17_14.Emotes:AddButton({
+    Title = "Lọ Vương R6",
+    Callback = function()
+      -- line: [0, 0] id: 278
+      loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+    end,
+  })
+  r17_14.Emotes:AddButton({
+    Title = "Lọ Vương R15",
+    Callback = function()
+      -- line: [0, 0] id: 213
+      loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+    end,
+  })
+  local r191_14 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+  local r192_14 = loadstring(game:HttpGet("https://raw.githubusercontent.com/newbie0z-lol/Interface-Manager/refs/heads/main/interface.txt"))()
+  local r195_14 = "SetLibrary"
+  r195_14 = r10_14
+  r191_14:[r195_14](r195_14)
+  r195_14 = "SetLibrary"
+  r195_14 = r10_14
+  r192_14:[r195_14](r195_14)
+  r195_14 = "BuildInterfaceSection"
+  r195_14 = r17_14.Settings
+  r192_14:[r195_14](r195_14)
+  r195_14 = "BuildConfigSection"
+  r195_14 = r17_14.Settings
+  r191_14:[r195_14](r195_14)
+  r191_14:LoadAutoloadConfig()
+end
+local r0_0 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local r1_0 = {}
+local r2_0 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+local function r3_0(r0_280)
+  -- line: [0, 0] id: 280
+  return (r0_280:gsub(".", function(r0_282)
+    -- line: [0, 0] id: 282
+    local r1_282 = ""
+    local r2_282 = r0_282:byte()
+    for r6_282 = 8, 1, -1 do
+      local r7_282 = r1_282
+      local r8_282 = r2_282 % 2 ^ r6_282 - r2_282 % 2 ^ (r6_282 - 1)
+      if r8_282 > 0 then
+        r8_282 = "1" or "0"
+      else
+        goto label_19	-- block#3 is visited secondly
+      end
+      r1_282 = r7_282 .. r8_282
+    end
+    return r1_282
+  end) .. "0000"):gsub("%d%d%d?%d?%d?%d?", function(r0_281)
+    -- line: [0, 0] id: 281
+    if #r0_281 < 6 then
+      return ""
+    end
+    local r1_281 = 0
+    for r5_281 = 1, 6, 1 do
+      local r6_281 = r0_281:sub(r5_281, r5_281)
+      if r6_281 == "1" then
+        r6_281 = 2 ^ (6 - r5_281) or 0
+      else
+        goto label_20	-- block#5 is visited secondly
+      end
+      r1_281 = r1_281 + r6_281
+    end
+    return r2_0:sub(r1_281 + 1, r1_281 + 1)
+  end) .. ({
+    "",
+    "==",
+    "="
+  })[#r0_280 % 3 + 1]
+end
+local function r4_0(r0_1)
+  -- line: [0, 0] id: 1
+  r0_1 = string.gsub(r0_1, "[^" .. r2_0 .. "=]", "")
+  return r0_1:gsub(".", function(r0_3)
+    -- line: [0, 0] id: 3
+    if r0_3 == "=" then
+      return ""
+    end
+    local r1_3 = ""
+    local r2_3 = r2_0:find(r0_3) - 1
+    for r6_3 = 6, 1, -1 do
+      local r7_3 = r1_3
+      local r8_3 = r2_3 % 2 ^ r6_3 - r2_3 % 2 ^ (r6_3 - 1)
+      if r8_3 > 0 then
+        r8_3 = "1" or "0"
+      else
+        goto label_26	-- block#5 is visited secondly
+      end
+      r1_3 = r7_3 .. r8_3
+    end
+    return r1_3
+  end):gsub("%d%d%d?%d?%d?%d?%d?%d?%d?", function(r0_2)
+    -- line: [0, 0] id: 2
+    if #r0_2 ~= 8 then
+      return ""
+    end
+    local r1_2 = 0
+    for r5_2 = 1, 8, 1 do
+      local r6_2 = r0_2:sub(r5_2, r5_2)
+      if r6_2 == "1" then
+        r6_2 = 2 ^ (8 - r5_2) or 0
+      else
+        goto label_20	-- block#5 is visited secondly
+      end
+      r1_2 = r1_2 + r6_2
+    end
+    return string.char(r1_2)
+  end)
+end
+local function r5_0(r0_10)
+  -- line: [0, 0] id: 10
+  local r1_10 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  local r2_10 = {}
+  for r6_10 = 1, r0_10, 1 do
+    local r7_10 = math.random(1, #r1_10)
+    r2_10[r6_10] = r1_10:sub(r7_10, r7_10)
+  end
+  return table.concat(r2_10)
+end
+local function r6_0(r0_12)
+  -- line: [0, 0] id: 12
+  local r1_12 = {
+    r5_0(25)
+  }
+  for r5_12 = 1, #r0_12, 1 do
+    r1_12[#r1_12 + 1] = r0_12:sub(r5_12, r5_12)
+    r1_12[#r1_12 + 1] = r5_0(25)
+  end
+  return table.concat(r1_12)
+end
+local function r7_0(r0_13)
+  -- line: [0, 0] id: 13
+  print(r0_13)
+  if not r0_13 or #r0_13 <= 25 then
+    return ""
+  end
+  local r1_13 = math.floor((#r0_13 - 25) / 26)
+  local r2_13 = {}
+  for r6_13 = 0, r1_13 - 1, 1 do
+    local r7_13 = 26 * (r6_13 + 1)
+    r2_13[#r2_13 + 1] = r0_13:sub(r7_13, r7_13)
+  end
+  return table.concat(r2_13)
+end
+function r1_0.Load(r0_4, r1_4)
+  -- line: [0, 0] id: 4
+  -- notice: unreachable block#5
+  -- notice: unreachable block#3
+  -- error: decompile function#4: generate_block
+  -- 
+  -- Caused by:
+  --     0: generate_block(1)
+  --     1: collect_logic_branch(1)
+  --     2: Condition failed: `block.is_if() || block.is_while()`
+end
+local r9_0 = r1_0:Load("TAF-rezhub-hiabguawtunqwiph251")
+local r10_0 = r0_0:CreateWindow({
+  Title = "Rez Check Key" .. r0_0.Version,
+  SubTitle = "by rez",
+  TabWidth = 160,
+  Size = UDim2.fromOffset(500, 300),
+  Acrylic = true,
+  Theme = "Darker",
+  MinimizeKey = Enum.KeyCode.LeftControl,
+})
+local r11_0 = {
+  Main = r10_0:AddTab({
+    Title = "Key",
+    Icon = "key",
+  }),
+}
+local r12_0, r13_0 = r9_0:Kiemtrakey("bb")
+if r13_0 == "Key Sai" then
+  statuscotent = "Hoạt Động"
+end
+local r14_0 = r11_0.Main
+local r16_0 = {
+  Title = "Status Key System:",
+  Content = statuscotent or r13_0,
+}
+r14_0:AddParagraph(r16_0)
+r14_0 = r11_0.Main:AddInput("Input", {
+  Title = "Nhập Key",
+  Default = "",
+  Placeholder = "Key",
+  Numeric = false,
+  Finished = false,
+  Callback = function(r0_11)
+    -- line: [0, 0] id: 11
+    getgenv().UserKey = r0_11
+  end,
+})
+r11_0.Main:AddButton({
+  Title = "Check Key",
+  Description = "Kiểm Tra Key",
+  Callback = function()
+    -- line: [0, 0] id: 279
+    local r0_279, r1_279 = r9_0:Kiemtrakey(getgenv().UserKey or "default")
+    if r0_279 then
+      r0_0:Notify({
+        Title = "Rez Check Key",
+        Content = "Status : Key Hợp Lệ Chờ Loading Script.",
+        Duration = 2,
+      })
+      r10_0:Destroy()
+      writefile("RezHubKey.txt", getgenv().UserKey or "default")
+      MainScript()
+    else
+      r0_0:Notify({
+        Title = "Rez Check Key",
+        Content = "Status : " .. r1_279,
+        Duration = 2,
+      })
+    end
+  end,
+})
+r10_0:SelectTab(1)
+if isfile("RezHubKey.txt") then
+  getgenv().UserKey = readfile("RezHubKey.txt")
+end
+local r15_0, r16_0 = r9_0:Kiemtrakey(getgenv().UserKey or "default")
+if r15_0 then
+  r0_0:Notify({
+    Title = "Rez Hub Check Key",
+    Content = "Status : Key Hợp Lệ Chờ Loading Script.",
+    Duration = 2,
+  })
+  r10_0:Destroy()
+  MainScript()
+else
+  r0_0:Notify({
+    Title = "Rez Hub Check Key",
+    Content = "Status : " .. r16_0,
+    Duration = 2,
+  })
+end
+r11_0.Main:AddButton({
+  Title = "Copy Link Get Key",
+  Description = "��n để copy link Get Key vào clipboard",
+  Callback = function()
+    -- line: [0, 0] id: 9
+    setclipboard("https://cswz.site/rezhub/getkey")
+    r0_0:Notify({
+      Title = " Copy thành công",
+      Content = "Link Get Key đã được copy vào clipboard!",
+      SubContent = "Bạn có thể dán ra trình duyệt",
+      Duration = 5,
+    })
+  end,
+})
