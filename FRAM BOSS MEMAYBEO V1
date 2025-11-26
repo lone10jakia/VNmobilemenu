@@ -5,15 +5,15 @@ repeat
   task.wait()
 until game:IsLoaded()
 task.wait(1.5)
-local r0_0 = game:("Players")
+local r0_0 = game:GetService("Players")
 local r1_0 = game:GetService("RunService")
 local r2_0 = game:GetService("TweenService")
 local r3_0 = game:GetService("VirtualInputManager")
 local r4_0 = r0_0.LocalPlayer
 local r5_0 = r4_0:WaitForChild("PlayerGui")
-local r6_0 = "MEMAYBEO-HUB-MAI-DINH"
+local r6_0 = "PEPPA-HUB-MAI-DINH"
 for r10_0, r11_0 in pairs(r5_0:GetChildren()) do
-  if r11_0.Name:find("Memaybeo") then
+  if r11_0.Name:find("Peppa") then
     r11_0:Destroy()
   end
 end
@@ -126,7 +126,7 @@ end
 local function r22_0()
   -- line: [0, 0] id: 13
   r15_0 = Instance.new("ScreenGui")
-  r15_0.Name = "MauBoss"
+  r15_0.Name = "PeppaMauBoss"
   r15_0.ResetOnSpawn = false
   r15_0.Parent = r5_0
   local r0_13 = Instance.new("Frame", r15_0)
@@ -139,7 +139,7 @@ local function r22_0()
   local r1_13 = Instance.new("TextLabel", r0_13)
   r1_13.Size = UDim2.new(1, 0, 0, 30)
   r1_13.BackgroundTransparency = 1
-  r1_13.Text = "MÁU BOSS"
+  r1_13.Text = "MĂU BOSS"
   r1_13.TextColor3 = Color3.fromRGB(255, 100, 255)
   r1_13.Font = Enum.Font.GothamBold
   r1_13.TextSize = 18
@@ -230,7 +230,7 @@ local function r25_0()
   r20_0()
   r21_0()
   game.StarterGui:SetCore("SendNotification", {
-    Title = "MEMAYBEO HUB",
+    Title = "PEPPA HUB",
     Text = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ FRAM BOSS + RAINBOW + AUTO CLICK ON!",
     Duration = 4,
   })
@@ -250,7 +250,7 @@ end
 local function r27_0()
   -- line: [0, 0] id: 4
   local r0_4 = Instance.new("ScreenGui")
-  r0_4.Name = "MEMAYBEOHub_Main"
+  r0_4.Name = "PeppaHub_Main"
   r0_4.ResetOnSpawn = false
   r0_4.Parent = r5_0
   local r1_4 = Instance.new("Frame", r0_4)
@@ -264,7 +264,7 @@ local function r27_0()
   local r2_4 = Instance.new("TextLabel", r1_4)
   r2_4.Size = UDim2.new(1, 0, 0, 45)
   r2_4.BackgroundTransparency = 1
-  r2_4.Text = "MEMAYBEO HUB"
+  r2_4.Text = "PEPPA HUB"
   r2_4.TextColor3 = Color3.fromRGB(255, 100, 255)
   r2_4.Font = Enum.Font.GothamBlack
   r2_4.TextSize = 28
@@ -298,13 +298,13 @@ local function r27_0()
     Instance.new("UICorner", r4_5).CornerRadius = UDim.new(0, 8)
     return r4_5
   end
-  local r5_4 = r4_4(115, "Khoảng cách xoay:", "17")
-  local r6_4 = r4_4(160, "Tốc xoay:", "25")
-  local r7_4 = r4_4(205, "độ cao:", "7")
+  local r5_4 = r4_4(115, "Khoáº£ng cĂ¡ch xoay:", "17")
+  local r6_4 = r4_4(160, "Tá»‘c Ä‘á»™ xoay:", "25")
+  local r7_4 = r4_4(205, "Äá»™ cao Ä‘Ă¡nh:", "7")
   local r8_4 = Instance.new("TextButton", r1_4)
   r8_4.Size = UDim2.new(0.92, 0, 0, 45)
   r8_4.Position = UDim2.new(0.04, 0, 0, 305)
-  r8_4.Text = "Máu BOSS: OFF"
+  r8_4.Text = "MĂU BOSS: OFF"
   r8_4.BackgroundColor3 = Color3.fromRGB(30, 120, 200)
   r8_4.TextColor3 = Color3.new(1, 1, 1)
   r8_4.Font = Enum.Font.GothamBold
@@ -339,14 +339,14 @@ local function r27_0()
     r8_0 = not r8_0
     if r8_0 then
       r22_0()
-      r8_4.Text = "Máu BOSS: ON"
+      r8_4.Text = "MĂU BOSS: ON"
       r8_4.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     else
       if r15_0 then
         r15_0:Destroy()
         r15_0 = nil
       end
-      r8_4.Text = "Máu BOSS: OFF"
+      r8_4.Text = "MĂU BOSS: OFF"
       r8_4.BackgroundColor3 = Color3.fromRGB(30, 120, 200)
     end
   end)
@@ -378,7 +378,7 @@ end
 task.spawn(function()
   -- line: [0, 0] id: 1
   local r0_1 = Instance.new("ScreenGui")
-  r0_1.Name = "MemaybeoHub_Key"
+  r0_1.Name = "PeppaHub_Key"
   r0_1.ResetOnSpawn = false
   r0_1.Parent = r5_0
   local r1_1 = Instance.new("Frame", r0_1)
@@ -390,7 +390,7 @@ task.spawn(function()
   Instance.new("UICorner", r1_1).CornerRadius = UDim.new(0, 16)
   local r2_1 = Instance.new("TextLabel", r1_1)
   r2_1.Size = UDim2.new(1, 0, 0, 50)
-  r2_1.Text = "MEMAYBEO HUB - Get Key"
+  r2_1.Text = "PEPPA HUB - Get Key"
   r2_1.TextColor3 = Color3.fromRGB(255, 100, 255)
   r2_1.Font = Enum.Font.GothamBlack
   r2_1.TextSize = 26
@@ -398,7 +398,7 @@ task.spawn(function()
   local r3_1 = Instance.new("TextBox", r1_1)
   r3_1.Size = UDim2.new(0.9, 0, 0, 45)
   r3_1.Position = UDim2.new(0.05, 0, 0, 70)
-  r3_1.PlaceholderText = "nhập key..."
+  r3_1.PlaceholderText = "Nháº­p key..."
   r3_1.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
   r3_1.TextColor3 = Color3.new(1, 1, 1)
   r3_1.Font = Enum.Font.Gotham
@@ -407,7 +407,7 @@ task.spawn(function()
   local r4_1 = Instance.new("TextButton", r1_1)
   r4_1.Size = UDim2.new(0.9, 0, 0, 45)
   r4_1.Position = UDim2.new(0.05, 0, 1, -60)
-  r4_1.Text = "xác nhận"
+  r4_1.Text = "XĂC NHáº¬N"
   r4_1.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
   r4_1.TextColor3 = Color3.new(1, 1, 1)
   r4_1.Font = Enum.Font.GothamBold
@@ -421,8 +421,8 @@ task.spawn(function()
     else
       r3_1.Text = ""
       game.StarterGui:SetCore("SendNotification", {
-        Title = "MEMAYBEO HUB",
-        Text = "key sai kiểm tra lại key",
+        Title = "PEPPA HUB",
+        Text = "key sai kiá»ƒm tra láº¡i",
         Duration = 3,
       })
     end
