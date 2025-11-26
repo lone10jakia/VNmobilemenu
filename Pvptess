@@ -1,0 +1,756 @@
+repeat task.wait() until game:IsLoaded()
+
+-- Load Fluent UI
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+-- Tạo cửa sổ MEMAYBEO HUB
+local Window = Fluent:CreateWindow({
+    Title = "MEMAYBEO HUB - PvP Mode",
+    SubTitle = "Không Key - Free 100%",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(500, 300),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl,
+})
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "PvP Menu", Icon = "swords" })
+}
+
+-- Thông báo vào hub
+Fluent:Notify({
+    Title = "MEMAYBEO HUB",
+    Content = "Loaded successfully! Không cần key!",
+    Duration = 3
+})
+
+-------------------------------------------------------------------
+-- 🧹 ĐÃ XOÁ HOÀN TOÀN HỆ THỐNG KEY
+-- - Không Load()
+-- - Không Kiemtrakey()
+-- - Không API check key
+-- - Không Destroy window
+-- - Không Notify lỗi key
+-------------------------------------------------------------------
+
+-- SERVICES
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- MENU PVP GỐC (được giữ nguyên hoàn toàn)
+local function LoadPvpMenu()
+
+    local player = Players.LocalPlayer
+    local lighting = game:GetService("Lighting")
+    local blur = Instance.new("BlurEffect", lighting)
+    blur.Size = 10
+    blur.Enabled = true
+
+    local ui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+    ui.Name = "MEMAYBEO_PVP_UI"
+    ui.ResetOnSpawn = false
+
+    local mainFrame = Instance.new("Frame", ui)
+    mainFrame.AnchorPoint = Vector2.new(0, 0.5)
+    mainFrame.Position = UDim2.new(0, 0, 0.5, 0)
+    mainFrame.Size = UDim2.new(0, 610, 0, 400)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    mainFrame.BackgroundTransparency = 0.5
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 4)
+
+    -- Nền khói
+    local bg = Instance.new("ImageLabel", mainFrame)
+    bg.AnchorPoint = Vector2.new(0.5, 0.5)
+    bg.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bg.Size = UDim2.new(1, 40, 1, 40)
+    bg.Image = "rbxassetid://5554236805"
+    bg.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    bg.ImageTransparency = 0.6
+    bg.BackgroundTransparency = 0.5
+    bg.ScaleType = Enum.ScaleType.Slice
+    bg.SliceCenter = Rect.new(23, 23, 277, 277)
+    bg.ZIndex = 0
+
+    -- Tên HUB
+    local title = Instance.new("TextLabel", mainFrame)
+    title.Size = UDim2.new(1, 0, 0, 40)
+    title.BackgroundTransparency = 1
+    title.Text = "MEMAYBEO HUB - PvP Mode"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 22
+
+    local sub = Instance.new("TextLabel", mainFrame)
+    sub.Position = UDim2.new(0, 0, 0, 35)
+    sub.Size = UDim2.new(1, 0, 0, 25)
+    sub.BackgroundTransparency = 1
+    sub.Text = "Chế độ PvP nâng cao"
+    sub.TextColor3 = Color3.fromRGB(200, 200, 200)
+    sub.Font = Enum.Font.Gotham
+    sub.TextSize = 14
+
+    -- Ô tìm kiếm
+    local search = Instance.new("TextBox", mainFrame)
+    search.Position = UDim2.new(0, 5, 0, 70)
+    search.Size = UDim2.new(0.9, 0, 0, 30)
+    search.PlaceholderText = "Tìm chức năng..."
+    search.Text = ""
+    search.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    search.BorderSizePixel = 0
+    search.TextColor3 = Color3.fromRGB(255, 255, 255)
+    search.Font = Enum.Font.Gotham
+    search.TextSize = 14
+    search.ClearTextOnFocus = false
+    search.TextXAlignment = Enum.TextXAlignment.Left
+    Instance.new("UICorner", search).CornerRadius = UDim.new(0, 4)
+    Instance.new("UIPadding", search).PaddingLeft = UDim.new(0, 10)
+
+    -- Khung chứa các toggle
+    local scroll = Instance.new("ScrollingFrame", mainFrame)
+    scroll.Position = UDim2.new(0, 5, 0, 115)
+    scroll.Size = UDim2.new(1, 0, 1, -110)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.ScrollBarThickness = 6
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+    local pad = Instance.new("UIPadding", scroll)
+    pad.PaddingBottom = UDim.new(0, 10)
+    pad.PaddingRight = UDim.new(0, 10)
+    pad.PaddingLeft = UDim.new(0, 10)
+    pad.PaddingTop = UDim.new(0, 10)
+
+    local grid = Instance.new("UIGridLayout", scroll)
+    grid.CellSize = UDim2.new(0, 180, 0, 50)
+    grid.CellPadding = UDim2.new(0, 10, 0, 10)
+    grid.SortOrder = Enum.SortOrder.LayoutOrder
+
+    grid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scroll.CanvasSize = UDim2.new(0, 0, 0, grid.AbsoluteContentSize.Y + 10)
+    end)
+
+    ----------------------------------------------------------------------
+    -- NÚT THU NHỎ MENU
+    ----------------------------------------------------------------------
+
+    local toggleBtn = Instance.new("TextButton", ui)
+    toggleBtn.AnchorPoint = Vector2.new(0, 0.5)
+    toggleBtn.Position = UDim2.new(0, 600, 0.5, 0)
+    toggleBtn.Size = UDim2.new(0, 25, 0, 50)
+    toggleBtn.Text = "<"
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextSize = 20
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.BorderSizePixel = 0
+    local minimized = false
+
+    toggleBtn.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Position = UDim2.new(-1, 0, 0.5, 0),
+            }):Play()
+
+            TweenService:Create(toggleBtn, TweenInfo.new(0.5), {
+                Position = UDim2.new(0, 0, 0.5, 0),
+            }):Play()
+
+            toggleBtn.Text = ">"
+
+            TweenService:Create(blur, TweenInfo.new(0.4), { Size = 0 }):Play()
+            task.wait(0.4)
+            blur.Enabled = false
+        else
+            blur.Enabled = true
+            TweenService:Create(blur, TweenInfo.new(0.4), { Size = 10 }):Play()
+
+            TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Position = UDim2.new(0, 0, 0.5, 0),
+            }):Play()
+
+            TweenService:Create(toggleBtn, TweenInfo.new(0.5), {
+                Position = UDim2.new(0, 600, 0.5, 0),
+            }):Play()
+
+            toggleBtn.Text = "<"
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- HỆ THỐNG THÊM TOGGLE VÀO MENU
+    -------------------------------------------------------------------------
+
+    local ToggleList = {}
+
+    function AddToggle(name, default, callback)
+        local item = Instance.new("Frame", scroll)
+        item.Size = UDim2.new(0, 180, 0, 50)
+        item.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        item.BackgroundTransparency = 0.05
+        item.BorderSizePixel = 0
+        Instance.new("UICorner", item).CornerRadius = UDim.new(0, 6)
+
+        local txt = Instance.new("TextLabel", item)
+        txt.Size = UDim2.new(0.7, 0, 1, 0)
+        txt.Position = UDim2.new(0.05, 0, 0, 0)
+        txt.BackgroundTransparency = 1
+        txt.Text = name
+        txt.Font = Enum.Font.Gotham
+        txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+        txt.TextSize = 14
+        txt.TextXAlignment = Enum.TextXAlignment.Left
+
+        local btn = Instance.new("TextButton", item)
+        btn.AnchorPoint = Vector2.new(1, 0.5)
+        btn.Position = UDim2.new(0.95, 0, 0.5, 0)
+        btn.Size = UDim2.new(0, 25, 0, 25)
+        btn.BackgroundColor3 = default and Color3.fromRGB(255,255,255) or Color3.fromRGB(60,60,60)
+        btn.Text = default and "✔" or ""
+        btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 18
+        btn.BorderSizePixel = 0
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+
+        local state = default
+
+        btn.MouseButton1Click:Connect(function()
+            state = not state
+            btn.Text = state and "✔" or ""
+            btn.BackgroundColor3 = state and Color3.fromRGB(255,255,255) or Color3.fromRGB(60,60,60)
+            callback(state)
+        end)
+
+        table.insert(ToggleList, {name = name, frame = item})
+    end
+
+    search:GetPropertyChangedSignal("Text"):Connect(function()
+        local txt = string.lower(search.Text)
+        for _, item in ipairs(ToggleList) do
+            item.frame.Visible = string.find(string.lower(item.name), txt) ~= nil
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- ESP THANH MÁU
+    -------------------------------------------------------------------------
+
+    local healthEspEnabled = false
+
+    local function CreateHpESP(character)
+        if not healthEspEnabled then return end
+        local head = character:FindFirstChild("Head")
+        local hum = character:FindFirstChildOfClass("Humanoid")
+        if not head or not hum then return end
+        if head:FindFirstChild("HealthESP") then return end
+
+        local gui = Instance.new("BillboardGui")
+        gui.Name = "HealthESP"
+        gui.Size = UDim2.new(4,0,1.5,0)
+        gui.StudsOffset = Vector3.new(0,3,0)
+        gui.AlwaysOnTop = true
+        gui.Parent = head
+
+        local barBack = Instance.new("Frame", gui)
+        barBack.Size = UDim2.new(1,0,0.2,0)
+        barBack.Position = UDim2.new(0,0,0.5,0)
+        barBack.BackgroundColor3 = Color3.fromRGB(50,50,50)
+
+        local bar = Instance.new("Frame", barBack)
+        bar.Name = "HealthBar"
+        bar.BackgroundColor3 = Color3.fromRGB(0,255,0)
+        bar.Size = UDim2.new(1,0,1,0)
+
+        local txt = Instance.new("TextLabel", gui)
+        txt.Name = "HPText"
+        txt.Size = UDim2.new(1,0,0.5,0)
+        txt.Position = UDim2.new(0,0,0,-10)
+        txt.BackgroundTransparency = 1
+        txt.TextColor3 = Color3.fromRGB(255,255,255)
+        txt.TextStrokeTransparency = 0
+        txt.Font = Enum.Font.SourceSansBold
+        txt.TextScaled = true
+        txt.Text = tostring(hum.Health) .. "/" .. tostring(hum.MaxHealth)
+    end
+
+    AddToggle("Hiện Thanh Máu", false, function(v)
+        healthEspEnabled = v
+        if not v then
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr.Character and plr.Character:FindFirstChild("Head") then
+                    local h = plr.Character.Head:FindFirstChild("HealthESP")
+                    if h then h:Destroy() end
+                end
+            end
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if not healthEspEnabled then return end
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer and plr.Character then
+                CreateHpESP(plr.Character)
+                local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+                local head = plr.Character:FindFirstChild("Head")
+                if hum and head and head:FindFirstChild("HealthESP") then
+                    local gui = head.HealthESP
+                    local bar = gui.Frame.HealthBar
+                    local txt = gui.HPText
+                    bar.Size = UDim2.new(math.clamp(hum.Health / hum.MaxHealth, 0, 1), 0, 1, 0)
+
+                    local ratio = hum.Health / hum.MaxHealth
+                    if ratio > 0.6 then
+                        bar.BackgroundColor3 = Color3.fromRGB(0,255,0)
+                    elseif ratio > 0.3 then
+                        bar.BackgroundColor3 = Color3.fromRGB(255,255,0)
+                    else
+                        bar.BackgroundColor3 = Color3.fromRGB(255,0,0)
+                    end
+
+                    txt.Text = math.floor(hum.Health) .. "/" .. math.floor(hum.MaxHealth)
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- AIM PLAYER GẦN NHẤT
+    -------------------------------------------------------------------------
+
+    local function GetNearest()
+        local lp = LocalPlayer
+        if not lp.Character or not lp.Character:FindFirstChild("HumanoidRootPart") then return end
+        local hrp = lp.Character.HumanoidRootPart
+
+        local nearest, dist = nil, math.huge
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= lp and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                local d = (plr.Character.HumanoidRootPart.Position - hrp.Position).Magnitude
+                if d < dist then
+                    dist = d
+                    nearest = plr
+                end
+            end
+        end
+        return nearest
+    end
+
+    local aiming = false
+    local aimLine = Drawing.new("Line")
+    aimLine.Color = Color3.fromRGB(255,0,0)
+    aimLine.Thickness = 2
+    aimLine.Transparency = 1
+
+    AddToggle("Aim Player Gần Nhất", false, function(state)
+        aiming = state
+        if state == false then
+            aimLine.Visible = false
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if not aiming then return end
+
+        local lp = LocalPlayer
+        if not lp.Character or not lp.Character:FindFirstChild("HumanoidRootPart") then
+            aimLine.Visible = false
+            return
+        end
+
+        local target = GetNearest()
+        if not target or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then
+            aimLine.Visible = false
+            return
+        end
+
+        local cam = workspace.CurrentCamera
+        local lpPos, lpVis = cam:WorldToViewportPoint(lp.Character.HumanoidRootPart.Position)
+        local tPos, tVis = cam:WorldToViewportPoint(target.Character.HumanoidRootPart.Position)
+
+        if lpVis and tVis then
+            aimLine.From = Vector2.new(lpPos.X, lpPos.Y)
+            aimLine.To = Vector2.new(tPos.X, tPos.Y)
+            aimLine.Visible = true
+        else
+            aimLine.Visible = false
+        end
+    end)
+    -------------------------------------------------------------------------
+    -- AUTO PVP GẦN NHẤT
+    -------------------------------------------------------------------------
+
+    local autoPvp = false
+
+    AddToggle("Auto PvP Gần Nhất", false, function(state)
+        autoPvp = state
+
+        if state then
+            task.spawn(function()
+                while autoPvp and task.wait() do
+                    local lp = LocalPlayer
+                    local char = lp.Character
+                    if not char or not char:FindFirstChild("HumanoidRootPart") then continue end
+
+                    local hrp = char.HumanoidRootPart
+                    local hum = char:FindFirstChildOfClass("Humanoid")
+                    if not hum or char:GetAttribute("texe") then continue end
+
+                    local nearest = nil
+                    local dist = 30
+
+                    for _, p in pairs(Players:GetPlayers()) do
+                        if p ~= lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                            if p.Character:GetAttribute("PvPRemain") then
+                                local d = (p.Character.HumanoidRootPart.Position - hrp.Position).Magnitude
+                                if d < dist then
+                                    dist = d
+                                    nearest = p
+                                end
+                            end
+                        end
+                    end
+
+                    if nearest then
+                        local enemyHRP = nearest.Character.HumanoidRootPart
+                        local look = enemyHRP.CFrame.LookVector
+                        local pos = enemyHRP.Position - look * math.random(8,12)
+
+                        TweenService:Create(hrp, TweenInfo.new(0.25, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+                            CFrame = CFrame.new(pos, enemyHRP.Position)
+                        }):Play()
+
+                        if hum and hum.FloorMaterial ~= Enum.Material.Air then
+                            hum.Jump = true
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- AUTO HIT PLAYERS
+    -------------------------------------------------------------------------
+
+    local autoHit = false
+
+    AddToggle("Auto Hit Players", false, function(v)
+        autoHit = v
+
+        if v then
+            task.spawn(function()
+                while autoHit and task.wait() do
+                    local lp = LocalPlayer
+                    local char = lp.Character
+                    if not char or not char:FindFirstChild("HumanoidRootPart") then continue end
+
+                    local hrp = char.HumanoidRootPart
+                    local tool = char:FindFirstChildOfClass("Tool")
+                    if not tool then continue end
+
+                    local nearest, dist = nil, 30
+                    for _, p in pairs(Players:GetPlayers()) do
+                        if p ~= lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                            local d = (p.Character.HumanoidRootPart.Position - hrp.Position).Magnitude
+                            if d < dist then
+                                dist = d
+                                nearest = p
+                            end
+                        end
+                    end
+
+                    if nearest and tool and tool.Activate then
+                        tool:Activate()
+                    end
+                end
+            end)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- TẮT BLUR KHI MỞ MENU
+    -------------------------------------------------------------------------
+
+    AddToggle("Tắt Blur Của Menu", false, function(v)
+        if v then
+            task.spawn(function()
+                while v and task.wait() do
+                    blur.Size = 0
+                end
+            end)
+        else
+            blur.Size = 10
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- ESP THÔNG TIN NGƯỜI CHƠI (Tên + Level + PvP)
+    -------------------------------------------------------------------------
+
+    local espInfo = false
+
+    AddToggle("ESP Thông Tin", false, function(v)
+        espInfo = v
+
+        if v then
+            task.spawn(function()
+                while espInfo and task.wait() do
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        if p ~= LocalPlayer and p.Character then
+                            local head = p.Character:FindFirstChild("Head")
+                            if head and not head:FindFirstChild("PlayerInfo") then
+
+                                local gui = Instance.new("BillboardGui")
+                                gui.Name = "PlayerInfo"
+                                gui.Size = UDim2.new(4,0,2,0)
+                                gui.StudsOffset = Vector3.new(0,3,0)
+                                gui.AlwaysOnTop = true
+                                gui.Parent = head
+
+                                local name = Instance.new("TextLabel", gui)
+                                name.Size = UDim2.new(1,0,0.5,0)
+                                name.BackgroundTransparency = 1
+                                name.TextColor3 = Color3.fromRGB(255,255,255)
+                                name.TextStrokeTransparency = 0
+                                name.Font = Enum.Font.SourceSansBold
+                                name.TextScaled = true
+                                name.Text = p.Name
+
+                                local info = Instance.new("TextLabel", gui)
+                                info.Size = UDim2.new(1,0,0.5,0)
+                                info.Position = UDim2.new(0,0,0.5,0)
+                                info.BackgroundTransparency = 1
+                                info.TextColor3 = Color3.fromRGB(255,255,255)
+                                info.TextStrokeTransparency = 0
+                                info.Font = Enum.Font.SourceSansBold
+                                info.TextScaled = true
+
+                                local stats = p:FindFirstChild("stats")
+                                local lv = stats and stats:FindFirstChild("Level") and stats.Level.Value or "N/A"
+                                info.Text = "Level: " .. tostring(lv) .. " | PvP: " .. tostring(p.Character:GetAttribute("PvPRemain") or "OFF")
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p.Character and p.Character:FindFirstChild("Head") then
+                    local g = p.Character.Head:FindFirstChild("PlayerInfo")
+                    if g then g:Destroy() end
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- HEALTH MODE (Tự động dùng băng gạc nếu HP thấp)
+    -------------------------------------------------------------------------
+
+    local autoHeal = false
+
+    AddToggle("Health Mode", false, function(v)
+        autoHeal = v
+
+        if v then
+            task.spawn(function()
+                local lp = LocalPlayer
+                local backpack = lp:WaitForChild("Backpack")
+                local char = lp.Character or lp.CharacterAdded:Wait()
+                local healName = "băng gạc"
+
+                local function FindTool(where, name)
+                    for _, tool in ipairs(where:GetChildren()) do
+                        if tool:IsA("Tool") and string.find(string.lower(tool.Name), string.lower(name)) then
+                            return tool
+                        end
+                    end
+                end
+
+                while autoHeal and task.wait() do
+                    local hum = char:FindFirstChild("Humanoid")
+                    if hum and hum.Health < 75 then
+                        local toolNow = char:FindFirstChildOfClass("Tool")
+                        local heal = FindTool(backpack, healName)
+
+                        if heal then
+                            hum:EquipTool(heal)
+                            task.wait(0.05)
+                            if heal.Activate then heal:Activate() end
+                            task.wait(1.2)
+                            if toolNow then hum:EquipTool(toolNow) end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- AUTO LẤY BĂNG GẠC (Mở Inventory tự động)
+    -------------------------------------------------------------------------
+
+    local autoBandage = false
+
+    AddToggle("Auto Lấy Băng Gạc", false, function(v)
+        autoBandage = v
+
+        if v then
+            task.spawn(function()
+                while autoBandage and task.wait(0.3) do
+                    local lp = LocalPlayer
+                    local pg = lp:WaitForChild("PlayerGui")
+                    local inv = pg:WaitForChild("Inventory")
+
+                    inv.MainFrame.Visible = true
+                    inv.Enabled = true
+                    inv.MainFrame.Position = UDim2.new(10, 0, 0.555, 0)
+
+                    local backpack = lp:FindFirstChild("Backpack")
+                    local char = lp.Character or lp.CharacterAdded:Wait()
+
+                    if not backpack:FindFirstChild("băng gạc") and not char:FindFirstChild("băng gạc") then
+                        game:GetService("ReplicatedStorage")
+                            .KnitPackages._Index["sleitnick_knit@1.7.0"]
+                            .knit.Services.InventoryService.RE.updateInventory:FireServer("eue", "băng gạc")
+                    end
+                end
+            end)
+        else
+            LocalPlayer.PlayerGui.Inventory.MainFrame.Position = UDim2.new(0.5,0,0.5,0)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- AUTO NHẶT GHẾ
+    -------------------------------------------------------------------------
+
+    local autoChair = false
+
+    AddToggle("Instant Nhặt Ghế", false, function(v)
+        autoChair = v
+
+        if v then
+            task.spawn(function()
+                while autoChair and task.wait() do
+
+                    local lp = LocalPlayer
+                    local char = lp.Character
+                    if not char or not char:FindFirstChild("HumanoidRootPart") then continue end
+
+                    -- Dịch chuyển tất cả ghế lên trời
+                    for _, c in pairs(workspace.Ghe:GetChildren()) do
+                        if c.Name == "Chair" then
+                            c.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0,150,0)
+                        end
+                    end
+
+                    -- Nhặt ghế
+                    if not lp.Backpack:FindFirstChild("Ghế") and not char:FindFirstChild("Ghế") then
+                        for _, c in pairs(workspace.Ghe:GetChildren()) do
+                            if c.Name == "Chair" and c:FindFirstChild("hitbox") and c.hitbox:FindFirstChild("ClickDetector") then
+                                fireclickdetector(c.hitbox.ClickDetector)
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- CHỌI GHẾ NO COOLDOWN
+    -------------------------------------------------------------------------
+
+    local thc = false
+
+    AddToggle("Chọi Ghế No CD", false, function(v)
+        thc = v
+        if v then
+            task.spawn(function()
+                while thc and task.wait() do
+                    local lp = LocalPlayer
+                    local char = lp.Character
+
+                    local chair = char:FindFirstChild("Ghế") or lp.Backpack:FindFirstChild("Ghế")
+                    if chair then
+                        for _, ui in pairs(chair["ghe/client"]:GetChildren()) do
+                            if ui.Name == "ScreenGui" then
+                                ui.Enabled = false
+                                ui.CanvasGroup.Frame.Size = UDim2.new(1,0, ui.CanvasGroup.Frame.Size.Y.Scale, 0)
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- SPIN MODE (Quay nhanh người chơi)
+    -------------------------------------------------------------------------
+
+    local autoSpin = false
+
+    AddToggle("Spin", false, function(v)
+        autoSpin = v
+
+        if v then
+            task.spawn(function()
+                while autoSpin and task.wait(0.03) do
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("HumanoidRootPart") and char:FindFirstChildOfClass("Humanoid") then
+                        char.Humanoid.AutoRotate = false
+                        char.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(999), 0)
+                    end
+                end
+            end)
+        else
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChildOfClass("Humanoid") then
+                char.Humanoid.AutoRotate = true
+            end
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- FIX LAG
+    -------------------------------------------------------------------------
+
+    AddToggle("FixLag v1", false, function(v)
+        if v then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/getscript-vn/Api/refs/heads/main/Anti%20Lag"))()
+        end
+    end)
+
+    -------------------------------------------------------------------------
+    -- THAY ĐỔI FOV
+    -------------------------------------------------------------------------
+
+    local oldFov = workspace.CurrentCamera.FieldOfView
+
+    AddToggle("FOV 120", false, function(v)
+        if v then
+            workspace.CurrentCamera.FieldOfView = 120
+        else
+            workspace.CurrentCamera.FieldOfView = oldFov
+        end
+    end)
+
+    print("MEMAYBEO HUB - PvP Mode Loaded!")
+end -- end LoadPvpMenu
+
+LoadPvpMenu()
+Window:SelectTab(1)
+-- KHỞI ĐỘNG MENU PVP
+LoadPvpMenu()
+
+-- TỰ ĐỘNG CHỌN TAB
+Window:SelectTab(1)
