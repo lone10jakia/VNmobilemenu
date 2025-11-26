@@ -1,0 +1,1167 @@
+-- filename: 
+-- version: lua51
+-- line: [0, 0] id: 0
+print("aaaaaa")
+local r0_0 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local r1_0 = {}
+local r2_0 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+local function r3_0(r0_7)
+  -- line: [0, 0] id: 7
+  return (r0_7:gsub(".", function(r0_8)
+    -- line: [0, 0] id: 8
+    local r1_8 = ""
+    local r2_8 = r0_8:byte()
+    for r6_8 = 8, 1, -1 do
+      local r7_8 = r1_8
+      local r8_8 = r2_8 % 2 ^ r6_8 - r2_8 % 2 ^ (r6_8 - 1)
+      if r8_8 > 0 then
+        r8_8 = "1" or "0"
+      else
+        goto label_19	-- block#3 is visited secondly
+      end
+      r1_8 = r7_8 .. r8_8
+    end
+    return r1_8
+  end) .. "0000"):gsub("%d%d%d?%d?%d?%d?", function(r0_9)
+    -- line: [0, 0] id: 9
+    if #r0_9 < 6 then
+      return ""
+    end
+    local r1_9 = 0
+    for r5_9 = 1, 6, 1 do
+      local r6_9 = r0_9:sub(r5_9, r5_9)
+      if r6_9 == "1" then
+        r6_9 = 2 ^ (6 - r5_9) or 0
+      else
+        goto label_20	-- block#5 is visited secondly
+      end
+      r1_9 = r1_9 + r6_9
+    end
+    return r2_0:sub(r1_9 + 1, r1_9 + 1)
+  end) .. ({
+    "",
+    "==",
+    "="
+  })[#r0_7 % 3 + 1]
+end
+local function r4_0(r0_3)
+  -- line: [0, 0] id: 3
+  r0_3 = string.gsub(r0_3, "[^" .. r2_0 .. "=]", "")
+  return r0_3:gsub(".", function(r0_4)
+    -- line: [0, 0] id: 4
+    if r0_4 == "=" then
+      return ""
+    end
+    local r1_4 = ""
+    local r2_4 = r2_0:find(r0_4) - 1
+    for r6_4 = 6, 1, -1 do
+      local r7_4 = r1_4
+      local r8_4 = r2_4 % 2 ^ r6_4 - r2_4 % 2 ^ (r6_4 - 1)
+      if r8_4 > 0 then
+        r8_4 = "1" or "0"
+      else
+        goto label_26	-- block#5 is visited secondly
+      end
+      r1_4 = r7_4 .. r8_4
+    end
+    return r1_4
+  end):gsub("%d%d%d?%d?%d?%d?%d?%d?%d?", function(r0_5)
+    -- line: [0, 0] id: 5
+    if #r0_5 ~= 8 then
+      return ""
+    end
+    local r1_5 = 0
+    for r5_5 = 1, 8, 1 do
+      local r6_5 = r0_5:sub(r5_5, r5_5)
+      if r6_5 == "1" then
+        r6_5 = 2 ^ (8 - r5_5) or 0
+      else
+        goto label_20	-- block#5 is visited secondly
+      end
+      r1_5 = r1_5 + r6_5
+    end
+    return string.char(r1_5)
+  end)
+end
+local function r5_0(r0_63)
+  -- line: [0, 0] id: 63
+  local r1_63 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  local r2_63 = {}
+  for r6_63 = 1, r0_63, 1 do
+    local r7_63 = math.random(1, #r1_63)
+    r2_63[r6_63] = r1_63:sub(r7_63, r7_63)
+  end
+  return table.concat(r2_63)
+end
+local function r6_0(r0_10)
+  -- line: [0, 0] id: 10
+  local r1_10 = {
+    r5_0(25)
+  }
+  for r5_10 = 1, #r0_10, 1 do
+    r1_10[#r1_10 + 1] = r0_10:sub(r5_10, r5_10)
+    r1_10[#r1_10 + 1] = r5_0(25)
+  end
+  return table.concat(r1_10)
+end
+local function r7_0(r0_2)
+  -- line: [0, 0] id: 2
+  print(r0_2)
+  if not r0_2 or #r0_2 <= 25 then
+    return ""
+  end
+  local r1_2 = math.floor((#r0_2 - 25) / 26)
+  local r2_2 = {}
+  for r6_2 = 0, r1_2 - 1, 1 do
+    local r7_2 = 26 * (r6_2 + 1)
+    r2_2[#r2_2 + 1] = r0_2:sub(r7_2, r7_2)
+  end
+  return table.concat(r2_2)
+end
+function r1_0.Load(r0_13, r1_13)
+  -- line: [0, 0] id: 13
+  -- notice: unreachable block#5
+  if r1_13 ~= "TAF-Xenox-hiabguawtunqwiph251" then
+    task.spawn(function()
+      -- line: [0, 0] id: 17
+      game.Players.LocalPlayer:Kick("Invalid Key")
+    end)
+    task.spawn(function()
+      -- line: [0, 0] id: 16
+      task.wait()
+      waitnothook = true
+    end)
+    if waitnothook then
+      while true do
+      end
+      task.wait(4)
+      while true do
+      end
+      goto label_19	-- block#5 is visited secondly
+    else
+      goto label_14	-- block#3 is visited secondly
+    end
+  else
+    return {
+      Kiemtrakey = function(r0_14, r1_14)
+        -- line: [0, 0] id: 14
+        local r2_14 = game:GetService("RbxAnalyticsService"):GetClientId()
+        local r3_14 = "https://cswz.site/xenoxhub/api/v1/api.php?auth=a" .. r5_0(150)
+        local r4_14, r5_14 = pcall(function()
+          -- line: [0, 0] id: 15
+          return (http_request or request)({
+            Url = r3_14,
+            Method = "GET",
+            TafKey = "TAFSERVICE",
+            Headers = {
+              Authorization = "TAFSERVICE",
+              XenoxHub = r6_0(r1_14),
+              XenoxHubData = r6_0(r2_14),
+            },
+          })
+        end)
+        if not r4_14 then
+          return false, "Lỗi kết nối, vui lòng thử lại"
+        end
+        r5_14 = r7_0(r5_14.Headers["x-api"])
+        local r6_14, r7_14 = r5_14:match("^(.-)%-(.+)")
+        if r6_14 == "Success" or r6_14 == "Success1" then
+          local r8_14, r9_14, r10_14, r11_14, r12_14, r13_14 = r7_14:match("^(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)")
+          if r8_14 and r9_14 and r10_14 and r11_14 and r12_14 and r13_14 and os.time(os.date("!*t")) - os.time({
+            year = tonumber(r8_14),
+            month = tonumber(r9_14),
+            day = tonumber(r10_14),
+            hour = tonumber(r11_14),
+            min = tonumber(r12_14),
+            sec = tonumber(r13_14),
+          }) > 1800 then
+            return false, "Key đã hết hạn (quá 30 phút)"
+          end
+          return true, r5_14
+        end
+        return false, r5_14
+      end,
+    }
+  end
+end
+local r9_0 = r1_0:Load("TAF-Xenox-hiabguawtunqwiph251")
+local r10_0 = r0_0:CreateWindow({
+  Title = "Xenox Hub - Keysystem" .. r0_0.Version,
+  SubTitle = "Create at cswz",
+  TabWidth = 160,
+  Size = UDim2.fromOffset(500, 300),
+  Acrylic = true,
+  Theme = "Dark",
+  MinimizeKey = Enum.KeyCode.LeftControl,
+})
+local r11_0 = {
+  Main = r10_0:AddTab({
+    Title = "Key",
+    Icon = "key",
+  }),
+}
+local r12_0, r13_0 = r9_0:Kiemtrakey(getgenv().key or "user")
+if r13_0:find("Key Sai") then
+  statuscotent = "Hoạt Động"
+end
+local r14_0 = r11_0.Main
+local r16_0 = {
+  Title = "Status Key System:",
+  Content = statuscotent or r13_0,
+}
+r14_0:AddParagraph(r16_0)
+r14_0 = r11_0.Main:AddInput("Input", {
+  Title = "Nhập Key",
+  Default = "",
+  Placeholder = "Key",
+  Numeric = false,
+  Finished = false,
+  Callback = function(r0_1)
+    -- line: [0, 0] id: 1
+    getgenv().UserKey = r0_1
+  end,
+})
+local function r15_0()
+  -- line: [0, 0] id: 18
+  local r0_18 = game:GetService("Players")
+  local r1_18 = game:GetService("RunService")
+  local r2_18 = game:GetService("TweenService")
+  local r4_18 = Instance.new("BlurEffect", game:GetService("Lighting"))
+  r4_18.Size = 10
+  r4_18.Enabled = true
+  local r5_18 = Instance.new("ScreenGui", game:GetService("CoreGui"))
+  r5_18.Name = "AZT_UI"
+  r5_18.ResetOnSpawn = false
+  local r6_18 = Instance.new("Frame", r5_18)
+  r6_18.AnchorPoint = Vector2.new(0, 0.5)
+  r6_18.Position = UDim2.new(0, 0, 0.5, 0)
+  r6_18.Size = UDim2.new(0, 610, 0, 400)
+  r6_18.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+  r6_18.BackgroundTransparency = 0.5
+  r6_18.BorderSizePixel = 0
+  r6_18.ClipsDescendants = true
+  r6_18.Active = true
+  Instance.new("UICorner", r6_18).CornerRadius = UDim.new(0, 4)
+  local r7_18 = Instance.new("ImageLabel", r6_18)
+  r7_18.AnchorPoint = Vector2.new(0.5, 0.5)
+  r7_18.Position = UDim2.new(0.5, 0, 0.5, 0)
+  r7_18.Size = UDim2.new(1, 40, 1, 40)
+  r7_18.Image = "rbxassetid://5554236805"
+  r7_18.ImageColor3 = Color3.fromRGB(0, 0, 0)
+  r7_18.ImageTransparency = 0.6
+  r7_18.BackgroundTransparency = 0.5
+  r7_18.ScaleType = Enum.ScaleType.Slice
+  r7_18.SliceCenter = Rect.new(23, 23, 277, 277)
+  r7_18.ZIndex = 0
+  local r8_18 = Instance.new("TextLabel", r6_18)
+  r8_18.Size = UDim2.new(1, 0, 0, 40)
+  r8_18.BackgroundTransparency = 1
+  r8_18.Text = "����� Xenox Hub"
+  r8_18.TextColor3 = Color3.fromRGB(255, 255, 255)
+  r8_18.Font = Enum.Font.GothamBold
+  r8_18.TextSize = 22
+  local r9_18 = Instance.new("TextLabel", r6_18)
+  r9_18.Position = UDim2.new(0, 0, 0, 35)
+  r9_18.Size = UDim2.new(1, 0, 0, 25)
+  r9_18.BackgroundTransparency = 1
+  r9_18.Text = "PVP Mode"
+  r9_18.TextColor3 = Color3.fromRGB(200, 200, 200)
+  r9_18.Font = Enum.Font.Gotham
+  r9_18.TextSize = 14
+  local r10_18 = Instance.new("TextBox", r6_18)
+  r10_18.Position = UDim2.new(0, 5, 0, 70)
+  r10_18.Size = UDim2.new(0.9, 0, 0, 30)
+  r10_18.PlaceholderText = "����� Search..."
+  r10_18.Text = ""
+  r10_18.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+  r10_18.BorderSizePixel = 0
+  r10_18.TextColor3 = Color3.fromRGB(255, 255, 255)
+  r10_18.Font = Enum.Font.Gotham
+  r10_18.TextSize = 14
+  r10_18.ClearTextOnFocus = false
+  r10_18.TextXAlignment = Enum.TextXAlignment.Left
+  Instance.new("UICorner", r10_18).CornerRadius = UDim.new(0, 4)
+  Instance.new("UIPadding", r10_18).PaddingLeft = UDim.new(0, 10)
+  local r11_18 = Instance.new("ScrollingFrame", r6_18)
+  r11_18.Position = UDim2.new(0, 5, 0, 115)
+  r11_18.Size = UDim2.new(1, 0, 1, -110)
+  r11_18.BackgroundTransparency = 1
+  r11_18.BorderSizePixel = 0
+  r11_18.ScrollBarThickness = 6
+  r11_18.CanvasSize = UDim2.new(0, 0, 0, 0)
+  local r12_18 = Instance.new("UIPadding", r11_18)
+  local r13_18 = UDim.new(0, 10)
+  local r14_18 = UDim.new(0, 10)
+  local r15_18 = UDim.new(0, 10)
+  r12_18.PaddingBottom = UDim.new(0, 10)
+  r12_18.PaddingRight = r15_18
+  r12_18.PaddingLeft = r14_18
+  r12_18.PaddingTop = r13_18
+  r13_18 = Instance.new("UIGridLayout", r11_18)
+  r13_18.CellSize = UDim2.new(0, 180, 0, 50)
+  r13_18.CellPadding = UDim2.new(0, 10, 0, 10)
+  r13_18.SortOrder = Enum.SortOrder.LayoutOrder
+  r13_18:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    -- line: [0, 0] id: 33
+    r11_18.CanvasSize = UDim2.new(0, 0, 0, r13_18.AbsoluteContentSize.Y + 10)
+  end)
+  r14_18 = Instance.new("TextButton", r5_18)
+  r14_18.AnchorPoint = Vector2.new(0, 0.5)
+  r14_18.Position = UDim2.new(0, 600, 0.5, 0)
+  r14_18.Size = UDim2.new(0, 25, 0, 50)
+  r14_18.Text = "<"
+  r14_18.Font = Enum.Font.GothamBold
+  r14_18.TextSize = 20
+  r14_18.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+  r14_18.TextColor3 = Color3.fromRGB(255, 255, 255)
+  r14_18.BorderSizePixel = 0
+  r15_18 = false
+  r14_18.MouseButton1Click:Connect(function()
+    -- line: [0, 0] id: 41
+    r15_18 = not r15_18
+    if r15_18 then
+      r2_18:Create(r6_18, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Position = UDim2.new(-1, 0, 0.5, 0),
+      }):Play()
+      r2_18:Create(r14_18, TweenInfo.new(0.5), {
+        Position = UDim2.new(0, 0, 0.5, 0),
+      }):Play()
+      r14_18.Text = ">"
+      r2_18:Create(r4_18, TweenInfo.new(0.4), {
+        Size = 0,
+      }):Play()
+      task.wait(0.4)
+      r4_18.Enabled = false
+    else
+      r4_18.Enabled = true
+      r2_18:Create(r4_18, TweenInfo.new(0.4), {
+        Size = 10,
+      }):Play()
+      r2_18:Create(r6_18, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 0, 0.5, 0),
+      }):Play()
+      r2_18:Create(r14_18, TweenInfo.new(0.5), {
+        Position = UDim2.new(0, 600, 0.5, 0),
+      }):Play()
+      r14_18.Text = "<"
+    end
+  end)
+  local r16_18 = {}
+  function AddToggle(r0_56, r1_56, r2_56)
+    -- line: [0, 0] id: 56
+    local r3_56 = Instance.new("Frame", r11_18)
+    r3_56.Size = UDim2.new(0, 180, 0, 50)
+    r3_56.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    r3_56.BorderSizePixel = 0
+    r3_56.BackgroundTransparency = 0.05
+    r3_56.Active = true
+    Instance.new("UICorner", r3_56).CornerRadius = UDim.new(0, 6)
+    local r4_56 = Instance.new("TextLabel", r3_56)
+    r4_56.Size = UDim2.new(0.7, 0, 1, 0)
+    r4_56.Position = UDim2.new(0.05, 0, 0, 0)
+    r4_56.BackgroundTransparency = 1
+    r4_56.Text = r0_56
+    r4_56.Font = Enum.Font.Gotham
+    r4_56.TextColor3 = Color3.fromRGB(255, 255, 255)
+    r4_56.TextSize = 14
+    r4_56.TextXAlignment = Enum.TextXAlignment.Left
+    local r5_56 = Instance.new("TextButton", r3_56)
+    r5_56.AnchorPoint = Vector2.new(1, 0.5)
+    r5_56.Position = UDim2.new(0.95, 0, 0.5, 0)
+    local r6_56 = UDim2.new(0, 25, 0, 25)
+    r5_56.Size = r6_56
+    if r1_56 then
+      r6_56 = "��" or ""
+    else
+      goto label_105	-- block#2 is visited secondly
+    end
+    r5_56.Text = r6_56
+    r5_56.Font = Enum.Font.GothamBold
+    r5_56.TextSize = 18
+    r6_56 = Color3.fromRGB(255, 255, 255)
+    r5_56.TextColor3 = r6_56
+    if r1_56 then
+      r6_56 = Color3.fromRGB(255, 255, 255) or Color3.fromRGB(60, 60, 60)
+    else
+      goto label_129	-- block#5 is visited secondly
+    end
+    r5_56.BackgroundColor3 = r6_56
+    r5_56.BorderSizePixel = 0
+    Instance.new("UICorner", r5_56).CornerRadius = UDim.new(0, 4)
+    r5_56.MouseButton1Click:Connect(function()
+      -- line: [0, 0] id: 57
+      r1_56 = not r1_56
+      local r0_57 = r5_56
+      local r1_57 = r1_56
+      if r1_57 then
+        r1_57 = "��" or ""
+      else
+        goto label_10	-- block#2 is visited secondly
+      end
+      r0_57.Text = r1_57
+      r0_57 = r5_56
+      r1_57 = r1_56
+      if r1_57 then
+        r1_57 = Color3.fromRGB(255, 255, 255) or Color3.fromRGB(60, 60, 60)
+      else
+        goto label_24	-- block#5 is visited secondly
+      end
+      r0_57.BackgroundColor3 = r1_57
+      r2_56(r1_56)
+    end)
+    table.insert(r16_18, {
+      name = r0_56,
+      frame = r3_56,
+    })
+  end
+  r10_18:GetPropertyChangedSignal("Text"):Connect(function()
+    -- line: [0, 0] id: 45
+    local r0_45 = string.lower(r10_18.Text)
+    for r4_45, r5_45 in ipairs(r16_18) do
+      local r6_45 = r5_45.frame
+      r6_45.Visible = string.find(string.lower(r5_45.name), (r0_45 or "")) ~= nil
+    end
+  end)
+  local r17_18 = Instance.new("Folder")
+  r17_18.Name = "ESP"
+  r17_18.Parent = workspace
+  local function r18_18(r0_19)
+    -- line: [0, 0] id: 19
+    if not healthEspEnabled then
+      return 
+    end
+    local r1_19 = r0_19:FindFirstChild("Head")
+    local r2_19 = r0_19:FindFirstChildOfClass("Humanoid")
+    if r1_19 and r2_19 and not r1_19:FindFirstChild("HealthESP") then
+      local r3_19 = Instance.new("BillboardGui")
+      r3_19.Name = "HealthESP"
+      r3_19.Size = UDim2.new(4, 0, 1.5, 0)
+      r3_19.StudsOffset = Vector3.new(0, 3, 0)
+      r3_19.AlwaysOnTop = true
+      r3_19.Parent = r1_19
+      local r4_19 = Instance.new("Frame", r3_19)
+      r4_19.Size = UDim2.new(1, 0, 0.2, 0)
+      r4_19.Position = UDim2.new(0, 0, 0.5, 0)
+      r4_19.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+      local r5_19 = Instance.new("Frame", r4_19)
+      r5_19.Name = "HealthBar"
+      r5_19.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+      r5_19.Size = UDim2.new(1, 0, 1, 0)
+      local r6_19 = Instance.new("TextLabel", r3_19)
+      r6_19.Name = "HPText"
+      r6_19.Size = UDim2.new(1, 0, 0.5, 0)
+      r6_19.Position = UDim2.new(0, 0, 0, -10)
+      r6_19.BackgroundTransparency = 1
+      r6_19.TextColor3 = Color3.fromRGB(255, 255, 255)
+      r6_19.TextStrokeTransparency = 0
+      r6_19.Font = Enum.Font.SourceSansBold
+      r6_19.TextScaled = true
+      r6_19.Text = tostring(r2_19.Health) .. "/" .. tostring(r2_19.MaxHealth)
+    end
+  end
+  local r19_18 = game:GetService("Players")
+  local r20_18 = r19_18.LocalPlayer
+  AddToggle("Hiện Thanh Máu", false, function(r0_29)
+    -- line: [0, 0] id: 29
+    healthEspEnabled = r0_29
+    if not r0_29 then
+      for r4_29, r5_29 in ipairs(r19_18:GetPlayers()) do
+        if r5_29.Character and r5_29.Character:FindFirstChild("Head") then
+          local r6_29 = r5_29.Character.Head
+          if r6_29:FindFirstChild("HealthESP") then
+            r6_29.HealthESP:Destroy()
+          end
+        end
+      end
+    end
+  end)
+  r1_18.RenderStepped:Connect(function()
+    -- line: [0, 0] id: 55
+    if healthEspEnabled then
+      for r3_55, r4_55 in ipairs(r19_18:GetPlayers()) do
+        if r4_55 ~= r20_18 and r4_55.Character then
+          r18_18(r4_55.Character)
+          local r5_55 = r4_55.Character:FindFirstChildOfClass("Humanoid")
+          local r6_55 = r4_55.Character:FindFirstChild("Head")
+          if r5_55 and r6_55 and r6_55:FindFirstChild("HealthESP") then
+            local r7_55 = r6_55.HealthESP
+            local r8_55 = r7_55.Frame.HealthBar
+            local r9_55 = r7_55.HPText
+            r8_55.Size = UDim2.new(math.clamp(r5_55.Health / r5_55.MaxHealth, 0, 1), 0, 1, 0)
+            local r10_55 = r5_55.Health / r5_55.MaxHealth
+            if r10_55 > 0.6 then
+              r8_55.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+            elseif r10_55 > 0.3 then
+              r8_55.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+            else
+              r8_55.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            end
+            r9_55.Text = math.floor(r5_55.Health) .. "/" .. math.floor(r5_55.MaxHealth)
+          end
+        end
+      end
+    end
+  end)
+  AddToggle("Inf Stamina v1", false, function(r0_36)
+    -- line: [0, 0] id: 36
+    getgenv().InfStamina = r0_36
+    if r0_36 == true then
+      repeat
+        wait()
+        game:GetService("Players").LocalPlayer.stats.Level.Value = 199999999
+      until getgenv().InfStamina == false
+    end
+  end)
+  AddToggle("Inf Stamina v2", false, function(r0_47)
+    -- line: [0, 0] id: 47
+    local r1_47 = getconnections
+    if r1_47 then
+      r1_47 = getconnections(game:GetService("RunService").RenderStepped) or {}
+    else
+      goto label_12	-- block#2 is visited secondly
+    end
+    local function r2_47(r0_48)
+      -- line: [0, 0] id: 48
+      -- error: decompile function#48: generate_block
+      -- 
+      -- Caused by:
+      --     0: generate_block(2)
+      --     1: generate_block(4)
+      --     2: conditional block should not has goto statement
+    end
+    local function r3_47(r0_49, r1_49, r2_49)
+      -- line: [0, 0] id: 49
+      local r6_49 = nil	-- notice: implicit variable refs by block#[0]
+      local r5_49 = nil	-- notice: implicit variable refs by block#[0]
+      r5_49, r6_49 = pcall(function()
+        -- line: [0, 0] id: 50
+        if debug and debug.setupvalue then
+          debug.setupvalue(r0_49, r1_49, r2_49)
+        elseif setupvalue then
+          setupvalue(r0_49, r1_49, r2_49)
+        else
+          error("No setupvalue available")
+        end
+      end)
+      return r5_49, r6_49
+    end
+    local function r4_47(r0_51, r1_51)
+      -- line: [0, 0] id: 51
+      if not r1_51 then
+        r1_51 = 1000
+      end
+      local r2_51 = nil
+      if debug and debug.getupvalues then
+        local r3_51, r4_51 = pcall(debug.getupvalues, r0_51)
+        if r3_51 and type(r4_51) == "table" then
+          r2_51 = r4_51
+        end
+      end
+      local r6_51 = nil	-- notice: implicit variable refs by block#[20]
+      if not r2_51 then
+        for r6_51 = 1, 50, 1 do
+          local r7_51, r8_51, r9_51 = pcall(debug.getupvalue, r0_51, r6_51)
+          if r7_51 and r8_51 then
+            if type(r9_51) == "number" and r9_51 < r1_51 then
+              pcall(function()
+                -- line: [0, 0] id: 53
+                r3_47(r0_51, r6_51, r1_51)
+              end)
+              return true, r6_51
+            end
+            -- close: r6_51
+          end
+        end
+      else
+        for r6_51, r7_51 in ipairs(r2_51) do
+          if type(r7_51) == "number" and r7_51 < r1_51 then
+            pcall(function()
+              -- line: [0, 0] id: 52
+              r3_47(r0_51, r6_51, r1_51)
+            end)
+            return true, r6_51
+          end
+          -- close: r6_51
+        end
+      end
+      return false
+    end
+    for r8_47, r9_47 in ipairs(r1_47) do
+      local r10_47 = r9_47.Function
+      local r11_47, r12_47 = pcall(debug.getinfo, r10_47)
+      if r11_47 and r12_47 and r12_47.source and string.find(r12_47.source, "ProfileController") then
+        r2_47(r10_47)
+        r4_47(r10_47, 999999999999)
+        break
+      end
+    end
+  end)
+  local function r21_18()
+    -- line: [0, 0] id: 54
+    local r0_54 = game:GetService("Players"):GetPlayers()
+    local r1_54 = game:GetService("Players").LocalPlayer
+    local r2_54 = r1_54.Character
+    if not r2_54 or not r2_54:FindFirstChild("HumanoidRootPart") then
+      return nil
+    end
+    local r3_54 = r2_54.HumanoidRootPart
+    local r4_54 = nil
+    local r5_54 = math.huge
+    for r9_54, r10_54 in ipairs(r0_54) do
+      if r10_54 ~= r1_54 and r10_54.Character and r10_54.Character:FindFirstChild("HumanoidRootPart") then
+        local r12_54 = (r3_54.Position - r10_54.Character.HumanoidRootPart.Position).Magnitude
+        if r12_54 < r5_54 then
+          r5_54 = r12_54
+          r4_54 = r10_54
+        end
+      end
+    end
+    return r4_54
+  end
+  local r22_18 = Drawing.new("Line")
+  r22_18.Color = Color3.fromRGB(255, 0, 0)
+  r22_18.Thickness = 2
+  r22_18.Transparency = 1
+  AddToggle("Aim Players Gần Nhất", false, function(r0_20)
+    -- line: [0, 0] id: 20
+    getgenv().AimNearest = r0_20
+    if r0_20 == true then
+      local r1_20 = nil
+      local r3_20 = game:GetService("Players").LocalPlayer
+      local r4_20 = game:GetService("RunService")
+      local r5_20 = workspace.CurrentCamera
+      r1_20 = r4_20.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 21
+        if getgenv().AimNearest == false then
+          if r1_20 then
+            r1_20:Disconnect()
+          end
+          r22_18.Visible = false
+          return 
+        end
+        if not r3_20.Character or not r3_20.Character:FindFirstChild("HumanoidRootPart") then
+          r22_18.Visible = false
+          return 
+        end
+        local r0_21 = r21_18()
+        if r0_21 and r0_21.Character and r0_21.Character:FindFirstChild("HumanoidRootPart") then
+          local r1_21 = r3_20.Character.HumanoidRootPart
+          local r2_21 = r0_21.Character.HumanoidRootPart
+          r1_21.CFrame = CFrame.new(r1_21.Position, Vector3.new(r2_21.Position.X, r1_21.Position.Y, r2_21.Position.Z))
+          local r3_21, r4_21 = r5_20:WorldToViewportPoint(r1_21.Position)
+          local r5_21, r6_21 = r5_20:WorldToViewportPoint(r2_21.Position)
+          if r4_21 and r6_21 then
+            r22_18.From = Vector2.new(r3_21.X, r3_21.Y)
+            r22_18.To = Vector2.new(r5_21.X, r5_21.Y)
+            r22_18.Visible = true
+          else
+            r22_18.Visible = false
+          end
+        else
+          r22_18.Visible = false
+        end
+      end)
+      -- close: r1_20
+    end
+  end)
+  local function r23_18()
+    -- line: [0, 0] id: 32
+    local r1_32 = 15
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+      return nil
+    end
+    local r2_32 = character.HumanoidRootPart
+    local r0_32 = nil	-- notice: implicit variable refs by block#[10]
+    for r6_32, r7_32 in pairs(r19_18:GetPlayers()) do
+      if r7_32 ~= r20_18 and r7_32.Character and r7_32.Character:FindFirstChild("HumanoidRootPart") then
+        local r8_32 = (r7_32.Character.HumanoidRootPart.Position - r2_32.Position).Magnitude
+        if r8_32 < r1_32 then
+          r1_32 = r8_32
+          r0_32 = r7_32
+        end
+      end
+    end
+    return r0_32
+  end
+  AddToggle("Auto Pvp Gần Nhất", false, function(r0_30)
+    -- line: [0, 0] id: 30
+    getgenv().AutoPvp = r0_30
+    local r1_30 = nil
+    if r0_30 then
+      r1_30 = r1_18.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 31
+        if not getgenv().AutoPvp then
+          if r1_30 then
+            r1_30:Disconnect()
+          end
+          return 
+        end
+        local r0_31 = r19_18.LocalPlayer
+        local r1_31 = r0_31.Character
+        if not r1_31 or not r1_31:FindFirstChild("HumanoidRootPart") then
+          return 
+        end
+        local r2_31 = r1_31.HumanoidRootPart
+        local r3_31 = r1_31:FindFirstChild("Humanoid")
+        if r3_31 == nil or r1_31:GetAttribute("texe") or typeof(r3_31.Health) ~= "number" then
+          return 
+        end
+        local r4_31 = nil
+        local r5_31 = nil
+        r5_31 = 30
+        for r9_31, r10_31 in pairs(r19_18:GetPlayers()) do
+          if r10_31 ~= r0_31 and r10_31.Character and r10_31.Character:FindFirstChild("HumanoidRootPart") and not r10_31.character:GetAttribute("texe") and r10_31.character:GetAttribute("PvPRemain") and typeof(r3_31.Health) == "number" then
+            local r11_31 = (r10_31.Character.HumanoidRootPart.Position - r2_31.Position).Magnitude
+            if r11_31 < r5_31 then
+              r5_31 = r11_31
+              r4_31 = r10_31
+            end
+          end
+        end
+        if r4_31 then
+          local r6_31 = r4_31.Character.HumanoidRootPart
+          local r7_31 = r6_31.CFrame.LookVector
+          local r10_31 = r7_31:Dot((r2_31.Position - r6_31.Position).Unit) < 0
+          local r11_31 = math.random(8, 12)
+          local r12_31 = (math.random() - 0.5) * 4
+          local r13_31 = nil
+          if r10_31 then
+            local r14_31 = math.random(1, 2)
+            if r14_31 == 1 then
+              r14_31 = r6_31.CFrame.RightVector or -r6_31.CFrame.RightVector
+            else
+              goto label_129	-- block#28 is visited secondly
+            end
+            r13_31 = r6_31.Position - r7_31 * r11_31 + r14_31 * 5
+          else
+            r13_31 = r6_31.Position - r7_31 * r11_31 + r6_31.CFrame.RightVector * r12_31
+          end
+          if (r2_31.Position - r13_31).Magnitude <= 1 then
+            r2_31.CFrame = CFrame.new(r13_31, r6_31.Position)
+          else
+            r2_18:Create(r2_31, TweenInfo.new(0.25, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+              CFrame = CFrame.new(r13_31, r6_31.Position),
+            }):Play()
+          end
+          if r3_31 and r3_31.FloorMaterial ~= Enum.Material.Air then
+            r3_31.Jump = true
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("Auto Hit Players", false, function(r0_39)
+    -- line: [0, 0] id: 39
+    getgenv().AutoPvp = r0_39
+    local r1_39 = nil
+    if r0_39 then
+      r1_39 = r1_18.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 40
+        if not getgenv().AutoPvp then
+          if r1_39 then
+            r1_39:Disconnect()
+          end
+          return 
+        end
+        local r0_40 = r19_18.LocalPlayer
+        local r1_40 = r0_40.Character
+        if not r1_40 or not r1_40:FindFirstChild("HumanoidRootPart") then
+          return 
+        end
+        local r2_40 = r1_40.HumanoidRootPart
+        if r1_40:FindFirstChild("Humanoid") == nil or r1_40:GetAttribute("texe") or not r1_40:FindFirstChildOfClass("Tool") then
+          return 
+        end
+        local r4_40 = nil
+        local r5_40 = nil
+        r5_40 = 30
+        for r9_40, r10_40 in pairs(r19_18:GetPlayers()) do
+          if r10_40 ~= r0_40 and r10_40.Character and r10_40.Character:FindFirstChild("HumanoidRootPart") and not r10_40.character:GetAttribute("texe") and r10_40.character:GetAttribute("PvPRemain") then
+            local r11_40 = (r10_40.Character.HumanoidRootPart.Position - r2_40.Position).Magnitude
+            if r11_40 < r5_40 then
+              r5_40 = r11_40
+              r4_40 = r10_40
+            end
+          end
+        end
+        if r4_40 then
+          local r6_40 = r1_40:FindFirstChildOfClass("Tool")
+          if r6_40 and r6_40.Activate then
+            r6_40:Activate()
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("Tắt Blur Của Menu", false, function(r0_42)
+    -- line: [0, 0] id: 42
+    getgenv().DisabledBlur = r0_42
+    if r0_42 then
+      repeat
+        task.wait()
+        r4_18.Size = 0
+      until getgenv().DisabledBlur == false
+    end
+  end)
+  AddToggle("ESP Thông Tin", false, function(r0_61)
+    -- line: [0, 0] id: 61
+    getgenv().PlayerInfo = r0_61
+    local r1_61 = nil
+    if r0_61 then
+      r1_61 = r1_18.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 62
+        if not getgenv().PlayerInfo then
+          if r1_61 then
+            r1_61:Disconnect()
+          end
+          return 
+        end
+        for r3_62, r4_62 in ipairs(r19_18:GetPlayers()) do
+          if r4_62 ~= r20_18 and r4_62.Character then
+            local r5_62 = r4_62.Character:FindFirstChild("Head")
+            if r5_62 and not r5_62:FindFirstChild("PlayerInfo") then
+              local r6_62 = Instance.new("BillboardGui")
+              r6_62.Name = "PlayerInfo"
+              r6_62.Size = UDim2.new(4, 0, 2, 0)
+              r6_62.StudsOffset = Vector3.new(0, 3, 0)
+              r6_62.AlwaysOnTop = true
+              r6_62.Parent = r5_62
+              local r7_62 = Instance.new("TextLabel", r6_62)
+              r7_62.Size = UDim2.new(1, 0, 0.5, 0)
+              r7_62.Position = UDim2.new(0, 0, 0, 0)
+              r7_62.BackgroundTransparency = 1
+              r7_62.TextColor3 = Color3.fromRGB(255, 255, 255)
+              r7_62.TextStrokeTransparency = 0
+              r7_62.Font = Enum.Font.SourceSansBold
+              r7_62.TextScaled = true
+              r7_62.Text = r4_62.Name
+              local r8_62 = Instance.new("TextLabel", r6_62)
+              r8_62.Size = UDim2.new(1, 0, 0.5, 0)
+              r8_62.Position = UDim2.new(0, 0, 0.5, 0)
+              r8_62.BackgroundTransparency = 1
+              r8_62.TextColor3 = Color3.fromRGB(255, 255, 255)
+              r8_62.TextStrokeTransparency = 0
+              r8_62.Font = Enum.Font.SourceSansBold
+              r8_62.TextScaled = true
+              local r9_62 = r4_62:FindFirstChild("stats")
+              if r9_62 then
+                r9_62 = r4_62.stats:FindFirstChild("Level") and (r4_62.stats.Level.Value or "N/A")
+              else
+                goto label_145	-- block#12 is visited secondly
+              end
+              r8_62.Text = "Level: " .. tostring(r9_62) .. " PvP: " .. tostring((r4_62.Character:GetAttribute("PvPRemain") or "OFF"))
+            end
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("Health Mode", false, function(r0_22)
+    -- line: [0, 0] id: 22
+    getgenv().HealthMode = r0_22
+    local r1_22 = game:GetService("Players")
+    local r2_22 = game:GetService("RunService")
+    local r3_22 = r1_22.LocalPlayer
+    local r4_22 = r3_22:FindFirstChild("Backpack")
+    local r5_22 = r3_22.Character or r3_22.CharacterAdded:Wait()
+    local r6_22 = "băng gạc"
+    local function r7_22(r0_24, r1_24)
+      -- line: [0, 0] id: 24
+      if not r0_24 then
+        return nil
+      end
+      if not r1_24 or r1_24 == "" then
+        return r0_24:FindFirstChildOfClass("Tool")
+      end
+      for r5_24, r6_24 in ipairs(r0_24:GetChildren()) do
+        if r6_24:IsA("Tool") and string.find(string.lower(r6_24.Name), string.lower(r1_24)) then
+          return r6_24
+        end
+      end
+      return nil
+    end
+    local r8_22 = nil
+    if r0_22 then
+      r8_22 = r2_22.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 23
+        if not getgenv().HealthMode then
+          if r8_22 then
+            r8_22:Disconnect()
+          end
+          return 
+        end
+        local r0_23 = r5_22:FindFirstChildOfClass("Humanoid")
+        if r0_23 and r0_23.Health < 75 then
+          local r1_23 = r7_22(r5_22, "")
+          local r2_23 = r7_22(r4_22, r6_22)
+          if r2_23 then
+            r3_22.Character.Humanoid:EquipTool(r2_23)
+            task.wait(0.05)
+            if r2_23 and r2_23.Activate then
+              r2_23:Activate()
+            end
+            task.wait(1.2)
+            if r1_23 then
+              r3_22.Character.Humanoid:EquipTool(r1_23)
+            end
+          end
+        end
+      end)
+    end
+  end)
+  local function r24_18(r0_58)
+    -- line: [0, 0] id: 58
+    game:GetService("ReplicatedStorage"):WaitForChild("KnitPackages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("InventoryService"):WaitForChild("RE"):WaitForChild("updateInventory"):FireServer(unpack({
+      "eue",
+      r0_58
+    }))
+  end
+  AddToggle("Auto Lấy Băng Gạc", false, function(r0_37)
+    -- line: [0, 0] id: 37
+    getgenv().AutoLayBan = r0_37
+    local r1_37 = nil
+    if r0_37 then
+      r1_37 = game:GetService("RunService").RenderStepped:Connect(function()
+        -- line: [0, 0] id: 38
+        if not getgenv().AutoLayBan then
+          if r1_37 then
+            r1_37:Disconnect()
+          end
+          return 
+        end
+        local r0_38 = game:GetService("Players").LocalPlayer
+        local r2_38 = r0_38:WaitForChild("PlayerGui"):WaitForChild("Inventory")
+        r2_38.MainFrame.Visible = true
+        r2_38.Enabled = true
+        r2_38.MainFrame.Position = UDim2.new(10, 0, 0.555833936, 0)
+        local r3_38 = r0_38:FindFirstChild("Backpack")
+        local r4_38 = r0_38.Character or r0_38.CharacterAdded:Wait()
+        if not r3_38:FindFirstChild("băng gạc") and not r4_38:FindFirstChild("băng gạc") then
+          r24_18("băng gạc")
+        end
+        task.wait(0.3)
+      end)
+    else
+      game:GetService("Players").LocalPlayer.PlayerGui.Inventory.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    end
+  end)
+  AddToggle("Instant Nhặt Ghế", false, function(r0_59)
+    -- line: [0, 0] id: 59
+    AutoNhatGhe = r0_59
+    local r1_59 = nil
+    if r0_59 then
+      r1_59 = r1_18.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 60
+        if not AutoNhatGhe then
+          if r1_59 then
+            r1_59:Disconnect()
+          end
+          return 
+        end
+        r20_18 = game.Players.LocalPlayer
+        if not r20_18 or not r20_18.Character or not r20_18.Character:FindFirstChild("HumanoidRootPart") then
+          return 
+        end
+        for r3_60, r4_60 in pairs(workspace.Ghe:GetChildren()) do
+          if r4_60.Name == "Chair" then
+            r4_60.CFrame = r20_18.Character.HumanoidRootPart.CFrame * CFrame.new(0, 150, 0)
+          end
+        end
+        if not r20_18.Backpack:FindFirstChild("Ghế") and not r20_18.Character:FindFirstChild("Ghế") then
+          for r3_60, r4_60 in pairs(workspace.Ghe:GetChildren()) do
+            if r4_60.Name == "Chair" and r4_60:FindFirstChild("hitbox") and r4_60.hitbox:FindFirstChild("ClickDetector") then
+              print("nhat")
+              fireclickdetector(r4_60.hitbox.ClickDetector)
+            end
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("Chọi Ghế No CD", false, function(r0_43)
+    -- line: [0, 0] id: 43
+    AutoNhatGheb = r0_43
+    local r1_43 = nil
+    if r0_43 then
+      r1_43 = r1_18.RenderStepped:Connect(function()
+        -- line: [0, 0] id: 44
+        if not AutoNhatGheb then
+          if r1_43 then
+            r1_43:Disconnect()
+          end
+          return 
+        end
+        if r20_18.Backpack:FindFirstChild("Ghế") or r20_18.Character:FindFirstChild("Ghế") then
+          local r0_44 = r20_18.Character:FindFirstChild("Ghế") or r20_18.Backpack:FindFirstChild("Ghế")
+          if r0_44 then
+            for r4_44, r5_44 in pairs(r0_44["ghe/client"]:GetChildren()) do
+              if r5_44.Name == "ScreenGui" then
+                r5_44.Enabled = false
+                r5_44.CanvasGroup.Frame.Size = UDim2.new(1, 0, r5_44.CanvasGroup.Frame.Size.Y.Scale, 0)
+              end
+            end
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("Spin", false, function(r0_26)
+    -- line: [0, 0] id: 26
+    AutoSpin = r0_26
+    local r1_26 = nil
+    if r0_26 then
+      task.spawn(function()
+        -- line: [0, 0] id: 27
+        while task.wait() do
+          local r0_27 = AutoSpin
+          if r0_27 then
+            r0_27 = r20_18.Character
+            if not r0_27 then
+              return 
+            end
+            local r1_27 = r0_27:FindFirstChildOfClass("Humanoid")
+            local r2_27 = r0_27:FindFirstChild("HumanoidRootPart")
+            if not r1_27 or not r2_27 then
+              return 
+            end
+            if r0_26 then
+              r1_27.AutoRotate = false
+              task.spawn(function()
+                -- line: [0, 0] id: 28
+                while AutoSpin do
+                  local r0_28 = r1_27
+                  if r0_28 then
+                    r0_28 = r2_27
+                    if r0_28 then
+                      r2_27.CFrame = r2_27.CFrame * CFrame.Angles(0, math.rad(999), 0)
+                      task.wait(0.03)
+                    else
+                      break
+                    end
+                  else
+                    break
+                  end
+                end
+              end)
+            else
+              r1_27.AutoRotate = true
+            end
+            -- close: r0_27
+          else
+            break
+          end
+        end
+      end)
+    end
+  end)
+  AddToggle("FixLag v1", false, function(r0_25)
+    -- line: [0, 0] id: 25
+    if r0_25 then
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/getscript-vn/Api/refs/heads/main/Anti%20Lag"))()
+    end
+  end)
+  local r25_18 = workspace.CurrentCamera.FieldOfView
+  AddToggle("Fov 120", false, function(r0_46)
+    -- line: [0, 0] id: 46
+    if r0_46 then
+      workspace.CurrentCamera.FieldOfView = 120
+    else
+      workspace.CurrentCamera.FieldOfView = r25_18
+    end
+  end)
+  AddToggle("Hồi Sinh Nhanh (beta)", false, function(r0_34)
+    -- line: [0, 0] id: 34
+    FastRespawn = r0_34
+    if r0_34 then
+      task.spawn(function()
+        -- line: [0, 0] id: 35
+        while task.wait() do
+          local r0_35 = FastRespawn
+          if r0_35 then
+            game:GetService("Players").LocalPlayer.PlayerGui.Dead.Dead.Position = UDim2.new(111115, 0, 11115, 0)
+            game:GetService("Players").LocalPlayer.PlayerGui.Dead.MainFrame.Position = UDim2.new(111115, 0, 11115, 0)
+            r0_35 = game:GetService("Players").LocalPlayer
+            local r1_35 = r0_35.Character and r0_35.Character:FindFirstChildWhichIsA("Humanoid")
+            if r0_35.Character:GetAttribute("dead") then
+              if replicatesignal then
+                replicatesignal(r0_35.Kill)
+              elseif r1_35 then
+                r1_35:ChangeState(Enum.HumanoidStateType.Dead)
+              else
+                r0_35.Character:BreakJoints()
+              end
+            end
+          else
+            break
+          end
+        end
+      end)
+    end
+  end)
+  print("Xenox PvP Mode Loaded")
+end
+if isfile("XenoxHubKey.txt") then
+  getgenv().UserKey = readfile("XenoxHubKey.txt")
+end
+local r16_0, r17_0 = r9_0:Kiemtrakey(getgenv().UserKey or "default")
+if r16_0 then
+  r0_0:Notify({
+    Title = "TAF SERVICE KEY SYSTEM",
+    Content = "Status : Key Hợp Lệ Chờ Loading Script.",
+    Duration = 2,
+  })
+  r10_0:Destroy()
+  r15_0()
+else
+  r0_0:Notify({
+    Title = "TAF SERVICE KEY SYSTEM",
+    Content = "Status : " .. r17_0,
+    Duration = 2,
+  })
+end
+r11_0.Main:AddButton({
+  Title = "Check Key",
+  Description = "Kiểm Tra Key",
+  Callback = function()
+    -- line: [0, 0] id: 6
+    local r0_6, r1_6 = r9_0:Kiemtrakey(getgenv().UserKey or "default")
+    if r0_6 then
+      r0_0:Notify({
+        Title = "TAF SERVICE KEY SYSTEM",
+        Content = "Status : Key Hợp Lệ Chờ Loading Script.",
+        Duration = 2,
+      })
+      r10_0:Destroy()
+      writefile("XenoxHubKey.txt", getgenv().UserKey or "default")
+      r15_0()
+    else
+      r0_0:Notify({
+        Title = "TAF SERVICE KEY SYSTEM",
+        Content = "Status : " .. r1_6,
+        Duration = 2,
+      })
+    end
+  end,
+})
+r11_0.Main:AddButton({
+  Title = "Get Key",
+  Description = "Liên Kết Lấy Key Ấn Vào Để Copy Link,Và Ra Google Dán vô",
+  Callback = function()
+    -- line: [0, 0] id: 12
+    setclipboard("https://cswz.site/xenoxhub/getkey")
+  end,
+})
+r11_0.Main:AddButton({
+  Title = "Discord",
+  Description = "Nhóm Discord Hỗ Trợ & Share Script & Share Key & Free & CheckUpdate",
+  Callback = function()
+    -- line: [0, 0] id: 11
+    setclipboard("https://discord.gg/qHxRU9C2qr")
+  end,
+})
+r10_0:SelectTab(1)
+r0_0:Notify({
+  Title = "Script Loaded",
+  Content = "The script has been loaded.",
+  Duration = 8,
+})
