@@ -1,0 +1,784 @@
+repeat task.wait() until game:IsLoaded()
+
+-- Load Fluent UI (giữ nguyên)
+local ok, Fluent = pcall(function()
+    return loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+end)
+if not ok or not Fluent then
+    warn("Không thể tải Fluent UI — dùng UI nội bộ.")
+end
+
+-- Nếu Fluent lỗi → tạo stub minimal
+if not Fluent then
+    Fluent = {}
+    function Fluent:CreateWindow(opts)
+        return {
+            AddTab = function() return {} end,
+            SelectTab = function() end,
+        }
+    end
+    function Fluent:Notify(t)
+        print(t.Title .. ": " .. t.Content)
+    end
+end
+
+-- Tạo cửa sổ MEMAYBEO HUB
+local Window = Fluent:CreateWindow({
+    Title = "MEMAYBEO HUB - PvP Mode",
+    SubTitle = "Không Key - Free 100%",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(500, 300),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl,
+})
+local Tabs = { Main = Window:AddTab({ Title = "PvP Menu", Icon = "swords" }) }
+
+Fluent:Notify({
+    Title = "MEMAYBEO HUB",
+    Content = "Loaded successfully! Không cần key!",
+    Duration = 3
+})
+
+-- SERVICES
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Workspace = workspace
+
+-- === UI nội bộ (nếu Fluent không hiển thị) ===
+local function CreateCoreUI()
+    local lighting = game:GetService("Lighting")
+    local blur = Instance.new("BlurEffect", lighting)
+    blur.Size = 10
+    blur.Enabled = true
+
+    local ui = Instance.new("ScreenGui")
+    ui.Name = "MEMAYBEO_PVP_UI"
+    ui.ResetOnSpawn = false
+    ui.Parent = game:GetService("CoreGui")
+
+    local mainFrame = Instance.new("Frame", ui)
+    mainFrame.AnchorPoint = Vector2.new(0, 0.5)
+    mainFrame.Position = UDim2.new(0, 0, 0.5, 0)
+    mainFrame.Size = UDim2.new(0, 610, 0, 400)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    mainFrame.BackgroundTransparency = 0.5
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 4)
+
+    local bg = Instance.new("ImageLabel", mainFrame)
+    bg.AnchorPoint = Vector2.new(0.5, 0.5)
+    bg.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bg.Size = UDim2.new(1, 40, 1, 40)
+    bg.Image = "rbxassetid://5554236805"
+    bg.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    bg.ImageTransparency = 0.6
+    bg.BackgroundTransparency = 0.5
+    bg.ScaleType = Enum.ScaleType.Slice
+    bg.SliceCenter = Rect.new(23, 23, 277, 277)
+    bg.ZIndex = 0
+
+    local title = Instance.new("TextLabel", mainFrame)
+    title.Size = UDim2.new(1, 0, 0, 40)
+    title.BackgroundTransparency = 1
+    title.Text = "MEMAYBEO HUB - PvP Mode"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 22
+
+    local sub = Instance.new("TextLabel", mainFrame)
+    sub.Position = UDim2.new(0, 0, 0, 35)
+    sub.Size = UDim2.new(1, 0, 0, 25)
+    sub.BackgroundTransparency = 1
+    sub.Text = "Chế độ PvP nâng cao"
+    sub.TextColor3 = Color3.fromRGB(200, 200, 200)
+    sub.Font = Enum.Font.Gotham
+    sub.TextSize = 14
+
+    -- Thanh tìm kiếm
+    local search = Instance.new("TextBox", mainFrame)
+    search.Position = UDim2.new(0, 5, 0, 70)
+    search.Size = UDim2.new(0.9, 0, 0, 30)
+    search.PlaceholderText = "Tìm chức năng..."
+    search.Text = ""
+    search.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    search.BorderSizePixel = 0
+    search.TextColor3 = Color3.fromRGB(255, 255, 255)
+    search.Font = Enum.Font.Gotham
+    search.TextSize = 14
+    search.ClearTextOnFocus = false
+    search.TextXAlignment = Enum.TextXAlignment.Left
+    Instance.new("UICorner", search).CornerRadius = UDim.new(0, 4)
+    Instance.new("UIPadding", search).PaddingLeft = UDim.new(0, 10)
+    -- Frame chứa các nút chức năng
+    local scroll = Instance.new("ScrollingFrame", mainFrame)
+    scroll.Position = UDim2.new(0, 5, 0, 115)
+    scroll.Size = UDim2.new(1, 0, 1, -110)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.ScrollBarThickness = 6
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+    local pad = Instance.new("UIPadding", scroll)
+    pad.PaddingBottom = UDim.new(0, 10)
+    pad.PaddingRight = UDim.new(0, 10)
+    pad.PaddingLeft = UDim.new(0, 10)
+    pad.PaddingTop = UDim.new(0, 10)
+
+    local grid = Instance.new("UIGridLayout", scroll)
+    grid.CellSize = UDim2.new(0, 180, 0, 50)
+    grid.CellPadding = UDim2.new(0, 10, 0, 10)
+    grid.SortOrder = Enum.SortOrder.LayoutOrder
+
+    grid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scroll.CanvasSize = UDim2.new(0, 0, 0, grid.AbsoluteContentSize.Y + 10)
+    end)
+
+    -- Nút thu nhỏ menu
+    local toggleBtn = Instance.new("TextButton", ui)
+    toggleBtn.AnchorPoint = Vector2.new(0, 0.5)
+    toggleBtn.Position = UDim2.new(0, 600, 0.5, 0)
+    toggleBtn.Size = UDim2.new(0, 25, 0, 50)
+    toggleBtn.Text = "<"
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextSize = 20
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.BorderSizePixel = 0
+    Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 4)
+
+    local menuOpen = true
+    toggleBtn.MouseButton1Click:Connect(function()
+        menuOpen = not menuOpen
+        if menuOpen then
+            TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                Position = UDim2.new(0, 0, 0.5, 0)
+            }):Play()
+            toggleBtn.Text = "<"
+        else
+            TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                Position = UDim2.new(0, -650, 0.5, 0)
+            }):Play()
+            toggleBtn.Text = ">"
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- HÀM TẠO NÚT CHỨC NĂNG
+    -------------------------------------------------------------
+    local function CreateToggle(name, callback)
+        local btn = Instance.new("TextButton", scroll)
+        btn.Size = UDim2.new(0, 180, 0, 50)
+        btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 14
+        btn.Text = name
+        btn.BorderSizePixel = 0
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+
+        local state = false
+
+        btn.MouseButton1Click:Connect(function()
+            state = not state
+            if state then
+                btn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+            else
+                btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+            end
+            callback(state)
+        end)
+
+        return btn
+    end
+
+    -------------------------------------------------------------
+    -- DƯỚI ĐÂY MÌNH SẼ TIẾP TỤC THÊM TỪNG CHỨC NĂNG PVP
+    -- (Auto PvP, Auto Hit, ESP, Aim, Inf Stamina V1 + V2, Fast Respawn...)
+    -------------------------------------------------------------
+    -------------------------------------------------------------
+    -- ========== ESP THANH MÁU ==========
+    -------------------------------------------------------------
+    local espHealthEnabled = false
+    local healthBars = {}
+
+    CreateToggle("ESP Thanh Máu", function(v)
+        espHealthEnabled = v
+        if not v then
+            for _, bar in pairs(healthBars) do
+                if bar then bar:Destroy() end
+            end
+            healthBars = {}
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if not espHealthEnabled then return end
+
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Humanoid") then
+                if not healthBars[plr] then
+                    local billboard = Instance.new("BillboardGui")
+                    billboard.Size = UDim2.new(4, 0, 0.5, 0)
+                    billboard.Adornee = plr.Character.HumanoidRootPart
+                    billboard.Parent = game.CoreGui
+                    billboard.AlwaysOnTop = true
+
+                    local bar = Instance.new("Frame", billboard)
+                    bar.Size = UDim2.new(1, 0, 1, 0)
+                    bar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                    bar.BorderSizePixel = 0
+
+                    healthBars[plr] = billboard
+                end
+
+                local hp = plr.Character.Humanoid.Health
+                local max = plr.Character.Humanoid.MaxHealth
+                healthBars[plr].Frame.Size = UDim2.new(math.clamp(hp/max,0,1),0,1,0)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== ESP INFO (Tên / Level / PvP) ==========
+    -------------------------------------------------------------
+    local espInfoEnabled = false
+    local espInfoData = {}
+
+    CreateToggle("ESP Thông Tin", function(v)
+        espInfoEnabled = v
+        if not v then
+            for _, g in pairs(espInfoData) do
+                if g then g:Destroy() end
+            end
+            espInfoData = {}
+        end
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if not espInfoEnabled then return end
+
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("Head") then
+                if not espInfoData[plr] then
+                    local gui = Instance.new("BillboardGui")
+                    gui.Adornee = plr.Character.Head
+                    gui.Size = UDim2.new(4, 0, 1, 0)
+                    gui.AlwaysOnTop = true
+                    gui.Parent = game.CoreGui
+
+                    local lbl = Instance.new("TextLabel", gui)
+                    lbl.Size = UDim2.new(1, 0, 1, 0)
+                    lbl.BackgroundTransparency = 1
+                    lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    lbl.Font = Enum.Font.GothamBold
+                    lbl.TextSize = 13
+                    lbl.Text = plr.Name
+
+                    espInfoData[plr] = gui
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== AIM NEAREST ==========
+    -------------------------------------------------------------
+    local aimEnabled = false
+
+    CreateToggle("Aim Gần Nhất", function(v)
+        aimEnabled = v
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if not aimEnabled then return end
+        local char = LocalPlayer.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+        local nearest = nil
+        local dist = 9999
+
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                local mag = (plr.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
+                if mag < dist then
+                    dist = mag
+                    nearest = plr
+                end
+            end
+        end
+
+        if nearest and nearest.Character and nearest.Character:FindFirstChild("HumanoidRootPart") then
+            local cam = workspace.CurrentCamera
+            cam.CFrame = CFrame.new(cam.CFrame.Position, nearest.Character.HumanoidRootPart.Position)
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== AUTO HIT ==========
+    -------------------------------------------------------------
+    local autoHit = false
+
+    CreateToggle("Auto Đánh Players", function(v)
+        autoHit = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            if autoHit then
+                pcall(function()
+                    local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                    if tool and tool:FindFirstChild("RemoteEvent") then
+                        tool.RemoteEvent:FireServer()
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== AUTO PVP GẦN NHẤT ==========
+    -------------------------------------------------------------
+    local autoPvp = false
+
+    CreateToggle("Auto PvP Gần Nhất", function(v)
+        autoPvp = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.15) do
+            if autoPvp then
+                local char = LocalPlayer.Character
+                if not char or not char:FindFirstChild("HumanoidRootPart") then continue end
+
+                local nearest = nil
+                local dist = 9999
+
+                for _,plr in pairs(Players:GetPlayers()) do
+                    if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                        local mag = (plr.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
+                        if mag < dist then
+                            dist = mag
+                            nearest = plr
+                        end
+                    end
+                end
+
+                if nearest and nearest.Character and nearest.Character:FindFirstChild("HumanoidRootPart") then
+                    char.HumanoidRootPart.CFrame = nearest.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-3)
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== FOV 120 ==========
+    -------------------------------------------------------------
+    CreateToggle("FOV 120", function(v)
+        if v then
+            workspace.CurrentCamera.FieldOfView = 120
+        else
+            workspace.CurrentCamera.FieldOfView = 70
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== SPIN ==========
+    -------------------------------------------------------------
+    local spin = false
+
+    CreateToggle("Spin", function(v)
+        spin = v
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if spin and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0, 0.4, 0)
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== FIXLAG ==========
+    -------------------------------------------------------------
+    CreateToggle("Fix Lag", function(v)
+        if v then
+            for _, obj in pairs(workspace:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
+                    obj.Enabled = false
+                end
+            end
+        else
+            for _, obj in pairs(workspace:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
+                    obj.Enabled = true
+                end
+            end
+        end
+    end)
+    -------------------------------------------------------------
+    -- ========== AUTO NHẶT GHẾ ==========
+    -------------------------------------------------------------
+    local autoChair = false
+
+    CreateToggle("Auto Nhặt Ghế", function(v)
+        autoChair = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.3) do
+            if autoChair then
+                for _, obj in pairs(workspace:GetDescendants()) do
+                    if obj.Name == "Chair" and obj:FindFirstChild("ClickDetector") then
+                        pcall(function()
+                            fireclickdetector(obj.ClickDetector)
+                        end)
+                    end
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== NÉM GHẾ NO CD ==========
+    -------------------------------------------------------------
+    local chairNocd = false
+
+    CreateToggle("Ghế Không Hồi Chiêu", function(v)
+        chairNocd = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.05) do
+            if chairNocd then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char then
+                        local tool = char:FindFirstChildOfClass("Tool")
+                        if tool and tool:FindFirstChild("RemoteEvent") then
+                            tool.RemoteEvent:FireServer()
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== HEALTH MODE (AUTO DÙNG BĂNG GẠC KHI THẤP MÁU) ==========
+    -------------------------------------------------------------
+    local healthMode = false
+
+    CreateToggle("Health Mode (HP thấp tự hồi)", function(v)
+        healthMode = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.4) do
+            if healthMode then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("Humanoid") and char.Humanoid.Health < 40 then
+                        local tool = char:FindFirstChild("Bandage") or char:FindFirstChild("Medkit")
+                        if tool and tool:FindFirstChild("RemoteEvent") then
+                            tool.RemoteEvent:FireServer()
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== AUTO LẤY BĂNG GẠC ==========
+    -------------------------------------------------------------
+    local autoBandage = false
+
+    CreateToggle("Auto Lấy Băng Gạc", function(v)
+        autoBandage = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.5) do
+            if autoBandage then
+                for _, obj in pairs(workspace:GetDescendants()) do
+                    if obj.Name == "Bandage" and obj:FindFirstChild("ClickDetector") then
+                        fireclickdetector(obj.ClickDetector)
+                    end
+                end
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== TẮT BLUR MENU ==========
+    -------------------------------------------------------------
+    local noblur = false
+
+    CreateToggle("Không Blur Menu", function(v)
+        noblur = v
+        local blur = nil
+
+        for _, eff in ipairs(game:GetService("Lighting"):GetChildren()) do
+            if eff:IsA("BlurEffect") then
+                blur = eff
+                break
+            end
+        end
+
+        if blur then
+            blur.Enabled = not v
+        end
+    end)
+    -------------------------------------------------------------
+    -- ========== INF STAMINA V1 (EP LEVEL 199999999) ==========
+    -------------------------------------------------------------
+    local infStaminaV1 = false
+
+    CreateToggle("Inf Stamina V1 (Level 199999999)", function(v)
+        infStaminaV1 = v
+
+        if v then
+            pcall(function()
+                local char = LocalPlayer.Character
+                if char and char:FindFirstChild("Level") then
+                    char.Level.Value = 199999999
+                end
+            end)
+        else
+            -- Tắt: trả về Level bình thường nếu muốn
+            pcall(function()
+                local char = LocalPlayer.Character
+                if char and char:FindFirstChild("Level") then
+                    char.Level.Value = 1
+                end
+            end)
+        end
+    end)
+
+    task.spawn(function()
+        while task.wait(0.3) do
+            if infStaminaV1 then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("Level") then
+                        char.Level.Value = 199999999
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== INF STAMINA V2 (AN TOÀN - DEBUG) ==========
+    -------------------------------------------------------------
+    local infStaminaV2 = false
+
+    CreateToggle("Inf Stamina V2 (Không bị trừ)", function(v)
+        infStaminaV2 = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            if infStaminaV2 then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if not char then return end
+                    if not char:FindFirstChild("Stamina") then return end
+
+                    local stamina = char.Stamina
+
+                    -- Chặn hàm trừ stamina
+                    for _, connection in ipairs(getconnections(stamina.Changed)) do
+                        connection:Disable()
+                    end
+
+                    -- Chặn function nội bộ (debug.setupvalue)
+                    if stamina.Changed and typeof(stamina.Changed) == "RBXScriptSignal" then
+                        pcall(function()
+                            local func = debug.getupvalue(stamina.Changed.Connect, 1)
+                            if func then
+                                debug.setupvalue(func, 1, function() end)
+                            end
+                        end)
+                    end
+
+                    -- Set stamina luôn tối đa
+                    stamina.Value = stamina.MaxValue or stamina.Value
+                end)
+            end
+        end
+    end)
+    -------------------------------------------------------------
+    -- ========== FAST RESPAWN (HỒI SINH SIÊU NHANH) ==========
+    -------------------------------------------------------------
+    local fastRespawn = false
+
+    CreateToggle("Fast Respawn (Hồi Sinh Nhanh)", function(v)
+        fastRespawn = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.1) do
+            if fastRespawn then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("Humanoid") then
+                        local hum = char.Humanoid
+                        if hum.Health <= 0 then
+                            -- Force respawn nhanh
+                            LocalPlayer:LoadCharacter()
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== ANTI SLOW (CHỐNG BỊ CHẬM) ==========
+    -------------------------------------------------------------
+    local antiSlow = false
+
+    CreateToggle("Anti Slow (Không bị làm chậm)", function(v)
+        antiSlow = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.15) do
+            if antiSlow then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("Humanoid") then
+                        local hum = char.Humanoid
+
+                        -- Chặn slowdown
+                        hum.WalkSpeed = 24
+                        hum.JumpPower = 50
+
+                        -- Một số game dùng VectorForce → remove luôn
+                        for _, f in pairs(char:GetDescendants()) do
+                            if f:IsA("VectorForce") then
+                                f:Destroy()
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== ANTI STUN (CHỐNG CHOÁNG) ==========
+    -------------------------------------------------------------
+    local antiStun = false
+
+    CreateToggle("Anti Stun (Chống Choáng)", function(v)
+        antiStun = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            if antiStun then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char then
+                        for _, obj in pairs(char:GetDescendants()) do
+                            if obj.Name == "Stun" or obj.Name == "Stunned" then
+                                obj:Destroy() -- xoá stun node
+                            end
+                            if obj:IsA("BoolValue") and obj.Value == true and obj.Name:lower():find("stun") then
+                                obj.Value = false
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== ANTI KNOCKBACK (KHÔNG BỊ HẤT LUI) ==========
+    -------------------------------------------------------------
+    local antiKB = false
+
+    CreateToggle("Anti Knockback", function(v)
+        antiKB = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.1) do
+            if antiKB then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char then
+                        for _, obj in pairs(char:GetDescendants()) do
+                            if obj:IsA("BodyVelocity") or obj:IsA("BodyPosition") then
+                                obj:Destroy()
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    -------------------------------------------------------------
+    -- ========== FIX CHẾT ĐỨNG ==========
+    -------------------------------------------------------------
+    local fixDie = false
+
+    CreateToggle("Fix Chết Đứng", function(v)
+        fixDie = v
+    end)
+
+    task.spawn(function()
+        while task.wait(0.25) do
+            if fixDie then
+                pcall(function()
+                    local char = LocalPlayer.Character
+                    if char and char:FindFirstChild("Humanoid") then
+                        local hum = char.Humanoid
+
+                        -- Reset trạng thái đứng im
+                        if hum.PlatformStand == true then
+                            hum.PlatformStand = false
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+    -------------------------------------------------------------
+    -- === KẾT THÚC HÀM TẠO MENU (LoadPvpMenu) ===
+    -------------------------------------------------------------
+end  -- <== đóng hàm LoadPvpMenu() tại đây
+
+
+-------------------------------------------------------------
+-- CHẠY MENU
+-------------------------------------------------------------
+task.wait(0.5)
+
+-- Load PVP UI
+pcall(function()
+    LoadPvpMenu()
+end)
+
+-- Chọn Tab đầu tiên nếu dùng Fluent UI
+pcall(function()
+    Window:SelectTab(1)
+end)
+
+-- Thông báo hoàn tất
+pcall(function()
+    Fluent:Notify({
+        Title = "MEMAYBEO HUB",
+        Content = "Đã tải thành công! Full chức năng không key.",
+        Duration = 4
+    })
+end)
+
+print("MEMAYBEO HUB Loaded Successfully!")
