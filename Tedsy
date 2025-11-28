@@ -1,0 +1,537 @@
+--=====================================================
+-- 🌈 MEMAYBEO HUB — MOBILE VERSION (NO KEY)
+--=====================================================
+
+local r0_0 = Instance.new("ScreenGui", game.CoreGui)
+r0_0.Name = "RainbowDragButton"
+
+local r1_0 = Instance.new("ImageButton")
+r1_0.Size = UDim2.new(0, 60, 0, 60)
+r1_0.Position = UDim2.new(0.5, -30, 0.5, -30)
+r1_0.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+r1_0.BorderSizePixel = 0
+r1_0.Image = "rbxassetid://112281735246019"
+r1_0.ScaleType = Enum.ScaleType.Fit
+r1_0.Parent = r0_0
+
+Instance.new("UICorner", r1_0).CornerRadius = UDim.new(0, 15)
+
+local r3_0 = Instance.new("UIStroke", r1_0)
+r3_0.Thickness = 3
+r3_0.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+r3_0.Color = Color3.fromRGB(255, 0, 0)
+
+task.spawn(function()
+    local hue = 0
+    while task.wait(0.03) do
+        hue = (hue + 2) % 360
+        r3_0.Color = Color3.fromHSV(hue / 360, 1, 1)
+    end
+end)
+
+r1_0.MouseButton1Click:Connect(function()
+    local vim = game:GetService("VirtualInputManager")
+    vim:SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+    task.wait(0.1)
+    vim:SendKeyEvent(false, Enum.KeyCode.LeftControl, false, game)
+end)
+
+local UIS = game:GetService("UserInputService")
+local dragging, dragInput, startPos, startInputPos
+
+local function update(input)
+    local delta = input.Position - startInputPos
+    r1_0.Position = UDim2.new(
+        startPos.X.Scale,
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale,
+        startPos.Y.Offset + delta.Y
+    )
+end
+
+r1_0.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        startInputPos = input.Position
+        startPos = r1_0.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+r1_0.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and input == dragInput then
+        update(input)
+    end
+end)
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "MEMAYBEO HUB",
+    SubTitle = "BY DungIOS",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(500, 300),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl,
+})
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Farm NPC", Icon = "sword" }),
+    Boss = Window:AddTab({ Title = "Farm Boss", Icon = "skull" }),
+    Settings = Window:AddTab({ Title = "Cài đặt", Icon = "settings" })
+}
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
+
+local AutoFarmNPC = false
+local AutoCollect = true
+local CollectDistance = 700
+
+local TeleportOffset = 3
+
+local AutoFarmBoss = false
+local BossRadius = 17
+local BossRotateSpeed = 35
+local BossHeight = 8
+--=====================================================
+-- 🔥 HỆ THỐNG AUTO NHẶT LOOT
+--=====================================================
+
+task.spawn(function()
+    local LP = Players.LocalPlayer
+
+    RunService.Heartbeat:Connect(function()
+        if not AutoCollect then return end
+        if not LP.Character then return end
+
+        local HRP = LP.Character:FindFirstChild("HumanoidRootPart")
+        if not HRP then return end
+
+        for _, obj in pairs(Workspace:GetDescendants()) do
+            if obj:IsA("ProximityPrompt") then
+                local parent = obj.Parent
+                if parent and (parent.Name == "Cash" or parent.Name == "Chest") then
+                    if (HRP.Position - parent.Position).Magnitude <= CollectDistance then
+                        pcall(function()
+                            fireproximityprompt(obj)
+                        end)
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+--=====================================================
+-- 🔥 HỆ THỐNG XỬ LÝ NPC CITY
+--=====================================================
+
+local function KillNPC(npc)
+    if npc and npc.Name == "CityNPC" then
+        local humanoid = npc:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid.Health > 0 then
+            pcall(function()
+                humanoid.Health = 0
+            end)
+            return true
+        end
+    end
+    return false
+end
+
+local function GetNPCList()
+    local root = Workspace:FindFirstChild("CityNPCs")
+    if root then
+        local list = root:FindFirstChild("NPCs")
+        if list then
+            local results = {}
+            for _, npc in pairs(list:GetChildren()) do
+                if npc.Name == "CityNPC" then
+                    local hum = npc:FindFirstChildOfClass("Humanoid")
+                    local hrp = npc:FindFirstChild("HumanoidRootPart")
+                    if hum and hrp and hum.Health > 0 then
+                        table.insert(results, npc)
+                    end
+                end
+            end
+            return results
+        end
+    end
+    return {}
+end
+
+local function TeleportTo(targetHRP, pos)
+    pcall(function()
+        targetHRP.CFrame = CFrame.new(pos + Vector3.new(0, TeleportOffset, 0))
+    end)
+end
+
+--=====================================================
+-- 🔥 AUTO FARM CITY NPC
+--=====================================================
+
+local function AutoFarmCity()
+    local LP = Players.LocalPlayer
+
+    while AutoFarmNPC do
+        local stopFlag = false
+        local function stop() stopFlag = true end
+
+        local HRP = (LP.Character or LP.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart")
+        local npcList = GetNPCList()
+
+        if #npcList == 0 then
+            task.wait(1)
+        else
+            for _, npc in pairs(npcList) do
+                if not AutoFarmNPC then stop() end
+                if not LP.Character then stop() end
+
+                if npc and npc.Name == "CityNPC" then
+                    local hum = npc:FindFirstChildOfClass("Humanoid")
+                    local hrp = npc:FindFirstChild("HumanoidRootPart")
+
+                    if hum and hrp and hum.Health > 0 then
+                        TeleportTo(HRP, hrp.Position)
+                        task.wait(0.2)
+
+                        KillNPC(npc)
+
+                        local timeout = 15
+                        local t0 = tick()
+
+                        while hum.Health > 0 and AutoFarmNPC do
+                            if tick() - t0 > timeout then break end
+                            KillNPC(npc)
+                            task.wait(0.3)
+                        end
+
+                        task.wait(0.5)
+                    end
+                end
+            end
+            task.wait(0.3)
+        end
+
+        if stopFlag then break end
+    end
+end
+--=====================================================
+-- 🔥 AUTO FARM BOSS GIANGHO2
+--=====================================================
+
+local function AttackBossLoop(bossHRP)
+    task.spawn(function()
+        local LP = Players.LocalPlayer
+        local HRP = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+        if not HRP or not bossHRP then return end
+
+        local angle = 0
+        local switch = false
+        local timer = tick()
+        local switchTime = 1
+
+        while AutoFarmBoss do
+            local parent = bossHRP.Parent
+            if not parent then break end
+
+            local hum = parent:FindFirstChild("Humanoid")
+            if not hum or hum.Health <= 0 then break end
+
+            local now = tick()
+            if now - timer >= switchTime then
+                switch = not switch
+                timer = now
+            end
+
+            angle = (angle + BossRotateSpeed * task.wait()) % (2 * math.pi)
+
+            local targetPos
+            if switch then
+                targetPos = bossHRP.Position + Vector3.new(0, BossHeight, 0)
+            else
+                local circleX = math.cos(angle) * BossRadius
+                local circleZ = math.sin(angle) * BossRadius
+                targetPos = Vector3.new(bossHRP.Position.X + circleX, bossHRP.Position.Y, bossHRP.Position.Z + circleZ)
+            end
+
+            HRP.CFrame = CFrame.lookAt(targetPos, bossHRP.Position)
+
+            VirtualUser:CaptureController()
+            VirtualUser:Button1Down(Vector2.new(1280, 672))
+        end
+    end)
+end
+
+local function AutoBoss()
+    task.spawn(function()
+        while AutoFarmBoss do
+            local target = nil
+
+            for _, npc in pairs(workspace.GiangHo2.NPCs:GetChildren()) do
+                if npc:FindFirstChild("Humanoid") and npc.Humanoid.Health > 0 and npc:FindFirstChild("HumanoidRootPart") then
+                    target = npc
+                    break
+                end
+            end
+
+            if target then
+                local HRP = target:FindFirstChild("HumanoidRootPart")
+                if HRP then
+                    AttackBossLoop(HRP)
+                end
+
+                while AutoFarmBoss and target do
+                    if not target:FindFirstChild("Humanoid") then break end
+                    if target.Humanoid.Health <= 0 then break end
+                    task.wait()
+                end
+
+                task.wait(2.5)
+            else
+                task.wait(1)
+            end
+        end
+    end)
+end
+--=====================================================
+-- 🌿 TAB FARM NPC — TÍNH NĂNG CHÍNH
+--=====================================================
+
+Tabs.Main:AddToggle("FarmToggle", {
+    Title = "Tự động Farm NPC",
+    Description = "Đứng gần NPC là auto farm",
+    Default = false,
+    Callback = function(state)
+        AutoFarmNPC = state
+
+        if state then
+            Fluent:Notify({
+                Title = "MEMAYBEO HUB",
+                Content = "Đang bật auto farm NPC!",
+                Duration = 4,
+            })
+            task.spawn(AutoFarmCity)
+        else
+            Fluent:Notify({
+                Title = "MEMAYBEO HUB",
+                Content = "Đã tắt auto farm NPC!",
+                Duration = 3,
+            })
+        end
+    end,
+})
+
+Tabs.Main:AddToggle("CollectToggle", {
+    Title = "Tự động nhặt loot",
+    Description = "Tự động nhặt Cash / Chest khi lại gần",
+    Default = true,
+    Callback = function(state)
+        AutoCollect = state
+    end,
+})
+
+Tabs.Main:AddSlider("DistanceSlider", {
+    Title = "Khoảng cách nhặt loot",
+    Description = "Bao xa thì tự động nhặt",
+    Default = 700,
+    Min = 100,
+    Max = 1500,
+    Rounding = 0,
+    Callback = function(value)
+        CollectDistance = value
+    end,
+})
+
+Tabs.Main:AddSlider("OffsetSlider", {
+    Title = "Độ cao teleport",
+    Description = "TP trên đầu NPC bao nhiêu studs",
+    Default = 3,
+    Min = 1,
+    Max = 10,
+    Rounding = 1,
+    Callback = function(value)
+        TeleportOffset = value
+    end,
+})
+
+
+--=====================================================
+-- 🔥 TAB FARM BOSS — XOAY QUANH BOSS + AUTO ĐÁNH
+--=====================================================
+
+Tabs.Boss:AddToggle("AutoFarmBoss", {
+    Title = "Auto Farm Boss",
+    Description = "Tự động xoay quanh boss và đánh liên tục",
+    Default = false,
+    Callback = function(state)
+        AutoFarmBoss = state
+
+        if state then
+            Fluent:Notify({
+                Title = "MEMAYBEO HUB",
+                Content = "Đang bật auto farm Boss!",
+                Duration = 3,
+            })
+            AutoBoss()
+        else
+            Fluent:Notify({
+                Title = "MEMAYBEO HUB",
+                Content = "Đã tắt auto farm Boss!",
+                Duration = 3,
+            })
+        end
+    end,
+})
+
+Tabs.Boss:AddInput("BossRadius", {
+    Title = "Khoảng cách xoay",
+    Description = "Bay vòng quanh boss bao nhiêu studs",
+    Default = tostring(BossRadius),
+    Placeholder = "VD: 17",
+    Numeric = true,
+    Callback = function(value)
+        local num = tonumber(value)
+        if num then BossRadius = num end
+    end,
+})
+
+Tabs.Boss:AddInput("BossSpeed", {
+    Title = "Tốc độ xoay",
+    Description = "Nhanh hay chậm",
+    Default = tostring(BossRotateSpeed),
+    Placeholder = "VD: 35",
+    Numeric = true,
+    Callback = function(value)
+        local num = tonumber(value)
+        if num then BossRotateSpeed = num end
+    end,
+})
+
+Tabs.Boss:AddInput("BossHeight", {
+    Title = "Độ cao trên đầu Boss",
+    Description = "Bay trên đầu Boss bao nhiêu studs",
+    Default = tostring(BossHeight),
+    Placeholder = "VD: 8",
+    Numeric = true,
+    Callback = function(value)
+        local num = tonumber(value)
+        if num then BossHeight = num end
+    end,
+})
+--=====================================================
+-- ⚙️ SETTINGS — LƯU CẤU HÌNH + GIAO DIỆN
+--=====================================================
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+
+InterfaceManager:SetFolder("MEMAYBEO_HUB")
+SaveManager:SetFolder("MEMAYBEO_HUB/Config")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+SaveManager:LoadAutoloadConfig()
+
+Window:SelectTab(1)
+--=====================================================
+-- 🎉 HOÀN TẤT MEMAYBEO HUB
+--=====================================================
+
+Fluent:Notify({
+    Title = "MEMAYBEO HUB",
+    Content = "Giao diện đã sẵn sàng!",
+    Duration = 4,
+})
+
+print("[MEMAYBEO HUB] Loaded successfully!")
+--=====================================================
+-- 🛠️ CHỐNG LỖI KHI NHÂN VẬT CHẾT / RESPAWN
+--=====================================================
+
+local function WaitForHRP()
+    local LP = Players.LocalPlayer
+    local char = LP.Character or LP.CharacterAdded:Wait()
+    local HRP = char:WaitForChild("HumanoidRootPart")
+    return HRP
+end
+
+Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    task.wait(1)
+
+    if AutoFarmNPC then
+        task.spawn(AutoFarmCity)
+    end
+
+    if AutoFarmBoss then
+        task.spawn(AutoBoss)
+    end
+end)
+
+--=====================================================
+-- 🛡️ ANTI-AFK
+--=====================================================
+
+task.spawn(function()
+    while task.wait(60) do
+        pcall(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+    end
+end)
+
+--=====================================================
+-- 🚀 TỐI ƯU HOẠT ĐỘNG RUNSERVICE
+--=====================================================
+
+RunService.Stepped:Connect(function()
+    if AutoFarmNPC or AutoFarmBoss then
+        sethiddenproperty(Players.LocalPlayer, "SimulationRadius", math.huge)
+    end
+end)
+
+--=====================================================
+-- 📌 KIỂM TRA MAP CÓ THAY ĐỔI KHÔNG
+--=====================================================
+
+task.spawn(function()
+    while task.wait(5) do
+        if AutoFarmNPC then
+            if #GetNPCList() == 0 then
+                print("[MEMAYBEO HUB] NPC chưa spawn → chờ map load…")
+            end
+        end
+    end
+end)
+--=====================================================
+-- 🎉 HOÀN TẤT MEMAYBEO HUB
+--=====================================================
+
+Fluent:Notify({
+    Title = "MEMAYBEO HUB",
+    Content = "Giao diện đã sẵn sàng!",
+    Duration = 4,
+})
+
+print("[MEMAYBEO HUB] Loaded successfully!")
