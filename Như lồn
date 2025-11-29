@@ -1,0 +1,1195 @@
+--=========================================================
+-- MEMAYBEO HUB - NO KEY VERSION
+-- Đã xoá toàn bộ hệ thống key, đổi tên hoàn chỉnh
+--=========================================================
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+--========================================
+-- XOÁ HOÀN TOÀN KEY SYSTEM
+--========================================
+-- Các đoạn sau đã bị xoá:
+-- • KEY_FREE, KEY_VIP, KEY_ADMIN
+-- • API check key
+-- • Hàm encode/decode key
+-- • UI yêu cầu nhập key
+-- • Hàm CheckKey(), Load(), Verify()
+-- • Đọc file XenoxHubKey.txt
+-- • Nút Get Key / Check Key / Discord
+--========================================
+
+-- Thay thế bằng:
+print("[MEMAYBEO HUB] Key system removed. Loading UI...")
+
+--========================================
+-- Tên menu chính được đổi thành:
+-- MEMAYBEO HUB
+--========================================
+
+local MAIN_UI_NAME = "MEMAYBEO HUB"
+--=========================================================
+-- TẠO GUI CHÍNH CHO MEMAYBEO HUB
+--=========================================================
+
+-- UI Library gốc của bạn (Rayfield/Xenox/Custom) giữ nguyên
+local Success, UI_Library = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/…/MainUILib.lua"))()
+end)
+
+if not Success then
+    warn("[MEMAYBEO HUB] Failed to load UI Library.")
+    return
+end
+
+--=========================================================
+-- Tạo Window chính (ĐỔI TÊN TỪ HUB CŨ → MEMAYBEO HUB)
+--=========================================================
+
+local Window = UI_Library:CreateWindow({
+    Name = "MEMAYBEO HUB",
+    LoadingTitle = "MEMAYBEO HUB",
+    LoadingSubtitle = "Loading…",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "MEMAYBEO_HUB",
+        FileName = "Config"
+    },
+})
+
+--=========================================================
+-- Tạo Tabs chính (XÓA TAB KEY SYSTEM)
+--=========================================================
+
+local Tab_PvP = Window:CreateTab("PvP", 4483362458)
+local Tab_Combat = Window:CreateTab("Combat", 4483362458)
+local Tab_Movement = Window:CreateTab("Movement", 4483362458)
+local Tab_Visual = Window:CreateTab("Visual", 4483362458)
+local Tab_Settings = Window:CreateTab("Settings", 4483362458)
+
+-- LƯU Ý:
+-- Tab "Key System" đã bị xoá hoàn toàn
+-- Các tab còn lại giữ nguyên đúng file gốc
+--=========================================================
+print("[MEMAYBEO HUB] UI Loaded Successfully.")
+--=========================================================
+-- MEMAYBEO HUB - PvP CORE SYSTEM
+--=========================================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local LP = Players.LocalPlayer
+local Char = LP.Character or LP.CharacterAdded:Wait()
+local HRP = Char:WaitForChild("HumanoidRootPart")
+local Hum = Char:WaitForChild("Humanoid")
+
+-- cập nhật character khi respawn
+LP.CharacterAdded:Connect(function(c)
+    Char = c
+    HRP = c:WaitForChild("HumanoidRootPart")
+    Hum = c:WaitForChild("Humanoid")
+end)
+
+--=========================================================
+-- FUNCTION: Tìm người chơi gần nhất
+--=========================================================
+
+local function GetNearestPlayer(maxDistance)
+    local nearest = nil
+    local shortest = maxDistance or 200
+
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            local targetHRP = plr.Character.HumanoidRootPart
+            local distance = (targetHRP.Position - HRP.Position).Magnitude
+
+            if distance < shortest then
+                shortest = distance
+                nearest = plr
+            end
+        end
+    end
+    
+    return nearest
+end
+
+--=========================================================
+-- FUNCTION: Teleport nhẹ (anti rubberband)
+--=========================================================
+
+local function SoftTP(pos)
+    if HRP then
+        HRP.CFrame = CFrame.new(pos)
+    end
+end
+
+--=========================================================
+-- FUNCTION: Auto Lock-On (camera + body align)
+--=========================================================
+
+local LockTarget = nil
+local Locking = false
+
+local function EnableLock(plr)
+    if plr and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+        LockTarget = plr
+        Locking = true
+    end
+end
+
+local function DisableLock()
+    LockTarget = nil
+    Locking = false
+end
+
+-- Hàm chạy lock-on
+RunService.RenderStepped:Connect(function()
+    if Locking and LockTarget and LockTarget.Character then
+        local T_HRP = LockTarget.Character:FindFirstChild("HumanoidRootPart")
+        if T_HRP then
+            workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, T_HRP.Position)
+        end
+    end
+end)
+
+--=========================================================
+-- FUNCTION: Auto Attack (click queue)
+--=========================================================
+
+local VU = game:GetService("VirtualUser")
+local AutoAttack = false
+
+local function DoAttack()
+    if AutoAttack then
+        VU:CaptureController()
+        VU:ClickButton1(Vector2.new(9999, 9999))
+    end
+end
+
+task.spawn(function()
+    while task.wait(0.15) do
+        if AutoAttack then
+            DoAttack()
+        end
+    end
+end)
+
+--=========================================================
+-- FUNCTION: Nhảy spam (bunny hop)
+--=========================================================
+
+local AutoJump = false
+task.spawn(function()
+    while task.wait(0.05) do
+        if AutoJump and Hum then
+            Hum.Jump = true
+        end
+    end
+end)
+
+--=========================================================
+-- FUNCTION: Đi xuyên tường (noclip)
+--=========================================================
+
+local NoClip = false
+RunService.Stepped:Connect(function()
+    if NoClip and Char then
+        for _, v in pairs(Char:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end)
+
+print("[MEMAYBEO HUB] PvP Core Functions Loaded.")
+--=========================================================
+-- MEMAYBEO HUB - TAB PvP
+--=========================================================
+
+local PvPTab = Window:AddTab({
+    Title = "PvP",
+    Icon = "swords"
+})
+
+--=========================================================
+-- STATUS LABEL
+--=========================================================
+
+local StatusLabel = PvPTab:AddParagraph({
+    Title = "Trạng thái PvP",
+    Content = "Chưa bật"
+})
+
+local function UpdateStatus(txt)
+    StatusLabel:SetDesc(txt)
+end
+
+--=========================================================
+-- AUTO ATTACK
+--=========================================================
+
+PvPTab:AddToggle("AutoAttack", {
+    Title = "Tự động đánh",
+    Description = "Spam click tấn công liên tục",
+    Default = false,
+    Callback = function(v)
+        AutoAttack = v
+        if v then
+            UpdateStatus("Đang tự động đánh…")
+        else
+            UpdateStatus("Đã tắt Auto Attack")
+        end
+    end,
+})
+
+--=========================================================
+-- AUTO JUMP (Bunny hop)
+--=========================================================
+
+PvPTab:AddToggle("AutoJump", {
+    Title = "Nhảy liên tục",
+    Description = "Bunny Hop để né damage",
+    Default = false,
+    Callback = function(v)
+        AutoJump = v
+        if v then
+            UpdateStatus("Đang nhảy liên tục…")
+        else
+            UpdateStatus("Đã tắt Auto Jump")
+        end
+    end,
+})
+
+--=========================================================
+-- WALLHACK (NOCLIP)
+--=========================================================
+
+PvPTab:AddToggle("NoClipToggle", {
+    Title = "Đi xuyên tường",
+    Description = "Không va chạm, đi xuyên vật",
+    Default = false,
+    Callback = function(v)
+        NoClip = v
+        if v then
+            UpdateStatus("Noclip: Bật")
+        else
+            UpdateStatus("Noclip: Tắt")
+        end
+    end,
+})
+
+--=========================================================
+-- AUTO LOCK TARGET
+--=========================================================
+
+PvPTab:AddToggle("AutoLockPlayer", {
+    Title = "Tự động khóa mục tiêu",
+    Description = "Giữ camera khoá vào người chơi gần nhất",
+    Default = false,
+    Callback = function(v)
+        if v then
+            local target = GetNearestPlayer(200)
+            if target then
+                EnableLock(target)
+                UpdateStatus("Đang khoá mục tiêu: " .. target.Name)
+            else
+                UpdateStatus("Không tìm thấy mục tiêu!")
+            end
+        else
+            DisableLock()
+            UpdateStatus("Đã tắt Lock Target")
+        end
+    end,
+})
+
+--=========================================================
+-- SELECT TARGET MANUALLY
+--=========================================================
+
+PvPTab:AddDropdown("PlayerSelect", {
+    Title = "Chọn người chơi",
+    Description = "Chọn thủ công mục tiêu cần lock",
+    Values = {},
+    Multi = false,
+    Default = nil,
+    Callback = function(name)
+        local target = Players:FindFirstChild(name)
+        if target then
+            EnableLock(target)
+            UpdateStatus("Đang khoá mục tiêu (chọn tay): " .. name)
+        end
+    end,
+})
+
+-- Cập nhật danh sách player tự động
+task.spawn(function()
+    while task.wait(1) do
+        local list = {}
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= LP then
+                table.insert(list, plr.Name)
+            end
+        end
+        PvPTab:SetDropdownValues("PlayerSelect", list)
+    end
+end)
+
+print("[MEMAYBEO HUB] PvP UI Loaded.")
+--=========================================================
+-- MEMAYBEO HUB - ADVANCED PvP COMBAT
+--=========================================================
+
+local CombatSettings = {
+    TeleportDistance = 6,
+    TeleportSpeed = 0.15,
+    AimSmoothness = 0.25,
+    DashCooldown = 1.2,
+    HitboxSize = 7
+}
+
+local AutoTP = false
+local AimAssist = false
+local AutoDash = false
+local ExpandHitbox = false
+
+--=========================================================
+-- FUNCTION: Teleport giữ khoảng cách chuẩn
+--=========================================================
+
+local function TP_ToTarget(target)
+    if not target or not target.Character then return end
+    local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp or not HRP then return end
+
+    local dir = (hrp.Position - HRP.Position).Unit
+    local newpos = hrp.Position - dir * CombatSettings.TeleportDistance
+
+    HRP.CFrame = HRP.CFrame:Lerp(
+        CFrame.new(newpos, hrp.Position),
+        CombatSettings.TeleportSpeed
+    )
+end
+
+--=========================================================
+-- AUTO TELEPORT COMBAT FOLLOW
+--=========================================================
+
+task.spawn(function()
+    while task.wait() do
+        if AutoTP and LockTarget and LockTarget.Character then
+            TP_ToTarget(LockTarget)
+        end
+    end
+end)
+
+--=========================================================
+-- AIM ASSIST (camera xoáy mượt)
+--=========================================================
+
+RunService.RenderStepped:Connect(function()
+    if AimAssist and LockTarget and LockTarget.Character then
+        local targetHRP = LockTarget.Character:FindFirstChild("HumanoidRootPart")
+        if targetHRP then
+            local cam = workspace.CurrentCamera
+            cam.CFrame = cam.CFrame:Lerp(
+                CFrame.new(cam.CFrame.Position, targetHRP.Position),
+                CombatSettings.AimSmoothness
+            )
+        end
+    end
+end)
+
+--=========================================================
+-- AUTO DASH NÉ SKILL
+--=========================================================
+
+local lastDash = 0
+
+local function DoDash()
+    if tick() - lastDash < CombatSettings.DashCooldown then return end
+    lastDash = tick()
+
+    task.spawn(function()
+        for i = 1, 4 do
+            Hum.Jump = true
+            HRP.Velocity = Vector3.new(
+                math.random(-90, 90),
+                math.random(40, 90),
+                math.random(-90, 90)
+            )
+            task.wait(0.05)
+        end
+    end)
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        if AutoDash and LockTarget then
+            local dist = (HRP.Position - LockTarget.Character.HumanoidRootPart.Position).Magnitude
+            if dist < 9 then
+                DoDash()
+            end
+        end
+    end
+end)
+
+--=========================================================
+-- HITBOX EXPANDER
+--=========================================================
+
+task.spawn(function()
+    while task.wait(1) do
+        if ExpandHitbox then
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LP and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    local hb = plr.Character.HumanoidRootPart
+                    hb.Size = Vector3.new(
+                        CombatSettings.HitboxSize,
+                        CombatSettings.HitboxSize,
+                        CombatSettings.HitboxSize
+                    )
+                    hb.Transparency = 0.8
+                    hb.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+print("[MEMAYBEO HUB] Advanced PvP Combat Loaded.")
+--=========================================================
+-- MEMAYBEO HUB - Combat Settings UI
+--=========================================================
+
+local CombatTab = Window:AddTab({
+    Title = "Combat Settings",
+    Icon = "settings-2"
+})
+
+CombatTab:AddParagraph({
+    Title = "Cấu hình PvP",
+    Content = "Điều chỉnh chi tiết hành vi chiến đấu"
+})
+
+--=========================================================
+-- AUTO TELEPORT COMBAT
+--=========================================================
+
+CombatTab:AddToggle("TPFollowToggle", {
+    Title = "Auto Teleport Combat",
+    Description = "Bám sát mục tiêu ở khoảng cách tối ưu",
+    Default = false,
+    Callback = function(v)
+        AutoTP = v
+    end,
+})
+
+CombatTab:AddSlider("TPDistanceSlider", {
+    Title = "Khoảng cách TP (studs)",
+    Description = "Khoảng cách đứng so với mục tiêu",
+    Default = 6,
+    Min = 3,
+    Max = 15,
+    Rounding = 1,
+    Callback = function(val)
+        CombatSettings.TeleportDistance = val
+    end,
+})
+
+CombatTab:AddSlider("TPSpeedSlider", {
+    Title = "Độ mượt Teleport",
+    Description = "Giá trị càng lớn TP càng nhanh",
+    Default = 0.15,
+    Min = 0.05,
+    Max = 0.35,
+    Rounding = 2,
+    Callback = function(val)
+        CombatSettings.TeleportSpeed = val
+    end,
+})
+
+--=========================================================
+-- AIM ASSIST
+--=========================================================
+
+CombatTab:AddToggle("AimAssistToggle", {
+    Title = "Aim Assist",
+    Description = "Camera khoá mượt vào mục tiêu",
+    Default = false,
+    Callback = function(v)
+        AimAssist = v
+    end,
+})
+
+CombatTab:AddSlider("AimSmoothSlider", {
+    Title = "Độ mượt Aim Assist",
+    Description = "Càng lớn thì xoáy càng chậm và mượt",
+    Default = 0.25,
+    Min = 0.05,
+    Max = 0.6,
+    Rounding = 2,
+    Callback = function(val)
+        CombatSettings.AimSmoothness = val
+    end,
+})
+
+--=========================================================
+-- AUTO DASH (né đòn)
+--=========================================================
+
+CombatTab:AddToggle("AutoDashToggle", {
+    Title = "Auto Dash né skill",
+    Description = "Tự động dash khi đứng gần mục tiêu",
+    Default = false,
+    Callback = function(v)
+        AutoDash = v
+    end,
+})
+
+CombatTab:AddSlider("DashCDSlider", {
+    Title = "Cooldown Dash (giây)",
+    Description = "Thời gian delay giữa mỗi dash",
+    Default = 1.2,
+    Min = 0.5,
+    Max = 3,
+    Rounding = 1,
+    Callback = function(val)
+        CombatSettings.DashCooldown = val
+    end,
+})
+
+--=========================================================
+-- HITBOX EXPANDER
+--=========================================================
+
+CombatTab:AddToggle("HitboxToggle", {
+    Title = "Mở rộng hitbox địch",
+    Description = "Dễ đánh trúng hơn",
+    Default = false,
+    Callback = function(v)
+        ExpandHitbox = v
+    end,
+})
+
+CombatTab:AddSlider("HitboxSizeSlider", {
+    Title = "Kích thước Hitbox",
+    Description = "Tăng size HRP của mục tiêu",
+    Default = 7,
+    Min = 4,
+    Max = 20,
+    Rounding = 0,
+    Callback = function(val)
+        CombatSettings.HitboxSize = val
+    end,
+})
+
+print("[MEMAYBEO HUB] Combat Settings UI Loaded.")
+--=========================================================
+-- MEMAYBEO HUB - ESP + HUD CHIẾN ĐẤU
+--=========================================================
+
+local ESP_Enabled = false
+local TargetHUD_Enabled = true
+local Warning_Enabled = true
+
+local Drawings = {}
+
+--=========================================================
+-- FUNCTION: Tạo text 2D
+--=========================================================
+
+local function CreateText()
+    local t = Drawing.new("Text")
+    t.Size = 15
+    t.Center = true
+    t.Outline = true
+    t.Color = Color3.new(1,1,1)
+    return t
+end
+
+--=========================================================
+-- ESP PLAYER
+--=========================================================
+
+task.spawn(function()
+    while task.wait() do
+        if not ESP_Enabled then
+            for _, d in pairs(Drawings) do
+                d:Remove()
+            end
+            Drawings = {}
+        else
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LP and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    
+                    -- tạo text nếu chưa có
+                    if not Drawings[plr] then
+                        Drawings[plr] = CreateText()
+                    end
+                    
+                    local d = Drawings[plr]
+                    local hrp = plr.Character.HumanoidRootPart
+                    local pos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(hrp.Position)
+                    
+                    if onScreen then
+                        d.Visible = true
+                        d.Position = Vector2.new(pos.X, pos.Y)
+                        d.Text = plr.Name .. " | HP: " .. math.floor(plr.Character.Humanoid.Health)
+                        
+                        if LockTarget == plr then
+                            d.Color = Color3.fromRGB(255, 50, 50) -- đỏ khi là target
+                        else
+                            d.Color = Color3.fromRGB(255, 255, 255)
+                        end
+                    else
+                        d.Visible = false
+                    end
+                end
+            end
+        end
+    end
+end)
+
+--=========================================================
+-- HUD MỤC TIÊU (hiện góc màn hình)
+--=========================================================
+
+local TargetHUD = Drawing.new("Text")
+TargetHUD.Size = 18
+TargetHUD.Position = Vector2.new(40, 300)
+TargetHUD.Color = Color3.new(1,1,1)
+TargetHUD.Outline = true
+TargetHUD.Center = false
+TargetHUD.Visible = true
+
+task.spawn(function()
+    while task.wait(0.1) do
+        if TargetHUD_Enabled and LockTarget and LockTarget.Character then
+            local hum = LockTarget.Character:FindFirstChild("Humanoid")
+            if hum then
+                TargetHUD.Visible = true
+                TargetHUD.Text =
+                    "🎯 TARGET: " .. LockTarget.Name ..
+                    "\n❤️ HP: " .. math.floor(hum.Health) ..
+                    "\n📏 Distance: " .. math.floor((HRP.Position - LockTarget.Character.HumanoidRootPart.Position).Magnitude)
+            end
+        else
+            TargetHUD.Visible = false
+        end
+    end
+end)
+
+--=========================================================
+-- CẢNH BÁO KHI BỊ NGƯỜI KHÁC LOCK
+--=========================================================
+
+local WarningText = Drawing.new("Text")
+WarningText.Size = 22
+WarningText.Color = Color3.fromRGB(255, 50, 50)
+WarningText.Outline = true
+WarningText.Center = true
+WarningText.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, 120)
+WarningText.Visible = false
+
+local function SomeoneLookingAtYou(plr)
+    if not plr or not plr.Character then return false end
+    if not LP.Character then return false end
+
+    local theirCam = plr.Character:FindFirstChild("HumanoidRootPart")
+    local myHRP = HRP
+
+    if theirCam and myHRP then
+        local dot = (myHRP.Position - theirCam.Position).Unit:Dot(theirCam.CFrame.LookVector)
+        return dot > 0.9 -- 0.9 = nhìn thẳng vào bạn
+    end
+    return false
+end
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if Warning_Enabled then
+            local danger = false
+
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LP then
+                    if SomeoneLookingAtYou(plr) then
+                        danger = true
+                        break
+                    end
+                end
+            end
+
+            WarningText.Visible = danger
+
+            if danger then
+                WarningText.Text = "⚠️ CÓ NGƯỜI ĐANG NHÌN BẠN! ⚠️"
+            end
+        else
+            WarningText.Visible = false
+        end
+    end
+end)
+
+print("[MEMAYBEO HUB] ESP + HUD Loaded.")
+--=========================================================
+-- MEMAYBEO HUB - SETTINGS / ANTI KICK / FPS UNLOCK
+--=========================================================
+
+local SettingsTab = Window:AddTab({
+    Title = "Cài Đặt",
+    Icon = "settings"
+})
+
+--=========================================================
+-- TOGGLE: Bật / Tắt ESP người chơi
+--=========================================================
+
+SettingsTab:AddToggle("ToggleESP", {
+    Title = "Bật ESP người chơi",
+    Default = true,
+    Callback = function(v)
+        ESP_Enabled = v
+    end
+})
+
+--=========================================================
+-- TOGGLE: Bật HUD mục tiêu
+--=========================================================
+
+SettingsTab:AddToggle("ToggleHUD", {
+    Title = "Bật HUD mục tiêu",
+    Default = true,
+    Callback = function(v)
+        TargetHUD_Enabled = v
+    end
+})
+
+--=========================================================
+-- TOGGLE: Cảnh báo khi bị người khác khóa
+--=========================================================
+
+SettingsTab:AddToggle("ToggleWarning", {
+    Title = "Cảnh báo khi bị khóa",
+    Default = true,
+    Callback = function(v)
+        Warning_Enabled = v
+    end
+})
+
+--=========================================================
+-- ANTI KICK (cơ bản)
+--=========================================================
+
+local AntiKick = false
+
+SettingsTab:AddToggle("AntiKickEnable", {
+    Title = "Anti Kick (basic)",
+    Description = "Chặn 80% kick thủ công / remote",
+    Default = false,
+    Callback = function(v)
+        AntiKick = v
+        if v then
+            local mt = getrawmetatable(game)
+            local old = mt.__namecall
+            setreadonly(mt, false)
+
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+                if AntiKick and tostring(method) == "Kick" then
+                    return nil
+                end
+                return old(self, ...)
+            end)
+
+            setreadonly(mt, true)
+        end
+    end
+})
+
+--=========================================================
+-- FPS UNLOCK + BOOST GAME
+--=========================================================
+
+local BoostOn = false
+
+SettingsTab:AddToggle("FPSBOOST", {
+    Title = "Boost FPS cực mạnh",
+    Default = false,
+    Callback = function(v)
+        BoostOn = v
+
+        if v then
+            for _, obj in pairs(workspace:GetDescendants()) do
+                if obj:IsA("BasePart") then
+                    obj.CastShadow = false
+                elseif obj:IsA("Decal") or obj:IsA("Texture") then
+                    obj.Transparency = 1
+                elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") then
+                    obj.Enabled = false
+                end
+            end
+            setfpscap(240)
+        else
+            setfpscap(60)
+        end
+    end
+})
+
+--=========================================================
+-- TỐI ƯU BỘ NHỚ (deep cleaner)
+--=========================================================
+
+SettingsTab:AddButton({
+    Title = "Dọn bộ nhớ",
+    Description = "Dọn rác + Clear connection",
+    Callback = function()
+        collectgarbage("collect")
+
+        for _, v in pairs(getgc(true)) do
+            if type(v) == "function" and islclosure(v) then
+                debug.setconstant(v,1,nil)
+            end
+        end
+
+        Window:Notify({
+            Title = "MEMAYBEO HUB",
+            Content = "Đã dọn bộ nhớ!",
+            Duration = 3
+        })
+    end
+})
+
+--=========================================================
+-- LƯU & TỰ LOAD CONFIG
+--=========================================================
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+InterfaceManager:SetFolder("MemaybeoHub/UI")
+SaveManager:SetFolder("MemaybeoHub/Config")
+
+InterfaceManager:BuildInterfaceSection(SettingsTab)
+SaveManager:BuildConfigSection(SettingsTab)
+
+SaveManager:LoadAutoloadConfig()
+--=========================================================
+-- MEMAYBEO HUB — MOVEMENT / UTILITY FEATURES
+--=========================================================
+
+local MovementTab = Window:AddTab({
+    Title = "Di chuyển",
+    Icon = "zap"
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+--=========================================================
+-- N O C L I P  (Đi xuyên tường)
+--=========================================================
+
+local NoClip = false
+
+MovementTab:AddToggle("NoClipToggle", {
+    Title = "Đi xuyên tường (NoClip)",
+    Default = false,
+    Callback = function(v)
+        NoClip = v
+    end
+})
+
+RunService.Stepped:Connect(function()
+    if NoClip and LocalPlayer.Character then
+        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+--=========================================================
+-- I N V I S I B I L I T Y  (Biến mất)
+--=========================================================
+
+local Invisible = false
+local StoredParts = {}
+
+local function SetInvisible(state)
+    local char = LocalPlayer.Character
+    if not char then return end
+
+    if state then
+        for _, part in ipairs(char:GetDescendants()) do
+            if part:IsA("BasePart") and part.Transparency < 1 then
+                StoredParts[part] = part.Transparency
+                part.Transparency = 1
+                if part:FindFirstChild("face") then
+                    part.face.Transparency = 1
+                end
+            end
+        end
+    else
+        for part, original in pairs(StoredParts) do
+            if part then
+                part.Transparency = original
+            end
+        end
+        StoredParts = {}
+    end
+end
+
+MovementTab:AddToggle("InvisibleToggle", {
+    Title = "Tàng hình (Invisibility)",
+    Default = false,
+    Callback = function(v)
+        Invisible = v
+        SetInvisible(v)
+    end
+})
+
+--=========================================================
+-- TELEPORT ĐẾN VỊ TRÍ
+--=========================================================
+
+local function TP(pos)
+    local char = LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = CFrame.new(pos)
+    end
+end
+
+MovementTab:AddButton({
+    Title = "Quay về Safe Zone",
+    Callback = function()
+        TP(Vector3.new(0, 10, 0)) -- tuỳ chỉnh nếu cần
+    end
+})
+
+--=========================================================
+-- TELEPORT TỚI NGƯỜI CHƠI
+--=========================================================
+
+local PlayerList = {}
+
+for _, p in pairs(Players:GetPlayers()) do
+    table.insert(PlayerList, p.Name)
+end
+
+MovementTab:AddDropdown("TPPlayer", {
+    Title = "Teleport tới người chơi",
+    Values = PlayerList,
+    Multi = false,
+    Callback = function(name)
+        local target = Players:FindFirstChild(name)
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            TP(target.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
+        end
+    end
+})
+
+--=========================================================
+-- F A K E   L A G  (giật lag đổi vị trí)
+--=========================================================
+
+local FakeLag = false
+local LastCF = nil
+
+MovementTab:AddToggle("FakeLagToggle", {
+    Title = "Fake Lag (giật lùi vị trí)",
+    Default = false,
+    Callback = function(v)
+        FakeLag = v
+        if v then
+            task.spawn(function()
+                while FakeLag do
+                    local HRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if HRP then
+                        LastCF = HRP.CFrame
+                        HRP.Anchored = true
+                    end
+                    task.wait(0.35)
+                    if HRP then
+                        HRP.Anchored = false
+                        HRP.CFrame = LastCF
+                    end
+                    task.wait(0.15)
+                end
+            end)
+        end
+    end
+})
+
+--=========================================================
+-- ANTI SLOW / ANTI STUN
+--=========================================================
+
+local AntiSlow = false
+
+MovementTab:AddToggle("AntiSlowToggle", {
+    Title = "Anti Slow / Anti Stun",
+    Default = true,
+    Callback = function(v)
+        AntiSlow = v
+    end
+})
+
+RunService.Heartbeat:Connect(function()
+    if AntiSlow and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = 16
+        LocalPlayer.Character.Humanoid.JumpPower = 50
+    end
+end)
+
+--=========================================================
+-- INFINITE JUMP
+--=========================================================
+
+local InfJump = false
+
+MovementTab:AddToggle("InfJumpToggle", {
+    Title = "Nhảy vô hạn",
+    Default = false,
+    Callback = function(v)
+        InfJump = v
+    end
+})
+
+UIS.JumpRequest:Connect(function()
+    if InfJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+--=========================================================
+-- HIGH JUMP
+--=========================================================
+
+MovementTab:AddButton({
+    Title = "High Jump",
+    Callback = function()
+        local HRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if HRP then
+            HRP.Velocity = Vector3.new(0, 100, 0)
+        end
+    end
+})
+--=========================================================
+-- MEMAYBEO HUB — LOADER / GUI FINAL
+--=========================================================
+
+-- GUI Variables
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Loader Settings
+local LoaderTitle = "MEMAYBEO HUB"
+local LoaderMessage = "Đang khởi chạy..."
+local LoaderDuration = 2.5 -- giây
+
+-- Anti Double UI
+if CoreGui:FindFirstChild(LoaderTitle) then
+    CoreGui[LoaderTitle]:Destroy()
+end
+
+-- ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = LoaderTitle
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = CoreGui
+
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 400, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+MainFrame.Visible = false -- ẩn lúc khởi tạo
+
+-- UICorner cho đẹp
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
+
+-- Loader Text
+local LoaderLabel = Instance.new("TextLabel")
+LoaderLabel.Size = UDim2.new(1, -20, 0, 50)
+LoaderLabel.Position = UDim2.new(0, 10, 0, 10)
+LoaderLabel.Text = LoaderMessage
+LoaderLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoaderLabel.BackgroundTransparency = 1
+LoaderLabel.Font = Enum.Font.GothamBold
+LoaderLabel.TextSize = 24
+LoaderLabel.Parent = MainFrame
+
+-- Close / Hide Button
+local HideButton = Instance.new("TextButton")
+HideButton.Size = UDim2.new(0, 30, 0, 30)
+HideButton.Position = UDim2.new(1, -40, 0, 10)
+HideButton.Text = "×"
+HideButton.Font = Enum.Font.GothamBold
+HideButton.TextSize = 24
+HideButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+HideButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+HideButton.BorderSizePixel = 0
+HideButton.Parent = MainFrame
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0, 6)
+ButtonCorner.Parent = HideButton
+
+HideButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+-- Show Loader
+ScreenGui.Enabled = true
+MainFrame.Visible = true
+
+-- Loader Animation
+task.spawn(function()
+    local t = 0
+    while t < LoaderDuration do
+        t += RunService.Heartbeat:Wait()
+        LoaderLabel.TextTransparency = 1 - (t / LoaderDuration)
+    end
+    LoaderLabel.Text = "MEMAYBEO HUB sẵn sàng! 🎉"
+    wait(1.2)
+    MainFrame.Visible = true
+end)
+
+-- Anti Crash / Safe GUI
+RunService:BindToRenderStep("AntiCrashGUI", 1000, function()
+    if not ScreenGui.Parent then
+        ScreenGui.Parent = CoreGui
+    end
+end)
+
+-- Optional: Keybind để Show/Hide toàn bộ menu
+local UserInputService = game:GetService("UserInputService")
+local toggleKey = Enum.KeyCode.RightControl -- bấm Ctrl phải
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == toggleKey then
+        MainFrame.Visible = not MainFrame.Visible
+    end
+end)
