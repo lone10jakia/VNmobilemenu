@@ -468,28 +468,7 @@ AddToggle("ESP Thông Tin", false, function(state)
     end
 end)
 
--- ==================== HEALTH MODE (TỰ DÙNG BĂNG GẠC) ====================
-AddToggle("Health Mode", false, function(state)
-    getgenv().HealthMode = state
-    if state then
-        spawn(function()
-            while getgenv().HealthMode do
-                task.wait()
-                local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-                local hum = char:FindFirstChildOfClass("Humanoid")
-                if hum and hum.Health < 75 then
-                    local tool = LocalPlayer.Backpack:FindFirstChild("băng gạc") or char:FindFirstChild("băng gạc")
-                    if tool then
-                        LocalPlayer.Character.Humanoid:EquipTool(tool)
-                        task.wait(0.1)
-                        tool:Activate()
-                        task.wait(1.3)
-                    end
-                end
-            end
-        end)
-    end
-end)
+
 
 -- ==================== AUTO LẤY BĂNG GẠC ====================
 local function GetBandage()
@@ -505,8 +484,54 @@ AddToggle("Auto Lấy Băng Gạc", false, function(state)
         spawn(function()
             while getgenv().AutoLayBan do
                 task.wait(0.3)
-                if not LocalPlayer.Backpack:FindFirstChild("băng gạc") and not (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("băng gạc")) then
-                    GetBandage()
+                if not LocalPlayer.Backpack:FindFirstChild("băng gạc") and not (LocalPlayer.Character and LocalPlayer.Character:Find-- ==================== HEALTH MODE PRO (GIỮ VŨ KHÍ + AUTO ATTACK) ====================
+local CurrentTool = nil
+local AutoAttackEnabled = false
+
+AddToggle("Health Mode Pro (Giữ Vũ Khí)", false, function(state)
+    getgenv().HealthMode = state
+    if state then
+        spawn(function()
+            while getgenv().HealthMode do
+                task.wait(0.1)
+                local char = LocalPlayer.Character
+                if not char then continue end
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if not hum or hum.Health >= 75 then continue end
+
+                -- Lưu lại vũ khí hiện tại
+                CurrentTool = char:FindFirstChildOfClass("Tool")
+
+                -- Tìm băng gạc trong backpack
+                local bandage = LocalPlayer.Backpack:FindFirstChild("băng gạc")
+                if bandage then
+                    hum:EquipTool(bandage)
+                    task.wait(0.15)
+                    bandage:Activate()
+                    task.wait(1.2)
+
+                    -- Trở lại vũ khí cũ ngay lập tức
+                    if CurrentTool and CurrentTool.Parent == LocalPlayer.Backpack then
+                        hum:EquipTool(CurrentTool)
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- ==================== AUTO ATTACK (SPAM ĐÁNH KHI CẦM VŨ KHÍ) ====================
+AddToggle("Auto Attack (Spam Đánh)", false, function(state)
+    AutoAttackEnabled = state
+    if state then
+        spawn(function()
+            while AutoAttackEnabled do
+                task.wait()
+                local char = LocalPlayer.Character
+                if not char then continue end
+                local tool = char:FindFirstChildOfClass("Tool")
+                if tool and tool:FindFirstChild("Handle") then
+                    tool:Activate()
                 end
             end
         end)
