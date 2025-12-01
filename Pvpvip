@@ -247,9 +247,9 @@ task.spawn(function()
             end
 
             hum:EquipTool(heal)
-            task.wait(0.15)
+            task.wait(0.3)
             pcall(function() heal:Activate() end)
-            task.wait(1)
+            task.wait(0.3)
 
             if old then
                 hum:EquipTool(old)
