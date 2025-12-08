@@ -1,4 +1,4 @@
-# File: app.py – BẢN SỬA CUỐI CÙNG, KHÔNG DÙNG experimental_rerun NỮA, CHẠY MƯỢT 100%!
+# File: app.py – BẢN SỬA HOÀN TOÀN, KHÔNG FLICKER, HIỆN LUÔN, CHƠI MƯỢT!
 import streamlit as st
 import json
 import random
@@ -39,7 +39,7 @@ if "user" not in st.session_state: st.session_state.user = None
 if "play_triggered" not in st.session_state: st.session_state.play_triggered = False
 
 menu = st.sidebar.selectbox("MENU", [
-    "Trang chủ","Đăng nhập","Đăng ký","Nhập code",
+    " Trang chủ","Đăng nhập","Đăng ký","Nhập code",
     "TOP 50","Chơi Game","Chuyển tiền"
 ])
 
@@ -59,7 +59,7 @@ elif menu == "Đăng nhập":
             st.session_state.user = user
             st.success(f"Chào {user} – {vip(users[user]['money'])}!")
             st.balloons()
-            st.rerun()  # ← SỬA THÀNH st.rerun() – KHÔNG DÙNG experimental_rerun
+            st.rerun()  # Reload to update sidebar
         else:
             st.error("Sai tên hoặc mật khẩu!")
 
@@ -124,7 +124,7 @@ elif menu == "Chơi Game":
         game = st.selectbox("Chọn game", ["BẦU CUA","TÀI XỈU","CAO THẤP"])
         bet = st.number_input("Cược", min_value=1000, step=1000, value=5000)
 
-        # Widgets luôn hiện, không ẩn
+        # Widgets luôn hiện
         if game == "BẦU CUA":
             choice = st.selectbox("Chọn con", ANIMALS)
         elif game == "TÀI XỈU":
@@ -183,7 +183,7 @@ elif menu == "Chơi Game":
             
             save()
             st.session_state.play_triggered = False  # Reset để ấn lại
-            st.rerun()  # ← SỬA THÀNH st.rerun() – KHÔNG DÙNG experimental_rerun
+            st.rerun()  # Reload số dư
 
 # Sidebar
 if st.session_state.user:
@@ -193,4 +193,4 @@ if st.session_state.user:
     st.sidebar.metric("Số dư", f"{users[u]['money']:,} VND")
     if st.sidebar.button("Đăng xuất"):
         st.session_state.user = None
-        st.rerun()  # ← SỬA THÀNH st.rerun()
+        st.rerun()
