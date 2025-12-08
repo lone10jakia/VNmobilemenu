@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "paketobuildpacks/builder:base",
+    "buildpacks": [
+      "heroku/python"
+    ]
+  },
+  "start": "streamlit run app.py --server.port $PORT --server.enableCORS false"
+}
