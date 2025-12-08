@@ -161,7 +161,7 @@ def game_dabanh(u, bet):
             st.error("THUA!")
 
 # ==================== ADMIN MENU ====================
-elif menu == "Admin (nếu là admin)":
+elif menu == "Admin Panel":
     if st.session_state.user != "admin":
         st.warning("Chỉ admin vào được!")
     else:
