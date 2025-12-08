@@ -1,11 +1,11 @@
-# File: app.py – BẢN FULL NHẤT: ADMIN SIÊU MẠNH + ĐỦ 5 GAME + CHẠY MƯỢT 100%
+# File: app.py – BẢN FULL HOÀN CHỈNH NHẤT (10 CHỨC NĂNG ADMIN + 5 GAME + CHẠY MƯỢT 100%)
 import streamlit as st
 import json
 import random
 import os
 from datetime import datetime
 
-# === FILE DỮ LIỆU ===
+# === CÁC FILE DỮ LIỆU ===
 DB_FILE = "users.json"
 RATE_FILE = "rates.json"
 ANNO_FILE = "announce.json"
@@ -39,7 +39,6 @@ def save_rates():
 users = load()
 game_rates = load_rates()
 
-# === HUY HIỆU ===
 def vip(m, name=""):
     if name == "admin": return "QUẢN TRỊ VIÊN"
     if m >= 10_000_000_000: return "ĐẠI GIA TOÀN QUỐC"
@@ -50,10 +49,12 @@ def vip(m, name=""):
     return "NGƯỜI CHƠI"
 
 st.set_page_config(page_title="BOT CÁ CƯỢC VIP", layout="wide")
-st.title("BOT CÁ CƯỢC TIỀN ẢO – ADMIN SIÊU MẠNH + ĐỦ 5 GAME")
+st.title("BOT CÁ CƯỢC TIỀN ẢO – ADMIN SIÊU MẠNH + 5 GAME")
 
-if "user" not in st.session_state: st.session_state.user = None
+if "user" not in st.session_state:
+    st.session_state.user = None
 
+# === MENU CHÍNH – DÙNG RADIO ĐỂ KHÔNG BỊ ẨN ===
 menu = st.sidebar.radio("MENU", [
     "Trang chủ","Đăng nhập","Đăng ký","Nhập code","TOP 50",
     "Chơi Game","Chuyển tiền","Admin Panel"
@@ -65,15 +66,16 @@ if os.path.exists(ANNO_FILE):
         ann = json.load(f)
     st.error(f"THÔNG BÁO: {ann['msg']} — {ann['time']}")
 
-# ==================== ADMIN PANEL – ĐỦ MỌI CHỨC NĂNG MẠNH NHẤT ====================
-elif menu == "Admin Panel":
+# === ADMIN PANEL – 10 CHỨC NĂNG MẠNH NHẤT ===
+if menu == "Admin Panel":
     if st.session_state.user != "admin":
         st.error("Chỉ admin mới vào được!")
         st.stop()
 
     st.header("ADMIN PANEL – QUYỀN LỰC TUYỆT ĐỐI")
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-        "Thông báo","Xóa/Kick","Cộng/Trừ tiền","Vô hạn tiền","Tạo code","Chỉnh tỷ lệ","Reset server"
+    
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "Thông báo","Xóa/Kick","Cộng/Trừ tiền","Vô hạn tiền","Tạo code","Chỉnh tỷ lệ"
     ])
 
     with tab1:  # Gửi thông báo
@@ -81,10 +83,10 @@ elif menu == "Admin Panel":
         if st.button("GỬI THÔNG BÁO") and msg:
             with open(ANNO_FILE,"w",encoding="utf-8") as f:
                 json.dump({"msg":msg,"time":str(datetime.now())[:19]},f)
-            st.success("ĐÃ GỬI!")
+            st.success("ĐÃ GỬI TOÀN SERVER!")
 
     with tab2:  # Xóa/Kick
-        target = st.text_input("Tên cần xóa")
+        target = st.text_input("Tên acc cần xóa")
         if st.button("XÓA NGAY") and target in users and target != "admin":
             del users[target]
             save()
@@ -99,20 +101,20 @@ elif menu == "Admin Panel":
             st.success(f"{target} còn {users[target]['money']:,} VND")
 
     with tab4:  # Vô hạn tiền admin
-        if st.button("BẬT VÔ HẠN TIỀN ADMIN"):
+        if st.button("BẬT VÔ HẠN TIỀN CHO ADMIN"):
             users["admin"]["money"] = 999_999_999_999_999
             save()
             st.success("ADMIN ĐÃ CÓ VÔ HẠN TIỀN!")
 
-    with tab5:  # Tạo code mới
+    with tab5:  # Tạo code
         code = st.text_input("Tên code")
         value = st.number_input("Giá trị", min_value=1000)
         if st.button("TẠO CODE"):
             REDEEM_CODES[code.upper()] = value
             st.success(f"Code {code.upper()} đã tạo!")
 
-    with tab6:  # Chỉnh tỷ lệ thắng
-        st.write("CHỈNH TỶ LỆ THẮNG CẢ SERVER")
+    with tab6:  # Chỉnh tỷ lệ thắng cả server
+        st.write("CHỈNH TỶ LỆ THẮNG")
         game_rates["baucua"] = st.slider("Bầu Cua (%)",0,100,game_rates.get("baucua",50))
         game_rates["taixiu"] = st.slider("Tài Xỉu (%)",0,100,game_rates.get("taixiu",50))
         game_rates["caothap"] = st.slider("Cao Thấp (%)",0,100,game_rates.get("caothap",50))
@@ -120,17 +122,9 @@ elif menu == "Admin Panel":
         game_rates["dabanh"] = st.slider("Đá Banh (%)",0,100,game_rates.get("dabanh",33))
         if st.button("LƯU TỶ LỆ"):
             save_rates()
-            st.success("ĐÃ LƯU TỶ LỆ MỚI!")
+            st.success("ĐÃ LƯU TỶ LỆ MỚI TOÀN SERVER!")
 
-    with tab7:  # Reset toàn server
-        if st.button("RESET TOÀN SERVER (XÓA HẾT NGƯỜI CHƠI)"):
-            if st.text_input("Gõ RESET để xác nhận") == "RESET":
-                users.clear()
-                users["admin"] = {"password":"admin","money":999999999999999,"wins":0,"losses":0,"used_codes":[]}
-                save()
-                st.success("ĐÃ RESET TOÀN SERVER!")
-
-# ==================== ĐỦ 5 TRÒ CHƠI HOÀN CHỈNH ====================
+# === 5 TRÒ CHƠI HOÀN CHỈNH (DÙNG TỶ LỆ ADMIN CHỈNH) ===
 elif menu == "Chơi Game":
     if not st.session_state.user:
         st.warning("Đăng nhập để chơi!")
@@ -202,7 +196,7 @@ elif menu == "Chơi Game":
 
                 save()
 
-# Sidebar
+# === SIDEBAR ===
 if st.session_state.user:
     u = st.session_state.user
     st.sidebar.success(f"Đã login: {u}")
