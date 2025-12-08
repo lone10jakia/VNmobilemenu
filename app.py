@@ -1,4 +1,4 @@
-# File: app.py – BẢN SỬA HOÀN TOÀN, KHÔNG FLICKER, HIỆN LUÔN, CHƠI MƯỢT!
+# File: app.py – BẢN CUỐI CÙNG, MƯỢT NHƯ GAME THẬT, KHÔNG NHÁY!
 import streamlit as st
 import json
 import random
@@ -8,7 +8,6 @@ DB_FILE = "users.json"
 REDEEM_CODES = {"GROK200K": 200000, "GROK10TY": 10000000000}
 ANIMALS = ["BẦU","CUA","TÔM","CÁ","GÀ","NAI"]
 
-# Load + fix key
 def load():
     if os.path.exists(DB_FILE):
         with open(DB_FILE,"r",encoding="utf-8") as f:
@@ -32,24 +31,24 @@ def vip(m):
     if m >= 1_000_000:      return "GIÀU CÓ"
     return "NGƯỜI CHƠI"
 
-st.set_page_config(page_title="BOT CÁ CƯỢC TIỀN ẢO", layout="wide")
-st.title("BOT CÁ CƯỢC TIỀN ẢO – CHƠI NGAY!")
+st.set_page_config(page_title="BOT CÁ CƯỢC VIP", layout="wide")
+st.title("BOT CÁ CƯỢC TIỀN ẢO – CHƠI MƯỢT NHƯ GAME!")
 
 if "user" not in st.session_state: st.session_state.user = None
-if "play_triggered" not in st.session_state: st.session_state.play_triggered = False
 
-menu = st.sidebar.selectbox("MENU", [
-    " Trang chủ","Đăng nhập","Đăng ký","Nhập code",
+menu = st.sidebar.radio("MENU", [
+    "Trang chủ","Đăng nhập","Đăng ký","Nhập code",
     "TOP 50","Chơi Game","Chuyển tiền"
 ])
 
-# ==================== CÁC TRANG ====================
+# ==================== TRANG CHỦ ====================
 if menu == "Trang chủ":
-    st.header("CHÀO MỪNG!")
-    st.write("Chơi Bầu Cua, Tài Xỉu, Cao Thấp. Tiền ảo hoàn toàn!")
-    st.write("Code đặc biệt: GROK200K (+200k), GROK10TY (+10 tỷ)!")
+    st.header("CHÀO MỪNG ĐẾN BOT CÁ CƯỢC TIỀN ẢO!")
+    st.write("Chơi Bầu Cua – Tài Xỉu – Cao Thấp")
+    st.write("**Code thần tài:** `GROK200K` (+200k) | `GROK10TY` (+10 tỷ)")
     st.balloons()
 
+# ==================== ĐĂNG NHẬP / ĐĂNG KÝ ====================
 elif menu == "Đăng nhập":
     st.header("ĐĂNG NHẬP")
     user = st.text_input("Tên đăng nhập")
@@ -57,16 +56,15 @@ elif menu == "Đăng nhập":
     if st.button("Đăng nhập"):
         if user in users and users[user]["password"] == pw:
             st.session_state.user = user
-            st.success(f"Chào {user} – {vip(users[user]['money'])}!")
+            st.success("Đăng nhập thành công!")
             st.balloons()
-            st.rerun()  # Reload to update sidebar
         else:
             st.error("Sai tên hoặc mật khẩu!")
 
 elif menu == "Đăng ký":
     st.header("ĐĂNG KÝ")
     new = st.text_input("Tên mới")
-    pw = st.text_input("Mật khẩu mới", type="password")
+    pw = st.text_input("Mật khẩu", type="password")
     if st.button("Đăng ký"):
         if new and new not in users:
             users[new] = {"password":pw,"money":50000,"used_codes":[],"wins":0,"losses":0}
@@ -74,13 +72,13 @@ elif menu == "Đăng ký":
             st.success("Đăng ký thành công! Nhận 50k")
             st.balloons()
         else:
-            st.error("Tên đã tồn tại hoặc trống!")
+            st.error("Tên đã tồn tại!")
 
 elif menu == "Nhập code":
     st.header("NHẬP CODE")
-    user = st.text_input("Tài khoản nhận")
+    user = st.text_input("Tài khoản")
     code = st.text_input("Code").upper()
-    if st.button("Nạp code"):
+    if st.button("Nạp"):
         if user in users and code in REDEEM_CODES and code not in users[user]["used_codes"]:
             users[user]["money"] += REDEEM_CODES[code]
             users[user]["used_codes"].append(code)
@@ -101,19 +99,20 @@ elif menu == "Chuyển tiền":
         st.warning("Đăng nhập để chuyển!")
     else:
         u = st.session_state.user
-        st.write(f"Chuyển từ: {u} | Dư: {users[u]['money']:,} VND")
+        st.write(f"Chuyển từ: **{u}** | Số dư: {users[u]['money']:,} VND")
         to = st.text_input("Tên người nhận")
         amount = st.number_input("Số tiền", min_value=1000, step=1000)
-        if st.button("CHUYỂN"):
+        if st.button("CHUYỂN NGAY"):
             if to not in users: st.error("Không tìm thấy!")
             elif amount > users[u]["money"]: st.error("Không đủ tiền!")
             else:
                 users[u]["money"] -= amount
                 users[to]["money"] += amount
                 save()
-                st.success(f"CHUYỂN {amount:,} VND → {to}!")
+                st.success(f"CHUYỂN {amount:,} → {to}!")
                 st.balloons()
 
+# ==================== CHƠI GAME – KHÔNG NHÁY, HIỆN MƯỢT! ====================
 elif menu == "Chơi Game":
     if not st.session_state.user:
         st.warning("Đăng nhập để chơi!")
@@ -124,6 +123,9 @@ elif menu == "Chơi Game":
         game = st.selectbox("Chọn game", ["BẦU CUA","TÀI XỈU","CAO THẤP"])
         bet = st.number_input("Cược", min_value=1000, step=1000, value=5000)
 
+        # Placeholder để hiện kết quả – không nháy!
+        result_placeholder = st.empty()
+
         # Widgets luôn hiện
         if game == "BẦU CUA":
             choice = st.selectbox("Chọn con", ANIMALS)
@@ -131,59 +133,53 @@ elif menu == "Chơi Game":
             door = st.radio("Cửa", ["TÀI","XỈU","BỘ BA"], horizontal=True)
         elif game == "CAO THẤP":
             guess = st.radio("Đoán", ["CAO hơn","THẤP hơn"], horizontal=True)
-            st.write("Lá bài sẽ hiện sau khi chơi!")
 
         if st.button("CHƠI NGAY!") and bet <= users[u]["money"]:
-            st.session_state.play_triggered = True  # Trigger kết quả
+            with result_placeholder.container():
+                st.header("KẾT QUẢ:")
 
-        # Hiện kết quả riêng biệt, không ẩn widget
-        if st.session_state.play_triggered:
-            st.header("KẾT QUẢ:")
-            if game == "BẦU CUA":
-                res = random.choices(ANIMALS, k=3)
-                st.write("KQ:", " | ".join(res))
-                cnt = res.count(choice)
-                if cnt: 
-                    users[u]["money"] += bet*(cnt-1); 
-                    users[u]["wins"] += 1; 
-                    st.success(f"THẮNG +{bet*cnt:,} VND!")
-                else: 
-                    users[u]["money"] -= bet; 
-                    users[u]["losses"] += 1; 
-                    st.error("THUA!")
+                if game == "BẦU CUA":
+                    res = random.choices(ANIMALS, k=3)
+                    st.write("KQ:", " | ".join(res))
+                    cnt = res.count(choice)
+                    if cnt:
+                        users[u]["money"] += bet*(cnt-1)
+                        users[u]["wins"] += 1
+                        st.success(f"TRÚNG {cnt} CON → +{bet*cnt:,} VND!")
+                    else:
+                        users[u]["money"] -= bet
+                        users[u]["losses"] += 1
+                        st.error("THUA!")
 
-            elif game == "TÀI XỈU":
-                d = [random.randint(1,6) for _ in range(3)]
-                total = sum(d)
-                st.write("KQ:", d, f"→ {total}")
-                win = (door == "TÀI" and total >= 11) or (door == "XỈU" and total <= 10) or (door == "BỘ BA" and d[0]==d[1]==d[2])
-                reward = bet*24 if door=="BỘ BA" and win else bet
-                if win: 
-                    users[u]["money"] += reward; 
-                    users[u]["wins"] += 1; 
-                    st.success(f"THẮNG +{reward:,} VND!")
-                else: 
-                    users[u]["money"] -= bet; 
-                    users[u]["losses"] += 1; 
-                    st.error("THUA!")
+                elif game == "TÀI XỈU":
+                    d = [random.randint(1,6) for _ in range(3)]
+                    total = sum(d)
+                    st.write("KQ:", d, f"→ Tổng: {total}")
+                    win = (door=="TÀI" and total>=11) or (door=="XỈU" and total<=10) or (door=="BỘ BA" and d[0]==d[1]==d[2])
+                    reward = bet*24 if door=="BỘ BA" and win else bet
+                    if win:
+                        users[u]["money"] += reward
+                        users[u]["wins"] += 1
+                        st.success(f"THẮNG +{reward:,} VND!")
+                    else:
+                        users[u]["money"] -= bet
+                        users[u]["losses"] += 1
+                        st.error("THUA!")
 
-            elif game == "CAO THẤP":
-                card = random.randint(2,14)
-                st.write(f"Lá hiện tại: {card}")
-                new = random.randint(2,14)
-                st.write(f"Lá mới: {new}")
-                if (guess == "CAO hơn" and new > card) or (guess == "THẤP hơn" and new < card):
-                    users[u]["money"] += bet
-                    users[u]["wins"] += 1
-                    st.success("THẮNG!")
-                else:
-                    users[u]["money"] -= bet
-                    users[u]["losses"] += 1
-                    st.error("THUA!")
-            
-            save()
-            st.session_state.play_triggered = False  # Reset để ấn lại
-            st.rerun()  # Reload số dư
+                elif game == "CAO THẤP":
+                    card = random.randint(2,14)
+                    new = random.randint(2,14)
+                    st.write(f"Lá hiện tại: {card} → Lá mới: {new}")
+                    if (guess=="CAO hơn" and new>card) or (guess=="THẤP hơn" and new<card):
+                        users[u]["money"] += bet
+                        users[u]["wins"] += 1
+                        st.success("THẮNG!")
+                    else:
+                        users[u]["money"] -= bet
+                        users[u]["losses"] += 1
+                        st.error("THUA!")
+                
+                save()
 
 # Sidebar
 if st.session_state.user:
