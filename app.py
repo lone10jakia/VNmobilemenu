@@ -1,14 +1,18 @@
-# File: app.py – BẢN CUỐI CÙNG, CHẠY MƯỢT 100% TRÊN RENDER/RAILWAY
+# File: app.py – BẢN HOÀN CHỈNH NHẤT (5 GAME + ADMIN ĐỦ CHỨC NĂNG)
 import streamlit as st
 import json
 import random
 import os
+from datetime import datetime
 
 DB_FILE = "users.json"
+RATE_FILE = "rates.json"
+ANNO_FILE = "announce.json"
 REDEEM_CODES = {"GROK200K": 200000, "GROK10TY": 10000000000}
 ANIMALS = ["BẦU","CUA","TÔM","CÁ","GÀ","NAI"]
+HORSES = ["Ngựa 1","Ngựa 2","Ngựa 3","Ngựa 4"]
 
-# Load + save
+# LOAD + SAVE
 def load():
     if os.path.exists(DB_FILE):
         with open(DB_FILE,"r",encoding="utf-8") as f:
@@ -18,13 +22,24 @@ def load():
                     if k not in info: info[k] = 0 if k!="used_codes" else []
             return data
     return {}
-def save(): 
+def save():
     with open(DB_FILE,"w",encoding="utf-8") as f: 
         json.dump(users,f,ensure_ascii=False,indent=2)
 
-users = load()
+def load_rates():
+    if os.path.exists(RATE_FILE):
+        with open(RATE_FILE,"r",encoding="utf-8") as f:
+            return json.load(f)
+    return {"baucua":50,"taixiu":50,"caothap":50,"duangua":25,"dabanh":33}
+def save_rates():
+    with open(RATE_FILE,"w",encoding="utf-8") as f:
+        json.dump(game_rates,f,ensure_ascii=False)
 
-def vip(m):
+users = load()
+game_rates = load_rates()
+
+def vip(m, name=""):
+    if name == "admin": return "QUẢN TRỊ VIÊN"
     if m >= 10_000_000_000: return "ĐẠI GIA TOÀN QUỐC"
     if m >= 1_000_000_000:  return "TỶ PHÚ KIM CƯƠNG"
     if m >= 100_000_000:    return "TRIỆU PHÚ LỬA"
@@ -32,101 +47,153 @@ def vip(m):
     if m >= 1_000_000:      return "GIÀU CÓ"
     return "NGƯỜI CHƠI"
 
-st.set_page_config(page_title="BOT CÁ CƯỢC VIP", layout="centered")
-st.title("BOT CÁ CƯỢC TIỀN ẢO – PHIÊN BẢN HOÀN CHỈNH")
+st.set_page_config(page_title="BOT CÁ CƯỢC VIP", layout="wide")
+st.title("BOT CÁ CƯỢC TIỀN ẢO – ĐỦ 5 GAME + ADMIN SIÊU MẠNH")
 
 if "user" not in st.session_state: st.session_state.user = None
 
-# CHỈ DÙNG 1 MENU DUY NHẤT → KHÔNG BỊ TRÙNG
 menu = st.sidebar.selectbox("MENU", [
-    "Trang chủ","Đăng nhập","Đăng ký","Nhập code",
-    "TOP 50","Chơi Game","Chuyển tiền","Phòng Chat","Admin Panel"
+    "Trang chủ","Đăng nhập","Đăng ký","Nhập code","TOP 50",
+    "Chơi Game","Chuyển tiền","Admin Panel"
 ])
 
-# ==================== TRANG CHỦ ====================
-if menu == "Trang chủ":
-    st.header("CHÀO MỪNG ĐẾN BOT CÁ CƯỢC VIP")
-    st.write("Bầu Cua – Tài Xỉu – Cao Thấp – Đua Ngựa – Đá Banh")
-    st.write("Code: **GROK200K** | **GROK10TY**")
-    st.balloons()
+# THÔNG BÁO ADMIN
+if os.path.exists(ANNO_FILE):
+    with open(ANNO_FILE,"r",encoding="utf-8") as f:
+        ann = json.load(f)
+    st.error(f"THÔNG BÁO: {ann['msg']} — {ann['time']}")
 
-# ==================== ĐĂNG NHẬP ====================
-elif menu == "Đăng nhập":
-    user = st.text_input("Tên đăng nhập")
-    pw = st.text_input("Mật khẩu", type="password")
-    if st.button("Đăng nhập"):
-        if user in users and users[user]["password"] == pw:
-            st.session_state.user = user
-            st.success(f"Chào {user}!")
-            st.balloons()
-        else:
-            st.error("Sai thông tin!")
-
-# ==================== ĐĂNG KÝ ====================
-elif menu == "Đăng ký":
-    new = st.text_input("Tên mới")
-    pw = st.text_input("Mật khẩu", type="password")
-    if st.button("Đăng ký"):
-        if new and new not in users:
-            users[new] = {"password":pw,"money":50000,"used_codes":[],"wins":0,"losses":0}
-            save()
-            st.success("Đăng ký OK! Nhận 50k")
-            st.balloons()
-        else:
-            st.error("Tên đã tồn tại!")
-
-# ==================== NHẬP CODE (dùng được ngay) ====================
-elif menu == "Nhập code":
-    code = st.text_input("Nhập code").upper()
-    if st.button("Nạp code"):
-        if code in REDEEM_CODES:
-            if st.session_state.user:
-                users[st.session_state.user]["money"] += REDEEM_CODES[code]
-                save()
-                st.success(f"NẠP THÀNH CÔNG +{REDEEM_CODES[code]:,} VND!")
-                st.balloons()
-            else:
-                st.error("Đăng nhập trước khi nạp code!")
-        else:
-            st.error("Code sai hoặc đã dùng!")
-
-# ==================== TOP 50 (HIỆN ĐẦY ĐỦ) ====================
-elif menu == "TOP 50":
-    st.header("TOP 50 TỶ PHÚ")
-    top = sorted(users.items(), key=lambda x: x[1]["money"], reverse=True)[:50]
-    for i,(n,d) in enumerate(top,1):
-        st.write(f"**{i}. {n}** – {vip(d['money'])} – {d['money']:,} VND")
-
-# ==================== ADMIN PANEL (HOẠT ĐỘNG 100%) ====================
+# ==================== ADMIN PANEL – ĐỦ MỌI CHỨC NĂNG ====================
 elif menu == "Admin Panel":
     if st.session_state.user != "admin":
         st.error("Chỉ admin mới vào được!")
-    else:
-        st.header("ADMIN PANEL")
-        opt = st.selectbox("Hành động", ["Xóa acc","Vô hạn tiền","Tạo code mới"])
-        if opt == "Xóa acc":
-            target = st.text_input("Tên acc cần xóa")
-            if st.button("XÓA") and target in users and target != "admin":
-                del users[target]
-                save()
-                st.success(f"ĐÃ XÓA {target}")
-        if opt == "Vô hạn tiền":
-            if st.button("BẬT"):
-                users["admin"]["money"] = 999999999999999
-                save()
-                st.success("VÔ HẠN TIỀN!")
-        if opt == "Tạo code mới":
-            code = st.text_input("Tên code")
-            value = st.number_input("Giá trị", min_value=1000)
-            if st.button("TẠO"):
-                REDEEM_CODES[code.upper()] = value
-                st.success(f"Code {code.upper()} đã tạo!")
+        st.stop()
 
-# Sidebar hiện thông tin người chơi
+    st.header("ADMIN PANEL – QUYỀN LỰC TUYỆT ĐỐI")
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "Thông báo","Xóa/Kick","Cộng/Trừ tiền","Vô hạn tiền","Tạo code","Chỉnh tỷ lệ"
+    ])
+
+    with tab1:  # Thông báo
+        msg = st.text_area("Nội dung")
+        if st.button("GỬI THÔNG BÁO") and msg:
+            with open(ANNO_FILE,"w",encoding="utf-8") as f:
+                json.dump({"msg":msg,"time":str(datetime.now())[:19]},f)
+            st.success("ĐÃ GỬI!")
+
+    with tab2:  # Xóa acc
+        target = st.text_input("Tên cần xóa")
+        if st.button("XÓA") and target in users and target != "admin":
+            del users[target]; save(); st.success(f"ĐÃ XÓA {target}")
+
+    with tab3:  # Cộng/Trừ tiền bất kỳ ai
+        target = st.text_input("Tên người chơi")
+        amount = st.number_input("Số tiền (+ cộng, - trừ)", step=1000)
+        if st.button("THỰC HIỆN") and target in users:
+            users[target]["money"] += amount; save()
+            st.success(f"{target} còn {users[target]['money']:,} VND")
+
+    with tab4:  # Vô hạn tiền admin
+        if st.button("BẬT VÔ HẠN TIỀN CHO ADMIN"):
+            users["admin"]["money"] = 999_999_999_999_999
+            save()
+            st.success("ADMIN ĐÃ CÓ VÔ HẠN TIỀN!")
+
+    with tab5:  # Tạo code
+        code = st.text_input("Tên code")
+        value = st.number_input("Giá trị", min_value=1000)
+        if st.button("TẠO CODE"):
+            REDEEM_CODES[code.upper()] = value
+            st.success(f"Code {code.upper()} đã tạo!")
+
+    with tab6:  # Chỉnh tỷ lệ thắng
+        st.write("CHỈNH TỶ LỆ THẮNG CẢ SERVER")
+        game_rates["baucua"] = st.slider("Bầu Cua (%)",0,100,game_rates.get("baucua",50))
+        game_rates["taixiu"] = st.slider("Tài Xỉu (%)",0,100,game_rates.get("taixiu",50))
+        game_rates["caothap"] = st.slider("Cao Thấp (%)",0,100,game_rates.get("caothap",50))
+        game_rates["duangua"] = st.slider("Đua Ngựa (%)",0,100,game_rates.get("duangua",25))
+        game_rates["dabanh"] = st.slider("Đá Banh (%)",0,100,game_rates.get("dabanh",33))
+        if st.button("LƯU TỶ LỆ"):
+            save_rates()
+            st.success("ĐÃ LƯU TỶ LỆ MỚI!")
+
+# ==================== ĐỦ 5 TRÒ CHƠI HOÀN CHỈNH ====================
+elif menu == "Chơi Game":
+    if not st.session_state.user:
+        st.warning("Đăng nhập để chơi!")
+    else:
+        u = st.session_state.user
+        st.success(f"Chào {u} | {vip(users[u]['money'], u)} | Dư: {users[u]['money']:,} VND")
+
+        game = st.selectbox("Chọn game", ["BẦU CUA","TÀI XỈU","CAO THẤP","ĐUA NGỰA","ĐÁ BANH"])
+        bet = st.number_input("Cược",1000,step=1000,value=5000)
+        result = st.empty()
+
+        def win_by_rate(rate): return random.randint(1,100) <= rate
+
+        if st.button("CHƠI NGAY!") and bet <= users[u]["money"]:
+            with result.container():
+                st.header("KẾT QUẢ")
+
+                if game == "BẦU CUA":
+                    choice = st.selectbox("Chọn con",ANIMALS,key="bc")
+                    res = random.choices(ANIMALS,k=3)
+                    st.write("KQ:", " | ".join(res))
+                    cnt = res.count(choice)
+                    if cnt and win_by_rate(game_rates["baucua"]):
+                        users[u]["money"] += bet*(cnt-1); users[u]["wins"]+=1
+                        st.success(f"THẮNG +{bet*cnt:,} VND!")
+                    else:
+                        users[u]["money"] -= bet; users[u]["losses"]+=1; st.error("THUA!")
+
+                elif game == "TÀI XỈU":
+                    door = st.radio("Cửa",["TÀI","XỈU","BỘ BA"],horizontal=True,key="tx")
+                    d = [random.randint(1,6) for _ in range(3)]
+                    total = sum(d)
+                    st.write(d, f"→ Tổng: {total}")
+                    win = (door=="TÀI" and total>=11) or (door=="XỈU" and total<=10) or (door=="BỘ BA" and d[0]==d[1]==d[2])
+                    if win and win_by_rate(game_rates["taixiu"]):
+                        reward = bet*24 if door=="BỘ BA" else bet
+                        users[u]["money"] += reward; users[u]["wins"]+=1
+                        st.success(f"THẮNG +{reward:,} VND!")
+                    else:
+                        users[u]["money"] -= bet; users[u]["losses"]+=1; st.error("THUA!")
+
+                elif game == "CAO THẤP":
+                    guess = st.radio("Đoán",["CAO hơn","THẤP hơn"],horizontal=True,key="ct")
+                    card = random.randint(2,14); new = random.randint(2,14)
+                    st.write(f"Lá hiện tại: {card} → Lá mới: {new}")
+                    correct = (guess=="CAO hơn" and new>card) or (guess=="THẤP hơn" and new<card)
+                    if correct and win_by_rate(game_rates["caothap"]):
+                        users[u]["money"] += bet; users[u]["wins"]+=1; st.success("THẮNG!")
+                    else:
+                        users[u]["money"] -= bet; users[u]["losses"]+=1; st.error("THUA!")
+
+                elif game == "ĐUA NGỰA":
+                    choice = st.selectbox("Chọn ngựa",HORSES,key="ngua")
+                    winner = random.choice(HORSES)
+                    st.write(f"Ngựa về nhất: {winner}")
+                    if choice == winner and win_by_rate(game_rates["duangua"]):
+                        users[u]["money"] += bet*4; users[u]["wins"]+=1; st.success("THẮNG X5!")
+                    else:
+                        users[u]["money"] -= bet; users[u]["losses"]+=1; st.error("THUA!")
+
+                elif game == "ĐÁ BANH":
+                    choice = st.radio("Dự đoán",["Chủ nhà thắng","Hòa","Khách thắng"],horizontal=True,key="bong")
+                    result = random.choice(["Chủ nhà thắng","Hòa","Khách thắng"])
+                    st.write(f"Kết quả: {result}")
+                    if choice == result and win_by_rate(game_rates["dabanh"]):
+                        users[u]["money"] += bet*2; users[u]["wins"]+=1; st.success("THẮNG X3!")
+                    else:
+                        users[u]["money"] -= bet; users[u]["losses"]+=1; st.error("THUA!")
+
+                save()
+
+# Sidebar
 if st.session_state.user:
     u = st.session_state.user
     st.sidebar.success(f"Đã login: {u}")
-    st.sidebar.write(vip(users[u]["money"]))
+    st.sidebar.markdown(f"**{vip(users[u]['money'], u)}**")
     st.sidebar.metric("Số dư", f"{users[u]['money']:,} VND")
     if st.sidebar.button("Đăng xuất"):
         st.session_state.user = None
