@@ -90,8 +90,7 @@ elif menu == "Câu cá":
     u = st.session_state.user
     data = users[u]
 
-    st.success(f"🧍 Nhân vật: **{u}** | 💰 {data['money']:,} VND | 🎣 {data['rod']}")
-
+    st.success(f"🧍 Nhân vật: **{u}** | 💰 {data.get('money', 0):,} VND | 🎣 {data.get('rod', 'Cần tre')}")
     # === CHỌN MAP ===
     st.subheader("🗺 Chọn khu vực câu cá:")
 
