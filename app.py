@@ -1,313 +1,219 @@
-# File: app.py – BẢN HOÀN CHỈNH CUỐI CÙNG (5 GAME + ADMIN SIÊU MẠNH + KHÔNG LỖI)
 import streamlit as st
 import json
 import random
 import os
-from datetime import datetime
 
-# === CÁC FILE DỮ LIỆU ===
+# ========================== DATABASE ================================
 DB_FILE = "users.json"
-RATE_FILE = "rates.json"
-ANNO_FILE = "announce.json"
-REDEEM_CODES = {"CODETANTHU": 200000, "MUNGUPDATE": 10000000000,"TANGQUA": 9999999999}
-ANIMALS = ["BẦU","CUA","TÔM","CÁ","GÀ","NAI"]
-HORSES = ["Ngựa 1","Ngựa 2","Ngựa 3","Ngựa 4"]
 
-# === LOAD + SAVE ===
-def load():
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE,"r",encoding="utf-8") as f:
-            data = json.load(f)
-            for info in data.values():
-                for k in ["wins","losses","used_codes","is_banned"]: 
-                    if k not in info: 
-                        info[k] = 0 if k in ["wins","losses"] else [] if k=="used_codes" else False
-            return data
-    return {}
+def load_users():
+    if not os.path.exists(DB_FILE):
+        return {}
+    return json.load(open(DB_FILE, "r"))
 
-def save():
-    with open(DB_FILE,"w",encoding="utf-8") as f: 
-        json.dump(users,f,ensure_ascii=False,indent=2)
+def save_users(data):
+    json.dump(data, open(DB_FILE, "w"), indent=4)
 
-def load_rates():
-    default = {"baucua":50,"taixiu":50,"caothap":50,"duangua":25,"dabanh":33}
-    if os.path.exists(RATE_FILE):
-        try:
-            with open(RATE_FILE,"r",encoding="utf-8") as f:
-                data = json.load(f)
-                for k in default:
-                    if k not in data: data[k] = default[k]
-                return data
-        except:
-            pass
-    with open(RATE_FILE,"w",encoding="utf-8") as f:
-        json.dump(default,f,ensure_ascii=False)
-    return default
+users = load_users()
 
-def save_rates():
-    with open(RATE_FILE,"w",encoding="utf-8") as f:
-        json.dump(game_rates,f,ensure_ascii=False)
+# ===================================================================
 
-users = load()
-game_rates = load_rates()
+st.title("🎣 GAME CÂU CÁ VẠN CÂN — FULL EDITION")
 
-def vip(m, name=""):
-    if name == "admin": return "QUẢN TRỊ VIÊN"
-    if m >= 10_000_000_000: return "ĐẠI GIA TOÀN QUỐC"
-    if m >= 1_000_000_000:  return "TỶ PHÚ KIM CƯƠNG"
-    if m >= 100_000_000:    return "TRIỆU PHÚ LỬA"
-    if m >= 10_000_000:     return "ĐẠI GIA"
-    if m >= 1_000_000:      return "GIÀU CÓ"
-    return "NGƯỜI CHƠI"
+username = st.text_input("Nhập tài khoản:")
+if username not in users:
+    st.warning("Tài khoản không tồn tại!")
+    st.stop()
 
-st.set_page_config(page_title="BOT CÁ CƯỢC VIP", layout="wide")
-st.title("BOT CÁ CƯỢC TIỀN ẢO – 5 GAME + ADMIN SIÊU MẠNH")
+money = users[username]["money"]
 
-if "user" not in st.session_state:
-    st.session_state.user = None
+st.success(f"💰 Số tiền hiện tại: {money:,} VNĐ")
 
-# === MENU CHÍNH ===
-menu = st.sidebar.radio("MENU", [
-    "Trang chủ","Đăng nhập","Đăng ký","Nhập code","TOP 50",
-    "Chơi Game","Chuyển tiền","Admin Panel"
-], key="main_menu")
+st.write("### 🎣 Khu câu cá")
 
-# === THÔNG BÁO ADMIN ===
-if os.path.exists(ANNO_FILE):
-    try:
-        with open(ANNO_FILE,"r",encoding="utf-8") as f:
-            ann = json.load(f)
-        st.error(f"THÔNG BÁO: {ann.get('msg','')} — {ann.get('time','')}")
-    except:
-        pass
+# ========================== FULL HTML GAME ==========================
 
-# === TRANG CHỦ ===
-if menu == "Trang chủ":
-    st.header("CHÀO MỪNG ĐẾN BOT CÁ CƯỢC VIP")
-    st.write("Đủ 5 game: Bầu Cua – Tài Xỉu – Cao Thấp – Đua Ngựa – Đá Banh")
-    st.write("Code: **CODETANTHU** | **MUNGUPDATE**")
-    st.balloons()
+html = """
+<style>
+.game-box {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  background: linear-gradient(#4fa2ff, #003a75);
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-# === ĐĂNG NHẬP ===
-elif menu == "Đăng nhập":
-    st.header("ĐĂNG NHẬP")
-    user = st.text_input("Tên đăng nhập")
-    pw = st.text_input("Mật khẩu", type="password")
-    if st.button("Đăng nhập"):
-        if user in users and users[user]["password"] == pw:
-            st.session_state.user = user
-            st.success("Đăng nhập thành công!")
-            st.balloons()
-            st.rerun()
-        else:
-            st.error("Sai tên hoặc mật khẩu!")
+/* Nhân vật */
+#fisherman {
+  position: absolute;
+  bottom: 0;
+  left: 40px;
+  width: 220px;
+  transition: 0.3s;
+}
 
-# === ĐĂNG KÝ ===
-elif menu == "Đăng ký":
-    st.header("ĐĂNG KÝ")
-    new = st.text_input("Tên mới")
-    pw = st.text_input("Mật khẩu mới", type="password")
-    if st.button("Đăng ký"):
-        if new and new not in users:
-            users[new] = {"password":pw,"money":50000,"used_codes":[],"wins":0,"losses":0,"is_banned":False}
-            save()
-            st.success("Đăng ký thành công! +50k")
-            st.balloons()
-        else:
-            st.error("Tên đã tồn tại!")
+/* Cá */
+#fish {
+  position: absolute;
+  right: -200px;
+  bottom: 150px;
+  width: 180px;
+  transition: 0.2s;
+}
 
-# === NHẬP CODE ===
-elif menu == "Nhập code":
-    st.header("NHẬP CODE")
-    code = st.text_input("Code").upper()
-    if st.button("Nạp") and st.session_state.user:
-        if code in REDEEM_CODES:
-            users[st.session_state.user]["money"] += REDEEM_CODES[code]
-            save()
-            st.success(f"NẠP +{REDEEM_CODES[code]:,} VND!")
-            st.balloons()
-        else:
-            st.error("Code sai hoặc đã dùng!")
+/* Hiệu ứng skill */
+#skillFx {
+  position: absolute;
+  left: 200px;
+  bottom: 230px;
+  width: 160px;
+  opacity: 0;
+  transition: 0.3s;
+}
 
-# === TOP 50 ===
-elif menu == "TOP 50":
-    st.header("TOP 50 TỶ PHÚ")
-    top = sorted(users.items(), key=lambda x: x[1]["money"], reverse=True)[:50]
-    for i,(n,d) in enumerate(top,1):
-        st.write(f"**{i}. {n}** – {vip(d['money'], n)} – {d['money']:,} VND")
+/* Thanh HP cá */
+.hp-bar-bg {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 300px;
+  height: 20px;
+  background: #00000066;
+  border-radius: 10px;
+  transform: translateX(-50%);
+}
+.hp-bar {
+  height: 100%;
+  background: #ff5b5b;
+  width: 100%;
+  border-radius: 10px;
+}
 
-# === CHUYỂN TIỀN ===
-elif menu == "Chuyển tiền":
-    if not st.session_state.user:
-        st.warning("Đăng nhập để chuyển!")
-    else:
-        u = st.session_state.user
-        st.write(f"Chuyển từ: {u} | Dư: {users[u]['money']:,} VND")
-        to = st.text_input("Tên người nhận")
-        amount = st.number_input("Số tiền", min_value=1000, step=1000)
-        if st.button("CHUYỂN") and to in users and amount <= users[u]["money"]:
-            users[u]["money"] -= amount
-            users[to]["money"] += amount
-            save()
-            st.success(f"CHUYỂN {amount:,} → {to}!")
-            st.balloons()
+/* Thanh căng dây */
+.tension-bg {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  width: 300px;
+  height: 20px;
+  background: #00000066;
+  border-radius: 10px;
+  transform: translateX(-50%);
+}
+.tension {
+  height: 100%;
+  background: #ffd700;
+  width: 10%;
+  border-radius: 10px;
+}
 
-# === ADMIN PANEL – SIÊU MẠNH ===
-elif menu == "Admin Panel":
-    if st.session_state.user != "admin":
-        st.error("Chỉ admin mới vào được!")
-        st.stop()
+/* Nút điều khiển */
+.control-btn {
+  padding: 10px 20px;
+  font-size: 20px;
+  margin: 10px;
+}
+</style>
 
-    st.header("ADMIN PANEL – QUYỀN LỰC TUYỆT ĐỐI")
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "Thông báo","Xóa/Ban","Cộng/Trừ tiền","Vô hạn tiền","Tạo/Xóa code","Chỉnh tỷ lệ"
-    ])
+<div class="game-box">
+  <img id="fisherman" src="https://i.imgur.com/KZtNFwN.png">
+  <img id="fish" src="https://i.imgur.com/wd8ZKzB.png">
+  <img id="skillFx" src="https://i.imgur.com/8t7Vsp3.png">
 
-    with tab1:
-        msg = st.text_area("Nội dung thông báo")
-        if st.button("GỬI THÔNG BÁO") and msg:
-            with open(ANNO_FILE,"w",encoding="utf-8") as f:
-                json.dump({"msg":msg,"time":str(datetime.now())[:19]},f)
-            st.success("ĐÃ GỬI TOÀN SERVER!")
+  <div class="hp-bar-bg"><div id="hpBar" class="hp-bar"></div></div>
+  <div class="tension-bg"><div id="tensionBar" class="tension"></div></div>
+</div>
 
-    with tab2:
-        target = st.text_input("Tên cần xóa/ban")
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("XÓA ACC") and target in users and target != "admin":
-                del users[target]; save(); st.success(f"ĐÃ XÓA {target}")
-        with col2:
-            if st.button("BAN ACC") and target in users and target != "admin":
-                users[target]["is_banned"] = True; save(); st.success(f"ĐÃ BAN {target}")
+<button class="control-btn" onclick="castRod()">🎣 Ném mồi</button>
+<button class="control-btn" onclick="pullFish()">💪 Kéo cá</button>
+<button class="control-btn" onclick="useSkill()">🔥 Kỹ năng</button>
 
-    with tab3:
-        target = st.text_input("Tên người chơi")
-        amount = st.number_input("Số tiền (+ cộng, - trừ)", step=1000)
-        if st.button("THỰC HIỆN") and target in users:
-            users[target]["money"] += amount; save(); st.success(f"{target} còn {users[target]['money']:,} VND")
+<script>
+let fishHP = 100;
+let tension = 10;
+let hooked = false;
 
-    with tab4:
-        if st.button("VÔ HẠN TIỀN CHO ADMIN"):
-            users["admin"]["money"] = 999999999999999; save(); st.success("ADMIN ĐÃ CÓ VÔ HẠN TIỀN!")
+// Âm thanh
+function play(url){
+  let a = new Audio(url);
+  a.volume = 0.75;
+  a.play();
+}
 
-    with tab5:
-        col1, col2 = st.columns(2)
-        with col1:
-            code = st.text_input("Tên code mới")
-            value = st.number_input("Giá trị", min_value=1000)
-            if st.button("TẠO CODE"):
-                REDEEM_CODES[code.upper()] = value; st.success(f"Code {code.upper()} đã tạo!")
-        with col2:
-            del_code = st.text_input("Code cần xóa")
-            if st.button("XÓA CODE") and del_code.upper() in REDEEM_CODES:
-                del REDEEM_CODES[del_code.upper()]; st.success(f"ĐÃ XÓA CODE {del_code.upper()}")
+// Ném mồi
+function castRod(){
+  play("https://www.myinstants.com/media/sounds/whoosh.mp3");
+  let f = document.getElementById("fish");
+  f.style.right = "120px";
+  hooked = true;
 
-    with tab6:
-        st.write("CHỈNH TỶ LỆ THẮNG CẢ SERVER")
-        game_rates["baucua"] = st.slider("Bầu Cua (%)",0,100,game_rates.get("baucua",50))
-        game_rates["taixiu"] = st.slider("Tài Xỉu (%)",0,100,game_rates.get("taixiu",50))
-        game_rates["caothap"] = st.slider("Cao Thấp (%)",0,100,game_rates.get("caothap",50))
-        game_rates["duangua"] = st.slider("Đua Ngựa (%)",0,100,game_rates.get("duangua",25))
-        game_rates["dabanh"] = st.slider("Đá Banh (%)",0,100,game_rates.get("dabanh",33))
-        if st.button("LƯU TỶ LỆ"):
-            save_rates(); st.success("ĐÃ LƯU TỶ LỆ MỚI!")
+  fishHP = Math.floor(Math.random()*80)+120; // 120–200 HP
+  tension = 10;
+  updateBars();
+}
 
-# === 5 TRÒ CHƠI HOÀN CHỈNH ===
-elif menu == "Chơi Game":
-    if not st.session_state.user:
-        st.warning("Đăng nhập để chơi!")
-    elif users.get(st.session_state.user, {}).get("is_banned", False):
-        st.error("TÀI KHOẢN CỦA BẠN ĐÃ BỊ BAN!")
-    else:
-        u = st.session_state.user
-        st.success(f"Chào {u} | {vip(users[u]['money'], u)} | Dư: {users[u]['money']:,} VND")
+// Kéo cá
+function pullFish(){
+  if(!hooked) return;
 
-        game = st.selectbox("Chọn game", ["BẦU CUA","TÀI XỈU","CAO THẤP","ĐUA NGỰA","ĐÁ BANH"])
-        bet = st.number_input("Cược", min_value=1000, step=1000, value=5000)
+  play("https://www.myinstants.com/media/sounds/metal-hit.mp3");
 
-        # Luôn hiện ô chọn
-        if game == "BẦU CUA":
-            choice = st.selectbox("Chọn con", ANIMALS)
-        elif game == "TÀI XỈU":
-            door = st.radio("Chọn cửa", ["TÀI","XỈU","BỘ BA"], horizontal=True)
-        elif game == "CAO THẤP":
-            guess = st.radio("Đoán", ["CAO hơn","THẤP hơn"], horizontal=True)
-        elif game == "ĐUA NGỰA":
-            choice = st.selectbox("Chọn ngựa", HORSES)
-        elif game == "ĐÁ BANH":
-            choice = st.radio("Dự đoán", ["Chủ nhà thắng","Hòa","Khách thắng"], horizontal=True)
+  fishHP -= Math.floor(Math.random()*10)+6;
+  tension += Math.floor(Math.random()*10)+5;
 
-        result = st.empty()
+  updateBars();
 
-        if st.button("CHƠI NGAY!") and bet <= users[u]["money"]:
-            with result.container():
-                st.header("KẾT QUẢ")
+  if(fishHP <= 0){
+    catchFish();
+  } else if(tension >= 100){
+    loseFish();
+  }
+}
 
-                def win_by_rate(key): return random.randint(1,100) <= game_rates.get(key,50)
+// Kỹ năng
+function useSkill(){
+  if(!hooked) return;
 
-                if game == "BẦU CUA":
-                    res = random.choices(ANIMALS,k=3)
-                    st.write("KQ:", " | ".join(res))
-                    cnt = res.count(choice)
-                    if cnt and win_by_rate("baucua"):
-                        users[u]["money"] += bet*(cnt-1); users[u]["wins"] += 1
-                        st.success(f"TRÚNG {cnt} CON → THẮNG +{bet*cnt:,} VND!")
-                    else:
-                        users[u]["money"] -= bet; users[u]["losses"] += 1
-                        st.error("THUA!")
+  play("https://www.myinstants.com/media/sounds/superpower.mp3");
 
-                elif game == "TÀI XỈU":
-                    d = [random.randint(1,6) for _ in range(3)]
-                    total = sum(d)
-                    st.write(d, f"→ Tổng: {total}")
-                    win = (door=="TÀI" and total>=11) or (door=="XỈU" and total<=10) or (door=="BỘ BA" and d[0]==d[1]==d[2])
-                    if win and win_by_rate("taixiu"):
-                        reward = bet*24 if door=="BỘ BA" else bet
-                        users[u]["money"] += reward; users[u]["wins"] += 1
-                        st.success(f"THẮNG +{reward:,} VND!")
-                    else:
-                        users[u]["money"] -= bet; users[u]["losses"] += 1
-                        st.error("THUA!")
+  document.getElementById("skillFx").style.opacity = 1;
+  setTimeout(()=>{ document.getElementById("skillFx").style.opacity = 0; },400);
 
-                elif game == "CAO THẤP":
-                    card = random.randint(2,14); new = random.randint(2,14)
-                    st.write(f"Lá hiện tại: {card} → Lá mới: {new}")
-                    correct = (guess=="CAO hơn" and new>card) or (guess=="THẤP hơn" and new<card)
-                    if correct and win_by_rate("caothap"):
-                        users[u]["money"] += bet; users[u]["wins"] += 1
-                        st.success("THẮNG!")
-                    else:
-                        users[u]["money"] -= bet; users[u]["losses"] += 1
-                        st.error("THUA!")
+  fishHP -= 30;
+  tension -= 15;
 
-                elif game == "ĐUA NGỰA":
-                    winner = random.choice(HORSES)
-                    st.write(f"Ngựa về nhất: {winner}")
-                    if choice == winner and win_by_rate("duangua"):
-                        users[u]["money"] += bet*4; users[u]["wins"] += 1
-                        st.success("THẮNG X5!")
-                    else:
-                        users[u]["money"] -= bet; users[u]["losses"] += 1
-                        st.error("THUA!")
+  if(tension < 5) tension = 5;
+  updateBars();
+}
 
-                elif game == "ĐÁ BANH":
-                    result_game = random.choice(["Chủ nhà thắng","Hòa","Khách thắng"])
-                    st.write(f"Kết quả: {result_game}")
-                    if choice == result_game and win_by_rate("dabanh"):
-                        users[u]["money"] += bet*2; users[u]["wins"] += 1
-                        st.success("THẮNG X3!")
-                    else:
-                        users[u]["money"] -= bet; users[u]["losses"] += 1
-                        st.error("THUA!")
+function updateBars(){
+  document.getElementById("hpBar").style.width = (fishHP<=0?0:fishHP)+"px";
+  document.getElementById("tensionBar").style.width = tension+"%";
+}
 
-                save()
+// Bắt cá thành công
+function catchFish(){
+  hooked = false;
+  play("https://www.myinstants.com/media/sounds/yeah-boy.mp3");
+  alert("🎉 Bạn đã bắt được cá!\n+ 50.000 VNĐ");
+  window.parent.postMessage({type: "addMoney", value: 50000}, "*");
+}
 
-# === SIDEBAR ===
-if st.session_state.user:
-    u = st.session_state.user
-    st.sidebar.success(f"Đã login: {u}")
-    st.sidebar.markdown(f"**{vip(users[u]['money'], u)}**")
-    st.sidebar.metric("Số dư", f"{users[u]['money']:,} VND")
-    if st.sidebar.button("Đăng xuất"):
-        st.session_state.user = None
-        st.rerun()
+// Đứt dây
+function loseFish(){
+  hooked = false;
+  play("https://www.myinstants.com/media/sounds/fail-trombone.mp3");
+  alert("💢 Dây bị đứt! Cá chạy mất...");
+}
+</script>
+"""
+
+# Hiển thị HTML game
+st.components.v1.html(html, height=750)
+
+# Lắng nghe message từ JS để cộng tiền
+msg = st.experimental_get_query_params()
+if "addMoney" in msg:
+    users[username]["money"] += int(msg["addMoney"][0])
+    save_users(users)
