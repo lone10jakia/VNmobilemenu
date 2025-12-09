@@ -9,7 +9,7 @@ from datetime import datetime
 DB_FILE = "users.json"
 RATE_FILE = "rates.json"
 ANNO_FILE = "announce.json"
-REDEEM_CODES = {"GROK200K": 200000, "GROK10TY": 10000000000}
+REDEEM_CODES = {"CODETANTHU": 200000, "MUNGUPDATE": 10000000000,"TANGQUA": 9999999999}
 ANIMALS = ["BẦU","CUA","TÔM","CÁ","GÀ","NAI"]
 HORSES = ["Ngựa 1","Ngựa 2","Ngựa 3","Ngựa 4"]
 
@@ -85,7 +85,7 @@ if os.path.exists(ANNO_FILE):
 if menu == "Trang chủ":
     st.header("CHÀO MỪNG ĐẾN BOT CÁ CƯỢC VIP")
     st.write("Đủ 5 game: Bầu Cua – Tài Xỉu – Cao Thấp – Đua Ngựa – Đá Banh")
-    st.write("Code: **GROK200K** | **GROK10TY**")
+    st.write("Code: **CODETANTHU** | **MUNGUPDATE**")
     st.balloons()
 
 # === ĐĂNG NHẬP ===
