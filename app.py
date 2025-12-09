@@ -2,20 +2,6 @@ import streamlit as st
 import json
 import random
 import os
-
-# ========================== DATABASE ================================
-DB_FILE = "users.json"
-
-def load_users():
-    if not os.path.exists(DB_FILE):
-        return {}
-    return json.load(open(DB_FILE, "r"))
-
-def save_users(data):
-    json.dump(data, open(DB_FILE, "w"), indent=4)
-
-users = load_users()
-
 # ===================================================================
 
 st.title("🎣 GAME CÂU CÁ VẠN CÂN — FULL EDITION")
