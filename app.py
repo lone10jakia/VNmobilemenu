@@ -2,204 +2,132 @@ import streamlit as st
 import json
 import random
 import os
-# ===================================================================
+import base64
 
-st.title("🎣 GAME CÂU CÁ VẠN CÂN — FULL EDITION")
+DB_FILE = "users.json"
 
-username = st.text_input("Nhập tài khoản:")
-if username not in users:
-    st.warning("Tài khoản không tồn tại!")
-    st.stop()
+# ========================== DATABASE ==========================
 
-money = users[username]["money"]
+def load_users():
+    if not os.path.exists(DB_FILE):
+        json.dump({}, open(DB_FILE, "w"))
+    return json.load(open(DB_FILE, "r"))
 
-st.success(f"💰 Số tiền hiện tại: {money:,} VNĐ")
+def save_users(data):
+    json.dump(data, open(DB_FILE, "w"), indent=4)
 
-st.write("### 🎣 Khu câu cá")
+users = load_users()
 
-# ========================== FULL HTML GAME ==========================
+# ========================== CSS + ANIMATION ==========================
 
-html = """
-<style>
-.game-box {
-  position: relative;
-  width: 100%;
-  height: 600px;
-  background: linear-gradient(#4fa2ff, #003a75);
-  border-radius: 12px;
-  overflow: hidden;
-}
+# Nhân vật cầm cần câu GIF
+CHAR_FISHING = "https://i.imgur.com/2fYqA7J.gif"
 
-/* Nhân vật */
-#fisherman {
-  position: absolute;
-  bottom: 0;
-  left: 40px;
-  width: 220px;
-  transition: 0.3s;
-}
+# Hiệu ứng skill khi kéo cần câu
+SKILL_EFFECT = "https://i.imgur.com/mJbZzRk.gif"
 
-/* Cá */
-#fish {
-  position: absolute;
-  right: -200px;
-  bottom: 150px;
-  width: 180px;
-  transition: 0.2s;
-}
+# Âm thanh bắt cá
+FISH_SOUND = "https://www.myinstants.com/media/sounds/pop-cat-original-meme.mp3"
 
-/* Hiệu ứng skill */
-#skillFx {
-  position: absolute;
-  left: 200px;
-  bottom: 230px;
-  width: 160px;
-  opacity: 0;
-  transition: 0.3s;
-}
+def play_sound(url):
+    audio_html = f"""
+    <audio autoplay>
+        <source src="{url}">
+    </audio>
+    """
+    st.markdown(audio_html, unsafe_allow_html=True)
 
-/* Thanh HP cá */
-.hp-bar-bg {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  width: 300px;
-  height: 20px;
-  background: #00000066;
-  border-radius: 10px;
-  transform: translateX(-50%);
-}
-.hp-bar {
-  height: 100%;
-  background: #ff5b5b;
-  width: 100%;
-  border-radius: 10px;
-}
+# ========================== UI ==========================
 
-/* Thanh căng dây */
-.tension-bg {
-  position: absolute;
-  top: 55px;
-  left: 50%;
-  width: 300px;
-  height: 20px;
-  background: #00000066;
-  border-radius: 10px;
-  transform: translateX(-50%);
-}
-.tension {
-  height: 100%;
-  background: #ffd700;
-  width: 10%;
-  border-radius: 10px;
-}
+st.set_page_config(page_title="Game Câu Cá Vạn Cân", layout="wide")
+st.title("🎣 GAME CÂU CÁ VẠN CÂN – 1 FILE HOÀN CHỈNH")
 
-/* Nút điều khiển */
-.control-btn {
-  padding: 10px 20px;
-  font-size: 20px;
-  margin: 10px;
-}
-</style>
+menu = st.sidebar.selectbox("MENU", ["Đăng nhập", "Đăng ký", "Chơi game"])
 
-<div class="game-box">
-  <img id="fisherman" src="https://i.imgur.com/KZtNFwN.png">
-  <img id="fish" src="https://i.imgur.com/wd8ZKzB.png">
-  <img id="skillFx" src="https://i.imgur.com/8t7Vsp3.png">
+# ===========================================================
+#                   ĐĂNG NHẬP
+# ===========================================================
+if menu == "Đăng nhập":
+    st.header("🔐 Đăng nhập")
+    username = st.text_input("Tài khoản")
+    password = st.text_input("Mật khẩu", type="password")
 
-  <div class="hp-bar-bg"><div id="hpBar" class="hp-bar"></div></div>
-  <div class="tension-bg"><div id="tensionBar" class="tension"></div></div>
-</div>
+    if st.button("Đăng nhập"):
+        if username in users and users[username]["password"] == password:
+            st.session_state["user"] = username
+            st.success(f"Đăng nhập thành công! Chào {username} 🎉")
+            st.balloons()
+        else:
+            st.error("Sai tài khoản hoặc mật khẩu!")
 
-<button class="control-btn" onclick="castRod()">🎣 Ném mồi</button>
-<button class="control-btn" onclick="pullFish()">💪 Kéo cá</button>
-<button class="control-btn" onclick="useSkill()">🔥 Kỹ năng</button>
+# ===========================================================
+#                   ĐĂNG KÝ
+# ===========================================================
+elif menu == "Đăng ký":
+    st.header("📝 Đăng ký tài khoản mới")
+    username = st.text_input("Tên tài khoản")
+    password = st.text_input("Mật khẩu", type="password")
 
-<script>
-let fishHP = 100;
-let tension = 10;
-let hooked = false;
+    if st.button("Tạo tài khoản"):
+        if username in users:
+            st.warning("Tên tài khoản đã tồn tại!")
+        else:
+            users[username] = {"password": password, "money": 50000}
+            save_users(users)
+            st.success("Đăng ký thành công! Bạn nhận 50.000 VNĐ 🎉")
 
-// Âm thanh
-function play(url){
-  let a = new Audio(url);
-  a.volume = 0.75;
-  a.play();
-}
+# ===========================================================
+#                   GAME CÂU CÁ
+# ===========================================================
+elif menu == "Chơi game":
 
-// Ném mồi
-function castRod(){
-  play("https://www.myinstants.com/media/sounds/whoosh.mp3");
-  let f = document.getElementById("fish");
-  f.style.right = "120px";
-  hooked = true;
+    # Chưa đăng nhập
+    if "user" not in st.session_state:
+        st.warning("⚠ Bạn phải đăng nhập mới chơi được!")
+        st.stop()
 
-  fishHP = Math.floor(Math.random()*80)+120; // 120–200 HP
-  tension = 10;
-  updateBars();
-}
+    user = st.session_state["user"]
 
-// Kéo cá
-function pullFish(){
-  if(!hooked) return;
+    st.header(f"🎣 Chào {user} – Số dư: {users[user]['money']:,} VNĐ")
 
-  play("https://www.myinstants.com/media/sounds/metal-hit.mp3");
+    st.image(CHAR_FISHING, width=280)  # Nhân vật cầm cần câu
 
-  fishHP -= Math.floor(Math.random()*10)+6;
-  tension += Math.floor(Math.random()*10)+5;
+    st.subheader("🐟 Chọn loại cá để câu")
+    fish_types = {
+        "Cá bé": [5000, 70],
+        "Cá vàng": [20000, 40],
+        "Cá mập": [100000, 15],
+        "Cá thần bí": [500000, 5],
+    }
 
-  updateBars();
+    fish = st.selectbox("Loại cá", list(fish_types.keys()))
+    bet = st.number_input("Tiền cược", min_value=1000, value=5000, step=1000)
 
-  if(fishHP <= 0){
-    catchFish();
-  } else if(tension >= 100){
-    loseFish();
-  }
-}
+    if st.button("🎣 QUĂNG CẦN!"):
 
-// Kỹ năng
-function useSkill(){
-  if(!hooked) return;
+        if bet > users[user]["money"]:
+            st.error("Không đủ tiền!")
+            st.stop()
 
-  play("https://www.myinstants.com/media/sounds/superpower.mp3");
+        st.subheader("⚡ Dùng chiêu kéo cần...")
+        st.image(SKILL_EFFECT, width=300)
 
-  document.getElementById("skillFx").style.opacity = 1;
-  setTimeout(()=>{ document.getElementById("skillFx").style.opacity = 0; },400);
+        # Chơi âm thanh
+        play_sound(FISH_SOUND)
 
-  fishHP -= 30;
-  tension -= 15;
+        price, rate = fish_types[fish]
+        success = random.randint(1, 100) <= rate
 
-  if(tension < 5) tension = 5;
-  updateBars();
-}
+        if success:
+            users[user]["money"] += price
+            st.success(f"🎉 BẮT ĐƯỢC {fish}! +{price:,} VNĐ")
+        else:
+            users[user]["money"] -= bet
+            st.error(f"💀 SỤT MẤT {bet:,} VNĐ – Cá tuột mất...")
 
-function updateBars(){
-  document.getElementById("hpBar").style.width = (fishHP<=0?0:fishHP)+"px";
-  document.getElementById("tensionBar").style.width = tension+"%";
-}
+        save_users(users)
 
-// Bắt cá thành công
-function catchFish(){
-  hooked = false;
-  play("https://www.myinstants.com/media/sounds/yeah-boy.mp3");
-  alert("🎉 Bạn đã bắt được cá!\n+ 50.000 VNĐ");
-  window.parent.postMessage({type: "addMoney", value: 50000}, "*");
-}
-
-// Đứt dây
-function loseFish(){
-  hooked = false;
-  play("https://www.myinstants.com/media/sounds/fail-trombone.mp3");
-  alert("💢 Dây bị đứt! Cá chạy mất...");
-}
-</script>
-"""
-
-# Hiển thị HTML game
-st.components.v1.html(html, height=750)
-
-# Lắng nghe message từ JS để cộng tiền
-msg = st.experimental_get_query_params()
-if "addMoney" in msg:
-    users[username]["money"] += int(msg["addMoney"][0])
-    save_users(users)
+    st.markdown("---")
+    if st.button("Đăng xuất"):
+        del st.session_state["user"]
+        st.rerun()
