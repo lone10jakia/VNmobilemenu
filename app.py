@@ -11,7 +11,7 @@ RATE_FILE = "rates.json"
 ANNO_FILE = "announce.json"
 REDEEM_CODES = {"GROK200K": 200000, "GROK10TY": 10000000000}
 ANIMALS = ["BẦU","CUA","TÔM","CÁ","GÀ","NAI"]
-HORSES = ["Ngựa 1","Ngựa 2","Ngựa 3","Ngựa 4"]
+HORSES = ["Ngựa ngu","Ngựa lọ","Ngựa ngáo","Ngựa lồn"]
 
 # === LOAD + SAVE ===
 def load():
