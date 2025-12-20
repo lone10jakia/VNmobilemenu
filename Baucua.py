@@ -1,4 +1,4 @@
-# File: app.py – BOT ĐOÁN BẦU CUA RIÊNG (CHỈ ĐOÁN 1 CON MẠNH NHẤT CHO VÁN TIẾP THEO)
+# File: app.py – BOT ĐOÁN BẦU CUA THÔNG MINH (CON RA NHIỀU GẦN ĐÂY → KHÓ RA LẦN SAU)
 import streamlit as st
 import json
 import os
@@ -17,12 +17,12 @@ def load_history():
 # Save lịch sử
 def save_history(history):
     with open(HISTORY_FILE,"w",encoding="utf-8") as f:
-        json.dump(history[-100:],f,ensure_ascii=False)  # Giữ 100 ván để đoán chuẩn
+        json.dump(history[-100:],f,ensure_ascii=False)
 
 history = load_history()
 
-st.set_page_config(page_title="BOT ĐOÁN BẦU CUA", layout="wide")
-st.title("BOT ĐOÁN BẦU CUA – CHỈ ĐOÁN 1 CON MẠNH NHẤT CHO VÁN TIẾP THEO")
+st.set_page_config(page_title="BOT ĐOÁN BẦU CUA THÔNG MINH", layout="wide")
+st.title("BOT ĐOÁN BẦU CUA – CON RA NHIỀU THÌ KHÓ RA LẦN SAU")
 
 st.markdown("### NHẬP KẾT QUẢ VÁN VỪA QUA (3 CON XÚC XẮC)")
 
@@ -41,36 +41,42 @@ if st.button("NHẬP VÀ ĐOÁN VÁN TIẾP THEO", type="primary"):
     st.success("ĐÃ NHẬP KẾT QUẢ VÀO LỊCH SỬ!")
     st.balloons()
 
-# === BOT ĐOÁN VÁN TIẾP THEO (CHỈ 1 CON MẠNH NHẤT) ===
+# === BOT ĐOÁN THÔNG MINH: CON RA NHIỀU GẦN ĐÂY → KHÓ RA LẦN SAU ===
 if len(history) >= 5:
-    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO")
+    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO (THÔNG MINH HƠN)")
 
-    # Tính xác suất từ toàn bộ lịch sử
-    all_animals = [animal for ván in history for animal in ván]
-    total = len(all_animals)
-    count = Counter(all_animals)
-    probs = {animal: (count[animal] / total) * 100 for animal in ANIMALS}
+    # Chỉ lấy 10 ván gần nhất để đoán (ngắn hạn)
+    recent = history[-10:]
+    all_recent = [animal for ván in recent for animal in ván]
+    count_recent = Counter(all_recent)
 
-    # Con có tỷ lệ ra cao nhất
-    best_animal = max(probs, key=probs.get)
-    best_percent = probs[best_animal]
+    # Con ra nhiều nhất gần đây → điểm thấp nhất (khó ra)
+    # Con ra ít nhất → điểm cao nhất (dễ ra lần sau)
+    scores = {}
+    for animal in ANIMALS:
+        times = count_recent[animal]
+        # Công thức: càng ra nhiều → điểm càng thấp
+        scores[animal] = 30 - times  # Max 30 điểm nếu chưa ra lần nào
 
-    st.success(f"**BOT DỰ ĐOÁN CON MẠNH NHẤT CHO VÁN SAU:** {best_animal}")
-    st.info(f"**TỶ LỆ RA:** {best_percent:.1f}% (cao nhất trong lịch sử)")
-    st.caption(f"Dựa trên {total} kết quả đã nhập – bot chỉ đoán 1 con mạnh nhất để tránh lừa!")
+    # Con có điểm cao nhất
+    best_animal = max(scores, key=scores.get)
+    best_score = scores[best_animal]
 
-    # Bảng xác suất đầy đủ
-    st.markdown("### XÁC SUẤT TỪNG CON")
-    sorted_probs = sorted(probs.items(), key=lambda x: x[1], reverse=True)
-    for animal, percent in sorted_probs:
-        color = "green" if animal == best_animal else "normal"
-        st.progress(percent / 100)
-        st.write(f"{animal}: {percent:.1f}% ({count[animal]} lần ra)")
+    st.success(f"**BOT DỰ ĐOÁN CON DỄ RA NHẤT VÁN SAU:** {best_animal}")
+    st.info(f"**LÝ DO:** Con này ra ít nhất trong 10 ván gần đây → dễ ra bù!")
+    st.caption("Logic: Con ra nhiều lần liên tục thì khó ra lần nữa – giống thực tế!")
+
+    # Bảng điểm từng con
+    st.markdown("### ĐIỂM DỄ RA CỦA TỪNG CON (TRONG 10 VÁN GẦN NHẤT)")
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    for animal, score in sorted_scores:
+        st.progress(score / 30)
+        st.write(f"{animal}: {score} điểm (ra {count_recent[animal]} lần gần đây)")
 
 else:
-    st.info("Chưa đủ dữ liệu – nhập ít nhất 5 ván để bot đoán chính xác!")
+    st.info("Chưa đủ dữ liệu – nhập ít nhất 5 ván để bot đoán thông minh!")
 
-# === LỊCH SỬ KẾT QUẢ ===
+# === LỊCH SỬ ===
 if history:
     st.markdown("### LỊCH SỬ 20 VÁN GẦN NHẤT")
     for i, res in enumerate(reversed(history[-20:]), 1):
@@ -81,4 +87,4 @@ if history:
             os.remove(HISTORY_FILE)
         st.rerun()
 
-st.info("Bot đoán Bầu Cua riêng – chỉ đoán 1 con mạnh nhất dựa trên lịch sử thật – không lừa, không đoán bừa!")
+st.info("Bot đoán thông minh: Con ra nhiều gần đây thì khó ra lần sau – giống sòng thật!")
