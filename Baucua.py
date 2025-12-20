@@ -102,8 +102,4 @@ if history:
             os.remove(HISTORY_FILE)
         st.rerun()
 
-st.info("Bot đoán Bầu Cua thông minh nhất – tính kỹ như người thật: ra nhiều khó ra, ra ít dễ bù, ra nhiều quá khứ có thể ra lại!")        if os.path.exists(HISTORY_FILE):
-            os.remove(HISTORY_FILE)
-        st.rerun()
-
 st.info("Bot đoán Bầu Cua thông minh nhất – tính kỹ như người thật: ra nhiều khó ra, ra ít dễ bù, ra nhiều quá khứ có thể ra lại!")
