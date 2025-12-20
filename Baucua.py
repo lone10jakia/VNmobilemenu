@@ -1,4 +1,4 @@
-# File: app.py – BOT ĐOÁN BẦU CUA THÔNG MINH (CON RA NHIỀU GẦN ĐÂY → KHÓ RA LẦN SAU)
+# File: app.py – BOT ĐOÁN BẦU CUA THÔNG MINH NHẤT (TÍNH KỸ NHƯ NGƯỜI THẬT)
 import streamlit as st
 import json
 import os
@@ -22,7 +22,7 @@ def save_history(history):
 history = load_history()
 
 st.set_page_config(page_title="BOT ĐOÁN BẦU CUA THÔNG MINH", layout="wide")
-st.title("BOT ĐOÁN BẦU CUA – CON RA NHIỀU THÌ KHÓ RA LẦN SAU")
+st.title("BOT ĐOÁN BẦU CUA – THÔNG MINH NHƯ NGƯỜI THẬT (KHÔNG NGÁO)")
 
 st.markdown("### NHẬP KẾT QUẢ VÁN VỪA QUA (3 CON XÚC XẮC)")
 
@@ -41,40 +41,58 @@ if st.button("NHẬP VÀ ĐOÁN VÁN TIẾP THEO", type="primary"):
     st.success("ĐÃ NHẬP KẾT QUẢ VÀO LỊCH SỬ!")
     st.balloons()
 
-# === BOT ĐOÁN THÔNG MINH: CON RA NHIỀU GẦN ĐÂY → KHÓ RA LẦN SAU ===
-if len(history) >= 5:
-    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO (THÔNG MINH HƠN)")
+# === BOT ĐOÁN THÔNG MINH (TÍNH KỸ NHƯ BẠN NÓI) ===
+if len(history) >= 10:
+    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO (THÔNG MINH NHẤT)")
 
-    # Chỉ lấy 10 ván gần nhất để đoán (ngắn hạn)
-    recent = history[-10:]
+    # Lấy 15 ván gần nhất
+    recent = history[-15:]
     all_recent = [animal for ván in recent for animal in ván]
     count_recent = Counter(all_recent)
 
-    # Con ra nhiều nhất gần đây → điểm thấp nhất (khó ra)
-    # Con ra ít nhất → điểm cao nhất (dễ ra lần sau)
+    # Công thức thông minh:
+    # - Ra nhiều gần đây → giảm điểm (khó ra lại)
+    # - Ra ít gần đây → tăng điểm (dễ ra bù)
+    # - Ra nhiều ở quá khứ xa → tăng nhẹ điểm (có thể ra lại)
+    # - Thêm yếu tố random nhẹ để tránh đoán cố định
+
     scores = {}
     for animal in ANIMALS:
-        times = count_recent[animal]
-        # Công thức: càng ra nhiều → điểm càng thấp
-        scores[animal] = 30 - times  # Max 30 điểm nếu chưa ra lần nào
+        recent_count = count_recent[animal]
+        past_count = sum(1 for ván in history[:-15] for a in ván if a == animal) if len(history) > 15 else 0
+
+        # Ra nhiều gần đây → trừ điểm mạnh
+        recent_penalty = recent_count * 3
+
+        # Ra ít gần đây → cộng điểm
+        recent_bonus = (15 - recent_count) * 1.5
+
+        # Ra nhiều quá khứ → cộng nhẹ (có thể ra lại)
+        past_bonus = past_count * 0.5
+
+        # Random nhẹ để linh hoạt
+        random_bonus = random.uniform(0, 2)
+
+        score = recent_bonus - recent_penalty + past_bonus + random_bonus
+        scores[animal] = score
 
     # Con có điểm cao nhất
     best_animal = max(scores, key=scores.get)
     best_score = scores[best_animal]
 
     st.success(f"**BOT DỰ ĐOÁN CON DỄ RA NHẤT VÁN SAU:** {best_animal}")
-    st.info(f"**LÝ DO:** Con này ra ít nhất trong 10 ván gần đây → dễ ra bù!")
-    st.caption("Logic: Con ra nhiều lần liên tục thì khó ra lần nữa – giống thực tế!")
+    st.info(f"**LÝ DO:** Con này cân bằng tốt nhất: không ra quá nhiều gần đây, nhưng có thể ra bù hoặc ra lại!")
+    st.caption("Bot tính kỹ: ra nhiều gần đây khó ra, ra ít thì dễ bù, ra nhiều quá khứ có thể ra lại – giống người thật!")
 
     # Bảng điểm từng con
-    st.markdown("### ĐIỂM DỄ RA CỦA TỪNG CON (TRONG 10 VÁN GẦN NHẤT)")
+    st.markdown("### ĐIỂM DỄ RA CỦA TỪNG CON")
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     for animal, score in sorted_scores:
-        st.progress(score / 30)
-        st.write(f"{animal}: {score} điểm (ra {count_recent[animal]} lần gần đây)")
+        st.progress(score / max(scores.values()))
+        st.write(f"{animal}: {score:.1f} điểm (ra {count_recent[animal]} lần gần đây)")
 
 else:
-    st.info("Chưa đủ dữ liệu – nhập ít nhất 5 ván để bot đoán thông minh!")
+    st.info("Chưa đủ dữ liệu – nhập ít nhất 10 ván để bot đoán thông minh nhất!")
 
 # === LỊCH SỬ ===
 if history:
@@ -87,4 +105,4 @@ if history:
             os.remove(HISTORY_FILE)
         st.rerun()
 
-st.info("Bot đoán thông minh: Con ra nhiều gần đây thì khó ra lần sau – giống sòng thật!")
+st.info("Bot đoán Bầu Cua thông minh nhất – tính kỹ như người thật: ra nhiều khó ra, ra ít dễ bù, ra nhiều quá khứ có thể ra lại!")
