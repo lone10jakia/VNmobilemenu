@@ -1,4 +1,4 @@
-# File: app.py – BOT ĐOÁN BẦU CUA RIÊNG (3 Ô SELECTBOX + XÁC SUẤT + LỊCH SỬ + ĐOÁN VÁN TIẾP)
+# File: app.py – BOT ĐOÁN BẦU CUA RIÊNG (CHỈ ĐOÁN 1 CON MẠNH NHẤT CHO VÁN TIẾP THEO)
 import streamlit as st
 import json
 import os
@@ -17,12 +17,12 @@ def load_history():
 # Save lịch sử
 def save_history(history):
     with open(HISTORY_FILE,"w",encoding="utf-8") as f:
-        json.dump(history[-100:],f,ensure_ascii=False)  # Giữ 100 ván
+        json.dump(history[-100:],f,ensure_ascii=False)  # Giữ 100 ván để đoán chuẩn
 
 history = load_history()
 
 st.set_page_config(page_title="BOT ĐOÁN BẦU CUA", layout="wide")
-st.title("BOT ĐOÁN BẦU CUA – NHẬP 3 CON VỪA RA ĐỂ ĐOÁN VÁN SAU")
+st.title("BOT ĐOÁN BẦU CUA – CHỈ ĐOÁN 1 CON MẠNH NHẤT CHO VÁN TIẾP THEO")
 
 st.markdown("### NHẬP KẾT QUẢ VÁN VỪA QUA (3 CON XÚC XẮC)")
 
@@ -41,9 +41,9 @@ if st.button("NHẬP VÀ ĐOÁN VÁN TIẾP THEO", type="primary"):
     st.success("ĐÃ NHẬP KẾT QUẢ VÀO LỊCH SỬ!")
     st.balloons()
 
-# === BOT ĐOÁN VÁN TIẾP THEO ===
-if len(history) >= 3:
-    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO (SIÊU CHUẨN)")
+# === BOT ĐOÁN VÁN TIẾP THEO (CHỈ 1 CON MẠNH NHẤT) ===
+if len(history) >= 5:
+    st.markdown("### BOT ĐOÁN VÁN TIẾP THEO")
 
     # Tính xác suất từ toàn bộ lịch sử
     all_animals = [animal for ván in history for animal in ván]
@@ -51,24 +51,24 @@ if len(history) >= 3:
     count = Counter(all_animals)
     probs = {animal: (count[animal] / total) * 100 for animal in ANIMALS}
 
-    # Sắp xếp theo xác suất cao nhất
-    sorted_probs = sorted(probs.items(), key=lambda x: x[1], reverse=True)
+    # Con có tỷ lệ ra cao nhất
+    best_animal = max(probs, key=probs.get)
+    best_percent = probs[best_animal]
 
-    # 3 con đoán mạnh nhất
-    top1, top2, top3 = sorted_probs[0][0], sorted_probs[1][0], sorted_probs[2][0]
-
-    st.success(f"**BOT DỰ ĐOÁN MẠNH NHẤT:** {top1} ({probs[top1]:.1f}%)")
-    st.info(f"**NÊN CƯỢC 3 CON NÀY:** {top1} – {top2} – {top3}")
-    st.caption(f"Dựa trên {total} kết quả đã nhập – càng nhiều ván càng chính xác!")
+    st.success(f"**BOT DỰ ĐOÁN CON MẠNH NHẤT CHO VÁN SAU:** {best_animal}")
+    st.info(f"**TỶ LỆ RA:** {best_percent:.1f}% (cao nhất trong lịch sử)")
+    st.caption(f"Dựa trên {total} kết quả đã nhập – bot chỉ đoán 1 con mạnh nhất để tránh lừa!")
 
     # Bảng xác suất đầy đủ
-    st.markdown("### XÁC SUẤT TỪNG CON (DỰA TRÊN LỊCH SỬ)")
+    st.markdown("### XÁC SUẤT TỪNG CON")
+    sorted_probs = sorted(probs.items(), key=lambda x: x[1], reverse=True)
     for animal, percent in sorted_probs:
+        color = "green" if animal == best_animal else "normal"
         st.progress(percent / 100)
         st.write(f"{animal}: {percent:.1f}% ({count[animal]} lần ra)")
 
 else:
-    st.info("Chưa đủ dữ liệu – nhập ít nhất 3 ván để bot bắt đầu đoán!")
+    st.info("Chưa đủ dữ liệu – nhập ít nhất 5 ván để bot đoán chính xác!")
 
 # === LỊCH SỬ KẾT QUẢ ===
 if history:
@@ -81,4 +81,4 @@ if history:
             os.remove(HISTORY_FILE)
         st.rerun()
 
-st.info("Bot đoán Bầu Cua riêng – nhập kết quả thật để bot học và đoán ván sau siêu chuẩn!")
+st.info("Bot đoán Bầu Cua riêng – chỉ đoán 1 con mạnh nhất dựa trên lịch sử thật – không lừa, không đoán bừa!")
