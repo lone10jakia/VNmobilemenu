@@ -1,7 +1,8 @@
-# File: app.py – BOT ĐOÁN BẦU CUA THÔNG MINH NHẤT (TÍNH KỸ NHƯ NGƯỜI THẬT)
+# File: app.py – BOT ĐOÁN BẦU CUA THÔNG MINH NHẤT (ĐÃ SỬA LỖI NameError)
 import streamlit as st
 import json
 import os
+import random  # Đã thêm import random đúng chỗ
 from collections import Counter
 
 HISTORY_FILE = "baucua_history.json"
@@ -50,12 +51,7 @@ if len(history) >= 10:
     all_recent = [animal for ván in recent for animal in ván]
     count_recent = Counter(all_recent)
 
-    # Công thức thông minh:
-    # - Ra nhiều gần đây → giảm điểm (khó ra lại)
-    # - Ra ít gần đây → tăng điểm (dễ ra bù)
-    # - Ra nhiều ở quá khứ xa → tăng nhẹ điểm (có thể ra lại)
-    # - Thêm yếu tố random nhẹ để tránh đoán cố định
-
+    # Công thức thông minh
     scores = {}
     for animal in ANIMALS:
         recent_count = count_recent[animal]
@@ -87,8 +83,9 @@ if len(history) >= 10:
     # Bảng điểm từng con
     st.markdown("### ĐIỂM DỄ RA CỦA TỪNG CON")
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    max_score = max(scores.values())
     for animal, score in sorted_scores:
-        st.progress(score / max(scores.values()))
+        st.progress(score / max_score)
         st.write(f"{animal}: {score:.1f} điểm (ra {count_recent[animal]} lần gần đây)")
 
 else:
@@ -102,6 +99,10 @@ if history:
 
     if st.button("XÓA TOÀN BỘ LỊCH SỬ"):
         if os.path.exists(HISTORY_FILE):
+            os.remove(HISTORY_FILE)
+        st.rerun()
+
+st.info("Bot đoán Bầu Cua thông minh nhất – tính kỹ như người thật: ra nhiều khó ra, ra ít dễ bù, ra nhiều quá khứ có thể ra lại!")        if os.path.exists(HISTORY_FILE):
             os.remove(HISTORY_FILE)
         st.rerun()
 
